@@ -1,0 +1,72 @@
+﻿<?xml version="1.0"?>
+<project name="AutoTemplate" default="build">
+    <property name="build.dir" value="..\dist\" />
+    <property name = "debug" value  = "true" />
+    <property name = "unsafe" value = "true" />
+    <target name="build" depends="AutoTemplate">
+    </target>
+    
+    <target name="AutoTemplate">
+        <property name="unsafe" value="true" />
+        <delete file="..\dist\CodeBot.exe" failonerror="false" />
+        <delete file="..\dist\CodeBot.pdb" failonerror="false" />
+        
+        <copy file="..\dist\Volte.Data.Json.dll" tofile="..\Tmp\Volte.Data.Json.dll" failonerror="false" />
+        <copy file="..\dist\Volte.Data.Dapper.dll" tofile="..\Tmp\Volte.Data.Dapper.dll" failonerror="false" />
+        <copy file="..\dist\Volte.Bot.Tpl.dll" tofile="..\Tmp\Volte.Bot.Tpl.dll" failonerror="false" />
+        <copy file="..\dist\Volte.Utils.dll" tofile="..\Tmp\Volte.Utils.dll" failonerror="false" />
+        <copy file="..\dist\MySql.Data.dll" tofile="..\Tmp\MySql.Data.dll" failonerror="false" />
+        
+        <csc target="exe" output="..\dist\CodeBot.exe" debug="${debug}" unsafe="${unsafe}">
+            <nowarn>
+                <!-- do not report deprecation warnings -->
+                <warning number = "0618" />
+                <warning number = "0168" />
+                <warning number = "1607" />
+                <warning number = "0108" />
+                <warning number = "0219" />
+                <warning number = "0252" />
+                <warning number = "0105" />
+            </nowarn>
+
+            <resources basedir="." prefix="" dynamicprefix="true">
+
+                <include name="..\Tmp\Volte.Data.Json.dll" />
+                <include name="..\Tmp\Volte.Data.Dapper.dll" />
+                <include name="..\Tmp\Volte.Bot.Tpl.dll" />
+                <include name="..\Tmp\Volte.Utils.dll" />
+                <include name="..\Tmp\MySql.Data.dll" />
+
+            </resources>
+
+            <sources>
+                <include name = "AppSettings.cs" />
+                <include name = "AppConfigs.cs" />
+                <include name = "Arguments.cs" />
+                <include name = "AssemblyInfo.cs" />
+                <include name = "AutoCoder.cs" />
+                <include name = "AutoTemplate.cs" />
+                <include name = "Base36Converter.cs" />
+                <include name = "COLUMNEntity.cs" />
+                <include name = "CodeBot.cs" />
+                <include name = "CoreUtil.cs" />
+                <include name = "IdGenerator.cs" />
+                <include name = "ShellCaller.cs" />
+                <include name = "TableUtil.cs" />
+                <include name = "SysFields.cs" />
+                <include name = "FileNameValue.cs" />
+                <include name = "Util.cs" />
+                <include name = "Substitute.cs" />
+            </sources>
+            <references>
+                <include name = "..\Tmp\Volte.Data.Json.dll" />
+                <include name = "..\Tmp\Volte.Data.Dapper.dll" />
+                <include name = "..\Tmp\Volte.Bot.Tpl.dll" />
+                <include name = "..\Tmp\Volte.Utils.dll" />
+            </references>
+        </csc>
+
+        <delete dir="..\Tmp" failonerror="false" />
+        
+    </target>
+</project>
