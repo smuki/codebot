@@ -1,3 +1,3 @@
 nant
-copy D:\System\git\Codebot\dist\CodeBot.* D:\System\iGOS\trunk\Generator\Core /Y
-copy D:\System\git\Codebot\dist\CodeBot.* D:\System\iGOS\trunk\Generator\hose /Y
+copy ..\dist\CodeBot.* D:\System\iGOS\trunk\Generator\Core /Y
+copy ..\dist\CodeBot.* D:\System\iGOS\trunk\Generator\hose /Y
