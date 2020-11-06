@@ -139,6 +139,13 @@ namespace Volte.Bot.Term
             return vValue;
         }
 
+        public JSONObject JSONObjects
+         {
+            get { 
+                return _JSONObject; 
+            } 
+         }
+
         public List<string> Names  
          {
             get { 
