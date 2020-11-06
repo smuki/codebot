@@ -84,6 +84,7 @@ namespace Volte.Bot.Term
         public void PrintHelp()
         {
             string fileName = System.IO.Path.GetFileNameWithoutExtension(System.Diagnostics.Process.GetCurrentProcess().MainModule.FileName);
+            Console.WriteLine("");
             Console.WriteLine("Usage");
             Console.WriteLine("");
             Console.WriteLine("    " + fileName + " <command> [Options]");
@@ -109,20 +110,6 @@ namespace Volte.Bot.Term
             Console.WriteLine("/debug [debug mode]");
             Console.WriteLine("");
 
-        }
-
-        public static void PrintSetting(AppSettings AppSetting)
-        {
-            //Console.WriteLine("AppPath      = " + AppConfigs.GetValue("AppPath"));
-            //Console.WriteLine("DistPath     = " + AppConfigs.GetValue("DistPath"));
-            //Console.WriteLine("DevelopPath  = " + AppConfigs.GetValue("DevelopPath"));
-            //Console.WriteLine("CodePath     = " + AppConfigs.GetValue("CodePath"));
-            //Console.WriteLine("TemplatePath = " + AppConfigs.GetValue("TemplatePath"));
-            //Console.WriteLine("ProjectPath  = " + AppConfigs.GetValue("ProjectPath"));
-            //Console.WriteLine("ProjectName  = " + AppConfigs.GetValue("ProjectName"));
-            //Console.WriteLine("dbAdapter    = " + AppConfigs.GetValue("dbAdapter"));
-            //Console.WriteLine("Provider     = " + AppConfigs.GetValue("Provider"));
-            //Console.WriteLine("LowerName    = " + AppConfigs.GetValue("LowerName"));
         }
 
         public bool DetectionUpdate()
@@ -184,9 +171,26 @@ namespace Volte.Bot.Term
             return false;
         }
 
-        public void Print(JSONObject obj)
+        public void PrintConfig(JSONObject obj , int level)
         {
+            string tKey    = "                     ";
+            string iKey    = "                     ";
+            string sIndent = iKey.Substring(0 , level*3);
 
+            Console.WriteLine(sIndent+"{");
+            foreach (string sKey in obj.Names)
+            {
+                if (obj.IsJSONObject(sKey)){
+                    tKey = sIndent+sKey+"                     ";
+                    Console.WriteLine(sIndent+"   "+tKey.Substring(0,13) + " = ");
+                    PrintConfig(obj.GetJSONObject(sKey) , level+1);
+                }else{
+                    tKey = sIndent+sKey+"                     ";
+                    Console.WriteLine(sIndent+"   "+tKey.Substring(0,13) + " = " + obj.GetValue(sKey));
+                }
+            }
+            tKey = "                     ";
+            Console.WriteLine(sIndent+"}");
         }
 
         public void Process(string[] args)
@@ -309,12 +313,8 @@ namespace Volte.Bot.Term
                 AppSettings AppSetting = new AppSettings(fileName);
                 AppConfigs AppConfigs  = new AppConfigs(fileName.Replace(".ini",".json"));
 
-                Console.WriteLine("AppSetting:["+fileName+"]");
-                foreach (string sKey in AppConfigs.Names)
-                {
-                    string tKey = sKey+"                     ";
-                    Console.WriteLine("   "+tKey.Substring(0,13) + " = " + AppConfigs.GetValue(sKey));
-                }
+                Console.WriteLine("AppSetting : ["+fileName+"]");
+                PrintConfig(AppConfigs.JSONObjects , 0);
 
                 switch (sCommand) {
                     case "B": {
