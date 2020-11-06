@@ -184,6 +184,11 @@ namespace Volte.Bot.Term
             return false;
         }
 
+        public void Print(JSONObject obj)
+        {
+
+        }
+
         public void Process(string[] args)
         {
             try {
@@ -365,7 +370,7 @@ namespace Volte.Bot.Term
                                 break;
                             }
 
-                                
+
                     default: {
                                  PrintHelp();
                                  break;
