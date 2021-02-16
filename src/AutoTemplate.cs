@@ -141,132 +141,6 @@ namespace Volte.Bot.Term
             return rtv;
         }
 
-        string AvailableColumnName(object[] args)
-        {
-            string sTableName  = args[0].ToString();
-            string nSequency   = args[1].ToString();
-            string sColumnName = "";
-
-            QueryRows RsSysTables = new QueryRows(this.Trans);
-
-            RsSysTables.CommandText = "SELECT * FROM systables WHERE bActive<>0 AND sTableName='" + sTableName + "'";
-
-            RsSysTables.Open();
-
-            if (!RsSysTables.EOF) {
-                if (nSequency == "1") {
-                    sColumnName = RsSysTables.GetValue("sAvailableColumnName01");
-                } else if (nSequency == "2") {
-                    sColumnName = RsSysTables.GetValue("sAvailableColumnName02");
-                } else if (nSequency == "3") {
-                    sColumnName = RsSysTables.GetValue("sAvailableColumnName03");
-                } else if (nSequency == "4") {
-                    sColumnName = RsSysTables.GetValue("sAvailableColumnName04");
-                } else if (nSequency == "5") {
-                    sColumnName = RsSysTables.GetValue("sAvailableColumnName05");
-                } else if (nSequency == "6") {
-                    sColumnName = RsSysTables.GetValue("sAvailableColumnName06");
-                } else if (nSequency == "7") {
-                    sColumnName = RsSysTables.GetValue("sAvailableColumnName07");
-                } else if (nSequency == "8") {
-                    sColumnName = RsSysTables.GetValue("sAvailableColumnName08");
-                } else if (nSequency == "9") {
-                    sColumnName = RsSysTables.GetValue("sAvailableColumnName09");
-                } else if (nSequency == "10") {
-                    sColumnName = RsSysTables.GetValue("sAvailableColumnName10");
-                } else if (nSequency == "11") {
-                    sColumnName = RsSysTables.GetValue("sAvailableColumnName11");
-                } else if (nSequency == "12") {
-                    sColumnName = RsSysTables.GetValue("sAvailableColumnName12");
-                }
-            }
-
-            return sColumnName;
-        }
-
-
-        string UserMstColumnName(object[] args)
-        {
-            string sTableName  = args[0].ToString();
-            string nSequency   = args[1].ToString();
-            string sColumnName = "";
-
-            QueryRows RsSysTables = new QueryRows(this.Trans);
-
-            RsSysTables.CommandText = "SELECT * FROM systables WHERE bActive<>0 AND sTableName='" + sTableName + "'";
-
-            RsSysTables.Open();
-
-            if (!RsSysTables.EOF) {
-                if (nSequency == "1") {
-                    sColumnName = RsSysTables.GetValue("sUserMstColumnName01");
-                } else if (nSequency == "2") {
-                    sColumnName = RsSysTables.GetValue("sUserMstColumnName02");
-                } else if (nSequency == "3") {
-                    sColumnName = RsSysTables.GetValue("sUserMstColumnName03");
-                } else if (nSequency == "4") {
-                    sColumnName = RsSysTables.GetValue("sUserMstColumnName04");
-                } else if (nSequency == "5") {
-                    sColumnName = RsSysTables.GetValue("sUserMstColumnName05");
-                } else if (nSequency == "6") {
-                    sColumnName = RsSysTables.GetValue("sUserMstColumnName06");
-                } else if (nSequency == "7") {
-                    sColumnName = RsSysTables.GetValue("sUserMstColumnName07");
-                } else if (nSequency == "8") {
-                    sColumnName = RsSysTables.GetValue("sUserMstColumnName08");
-                } else if (nSequency == "9") {
-                    sColumnName = RsSysTables.GetValue("sUserMstColumnName09");
-                } else if (nSequency == "10") {
-                    sColumnName = RsSysTables.GetValue("sUserMstColumnName10");
-                } else if (nSequency == "11") {
-                    sColumnName = RsSysTables.GetValue("sUserMstColumnName11");
-                } else if (nSequency == "12") {
-                    sColumnName = RsSysTables.GetValue("sUserMstColumnName12");
-                }
-            }
-
-            return sColumnName;
-        }
-
-        string PrivateWhere(object[] args)
-        {
-            string sTableName = args[0].ToString();
-            StringBuilder XObject = new StringBuilder();
-            QueryRows _SysTables = new QueryRows(_Trans);
-            _SysTables.CommandText = "SELECT * From systables Where bActive<>0 AND sTableName='" + sTableName + "'";
-            _SysTables.Open();
-            //Console.WriteLine(_SysTables.CommandText);
-            if (!_SysTables.EOF){
-
-                for (int i=1;i<=12;i++){
-                    string sID=i.ToString("00");
-                    sTableName                  = _SysTables.GetValue("sTableName");
-                    string sColumnName          = _SysTables.GetValue("sColumnName"+sID);
-                    string sUserMstColumnName   = _SysTables.GetValue("sUserMstColumnName"+sID);
-                    string sAvailableColumnName = _SysTables.GetValue("sAvailableColumnName"+sID);
-                    sTableName                  = sTableName.ToLower();
-                    if (sColumnName!="" && sAvailableColumnName!="" ){
-                        if (sColumnName=="nGrade"){
-                            XObject.AppendLine("_criteria.WhereClause(\""+sTableName+"."+sColumnName+"\" , Operation.LessOrEqual , _Private.GetInteger(\""+sAvailableColumnName+"\"));");
-                        }else{
-                            XObject.AppendLine("ZZLogger.Debug(ZFILE_NAME, _Private.GetValue(\""+sAvailableColumnName+"\")+\""+sAvailableColumnName+"\");");
-                            XObject.AppendLine("ZZLogger.Debug(ZFILE_NAME, _Private.GetValue(\""+sAvailableColumnName+"\")==\".\");");
-                            XObject.AppendLine("ZZLogger.Debug(ZFILE_NAME, _Private.GetValue(\""+sAvailableColumnName+"\"));");
-                            XObject.AppendLine("ZZLogger.Debug(ZFILE_NAME, _Private.GetValue(\""+sUserMstColumnName+"\"));");
-                            XObject.AppendLine("  if (_Private.GetValue(\""+sAvailableColumnName+"\")==\".\"){");
-                            XObject.AppendLine("     ZZLogger.Debug(ZFILE_NAME, \""+sAvailableColumnName+"+\");");
-                            XObject.AppendLine("     _criteria.Where(\""+sTableName+"."+sColumnName+"='\"+ _Private.GetValue(\""+sUserMstColumnName+"\")+\"'\");");
-                            XObject.AppendLine(" }else if (_Private.GetValue(\""+sAvailableColumnName+"\")!=\"-\"){");
-                            XObject.AppendLine("ZZLogger.Debug(ZFILE_NAME, \""+sAvailableColumnName+"-\");");
-                            XObject.AppendLine("     _criteria.WhereClause(\""+sTableName+"."+sColumnName+"\" , Operation.WhereIn , _Private.GetValue(\""+sAvailableColumnName+"\"));");
-                            XObject.AppendLine(" }");
-                        }
-                    }
-                }
-            }
-            _SysTables.Close();
-            return XObject.ToString();
-        }
         string TableColumnName(object[] args)
         {
             string sTableName  = args[0].ToString();
@@ -628,446 +502,6 @@ namespace Volte.Bot.Term
             }
         }
 
-        string QueryPrivateWhere(object[] args)
-        {
-            string sRef       = args[0].ToString();
-            string _TableName = args[1].ToString();
-            List<string> _PrivateWhere = new List<string>();
-            QueryRows  _SysTables  = new QueryRows(_Trans);
-            _SysTables.CommandText = "SELECT * From systables Where bActive<>0 AND sTableName = '" +_TableName+ "'";
-            _SysTables.Open();
-            if (!_SysTables.EOF){
-                string WhereExpression      = "";
-                _PrivateWhere.Add(" string _"+sRef+"_Private= \"\";");
-                while (!_SysTables.EOF) {
-                    for (int i=1;i<=12;i++){
-                        string sID=i.ToString("00");
-                        string sTableName           = _SysTables.GetValue("sTableName");
-                        string sColumnName          = _SysTables.GetValue("sColumnName"+sID);
-                        string sUserMstColumnName   = _SysTables.GetValue("sUserMstColumnName"+sID);
-                        string sAvailableColumnName = _SysTables.GetValue("sAvailableColumnName"+sID);
-                        sTableName                  = sTableName.ToLower();
-                        WhereExpression             = "";
-                        if (!string.IsNullOrEmpty(sColumnName)){
-                            if (sColumnName=="nGrade"){
-                                WhereExpression = WhereExpression+" if (!string.IsNullOrEmpty(_"+sRef+"_Private)){\n";
-                                WhereExpression = WhereExpression+"     _"+sRef+"_Private= _"+sRef+"_Private+\" AND \";";
-                                WhereExpression = WhereExpression+"\n}\n";
-                                WhereExpression = WhereExpression+" _"+sRef+"_Private= _"+sRef+"_Private+";
-                                WhereExpression = WhereExpression+" \" "+sTableName+"."+sColumnName+"<=\"";
-                                WhereExpression = WhereExpression+"+_Private.GetInteger(\""+sAvailableColumnName+"\");";
-                            }else{
-                                WhereExpression = WhereExpression+" if (_Private.GetValue(\""+sAvailableColumnName+"\")==\".\"){\n";
-                                WhereExpression = WhereExpression+" if (!string.IsNullOrEmpty(_"+sRef+"_Private)){\n";
-                                WhereExpression = WhereExpression+"     _"+sRef+"_Private= _"+sRef+"_Private+\" AND \";";
-                                WhereExpression = WhereExpression+"\n}\n";
-                                WhereExpression = WhereExpression+" _"+sRef+"_Private= _"+sRef+"_Private+";
-                                WhereExpression = WhereExpression + " \" "+sTableName+"."+sColumnName+" = '\"+_Private.GetValue(\""+sUserMstColumnName+"\")+\"'\";";
-                                WhereExpression = WhereExpression+"\n}else if (_Private.GetValue(\""+sAvailableColumnName+"\")!=\"-\"){\n";
-                                WhereExpression = WhereExpression+" if (!string.IsNullOrEmpty(_"+sRef+"_Private)){\n";
-                                WhereExpression = WhereExpression+"     _"+sRef+"_Private= _"+sRef+"_Private+\" AND \";";
-                                WhereExpression = WhereExpression+"\n}\n";
-                                WhereExpression = WhereExpression+" _"+sRef+"_Private= _"+sRef+"_Private+";
-                                WhereExpression = WhereExpression + " \" "+sTableName+"."+sColumnName+" IN (";
-                                WhereExpression = WhereExpression + "\"+DapperUtil.WhereIn(_Private.GetValue(\""+sAvailableColumnName+"\"))+\")\";";
-                                WhereExpression = WhereExpression+"\n}";
-                            }
-                        }
-                        if (WhereExpression!=""){
-                            _PrivateWhere.Add(WhereExpression);
-                        }
-                    }
-                    _SysTables.MoveNext();
-                }
-                WhereExpression = " if (!string.IsNullOrEmpty(_"+sRef+"_Private)){\n";
-                WhereExpression = WhereExpression+"     _"+sRef+"_Private= \" AND (\"+_"+sRef+"_Private+\")\";";
-                WhereExpression = WhereExpression+"\n}\n";
-                _PrivateWhere.Add(WhereExpression);
-            }
-            _SysTables.Close();
-            StringBuilder XObject = new StringBuilder();
-            foreach (string x in _PrivateWhere) {
-                XObject.AppendLine(x);
-            }
-            return XObject.ToString();
-        }
-        string ProcessRef(object[] args)
-        {
-
-            string _TableName  = args[0].ToString();
-            string _ColumnName = args[1].ToString();
-            string sRef        = args[2].ToString();
-            string sUID   = args[3].ToString();
-            string _Type       = args[4].ToString();
-            string _Prefix     = args[5].ToString();
-
-            string _DbName   = "UID";
-
-            if (sRef == "") {
-                return "";
-            }
-
-            JSONObject _JSONObject= AppSetting.LoadJSONObject(AppConfigs.GetValue("DevelopPath")+@"\define\functions\"+sUID+".js").GetJSONObject("sysref");
-
-            if (!_JSONObject.ContainsKey(sRef)){
-                return "";
-            }
-
-            JSONObject _JSONRef   = _JSONObject.GetJSONObject(sRef);
-            JSONArray _JSONRefDtl = _JSONRef.GetJSONArray("RefDtl");
-
-            string sType = _JSONRef.GetValue("sType");
-
-            QueryBuilder _query = QueryBuilder<string>.Builder(this.Trans);
-
-            if (_query == null) {
-                Console.WriteLine("..... invalid ref ");
-                Console.WriteLine("..... invalid ref " + sRef+ " / " + _JSONRef.GetValue("sSqlCode"));
-                return "";
-            }
-            _query.FromClause = _JSONRef.GetValue("sFromClause").ToLower();
-            //_query.Top(1);
-
-            bool _f = false;
-            int ndx = 1;
-
-            if (_JSONRef.GetValue("sWhereClause") != "") {
-                _query.Where(_JSONRef.GetValue("sWhereClause"));
-            }
-
-            if (_f) {
-                _query.RightParen();
-            }
-
-            List<string> _PrivateWhere = new List<string>();
-            QueryRows  _SysTables = new QueryRows(_Trans);
-            _SysTables.CommandText = "SELECT * From systables Where bActive<>0 AND sTableName IN (SELECT sTableName FROM sysdatadtl WHERE sSqlCode='" +_JSONRef.GetValue("sSqlCode") + "')";
-            _SysTables.Open();
-            //Console.WriteLine(_SysTables.CommandText);
-            if (!_SysTables.EOF){
-                string WhereExpression      = "";
-                _PrivateWhere.Add(" string _"+sRef+"_Private= \"\";");
-                while (!_SysTables.EOF) {
-                    for (int i=1;i<=12;i++){
-                        string sID=i.ToString("00");
-                        string sTableName           = _SysTables.GetValue("sTableName");
-                        string sColumnName          = _SysTables.GetValue("sColumnName"+sID);
-                        string sUserMstColumnName   = _SysTables.GetValue("sUserMstColumnName"+sID);
-                        string sAvailableColumnName = _SysTables.GetValue("sAvailableColumnName"+sID);
-                        sTableName                  = sTableName.ToLower();
-                        WhereExpression             = "";
-                        if (!string.IsNullOrEmpty(sColumnName)){
-                            if (sColumnName=="nGrade"){
-                                WhereExpression = WhereExpression+" if (!string.IsNullOrEmpty(_"+sRef+"_Private)){\n";
-                                WhereExpression = WhereExpression+"     _"+sRef+"_Private= _"+sRef+"_Private+\" AND \";";
-                                WhereExpression = WhereExpression+"\n}\n";
-                                WhereExpression = WhereExpression+" _"+sRef+"_Private= _"+sRef+"_Private+";
-                                WhereExpression = WhereExpression+" \" "+sTableName+"."+sColumnName+"<=\"";
-                                WhereExpression = WhereExpression+"+_Private.GetInteger(\""+sAvailableColumnName+"\");";
-                            }else{
-                                WhereExpression = WhereExpression+" if (_Private.GetValue(\""+sAvailableColumnName+"\")==\".\"){\n";
-                                WhereExpression = WhereExpression+" if (!string.IsNullOrEmpty(_"+sRef+"_Private)){\n";
-                                WhereExpression = WhereExpression+"     _"+sRef+"_Private= _"+sRef+"_Private+\" AND \";";
-                                WhereExpression = WhereExpression+"\n}\n";
-                                WhereExpression = WhereExpression+" _"+sRef+"_Private= _"+sRef+"_Private+";
-                                WhereExpression = WhereExpression + " \" "+sTableName+"."+sColumnName+" = '\"+_Private.GetValue(\""+sUserMstColumnName+"\")+\"'\";";
-                                WhereExpression = WhereExpression+"\n}else if (_Private.GetValue(\""+sAvailableColumnName+"\")!=\"-\"){\n";
-                                WhereExpression = WhereExpression+" if (!string.IsNullOrEmpty(_"+sRef+"_Private)){\n";
-                                WhereExpression = WhereExpression+"     _"+sRef+"_Private= _"+sRef+"_Private+\" AND \";";
-                                WhereExpression = WhereExpression+"\n}\n";
-                                WhereExpression = WhereExpression+" _"+sRef+"_Private= _"+sRef+"_Private+";
-                                WhereExpression = WhereExpression + " \" "+sTableName+"."+sColumnName+" IN (";
-                                WhereExpression = WhereExpression + "\"+DapperUtil.WhereIn(_Private.GetValue(\""+sAvailableColumnName+"\"))+\")\";";
-                                WhereExpression = WhereExpression+"\n}";
-                            }
-                        }
-                        if (WhereExpression!=""){
-                            _PrivateWhere.Add(WhereExpression);
-                        }
-                    }
-                    _SysTables.MoveNext();
-                }
-                WhereExpression = " if (!string.IsNullOrEmpty(_"+sRef+"_Private)){\n";
-                WhereExpression = WhereExpression+"     _"+sRef+"_Private= \" AND (\"+_"+sRef+"_Private+\")\";";
-                WhereExpression = WhereExpression+"\n}\n";
-                _PrivateWhere.Add(WhereExpression);
-            }
-            _SysTables.Close();
-            _query.Fields.Clear();
-
-            string sAccessType       = "";
-            string sAccessColumnName = "";
-
-            foreach (JSONObject _AttributeMapping in _JSONRefDtl.JSONObjects) {
-
-                string _COLUMN_NAME      = _AttributeMapping.GetValue("sColumnName");
-                string _TABLE_NAME       = _AttributeMapping.GetValue("sTableName").ToLower();
-                sAccessColumnName        = _AttributeMapping.GetValue("sAccessColumnName");
-                string sAccessTableName  = _AttributeMapping.GetValue("sAccessTableName");
-                string sAccessExpression = _AttributeMapping.GetValue("sAccessExpression");
-
-                string s     = _TABLE_NAME + "." + _COLUMN_NAME;
-                string _Name = _Prefix + "." + sAccessColumnName;
-                sAccessType  = _AttributeMapping.GetValue("sAccessType");
-
-                _Name = _Name.Replace("%", _ColumnName);
-
-                if (sAccessColumnName == "") {
-                    _Name = _Prefix + "." + _ColumnName;
-                }
-
-                _Name = "\"+DapperUtil.AntiSQLInjection(" + _Name + ")+\"";
-
-                if (sAccessType == "R" || sAccessType == "W") {
-                    if (sAccessExpression != "") {
-
-                        sAccessExpression = sAccessExpression.Replace("${" + sAccessTableName + "_" + sAccessColumnName + "}" , _Name);
-
-                        _query.Where(sAccessExpression);
-
-                    } else {
-                        _query.WhereClause(s, Operation.Equal, _Name);
-                    }
-                }
-
-                bool HasColumn = false;
-
-                foreach (AttributeMapping _Field in _query.Fields) {
-                    if (_Field.TableName.ToLower() + "." + _Field.ColumnName == s) {
-                        HasColumn = true;
-                    }
-                }
-
-                if (HasColumn == false) {
-                    AttributeMapping _Att = new AttributeMapping();
-                    _Att.TableName  = _AttributeMapping.GetValue("sTableName").ToLower();
-                    _Att.ColumnName = _AttributeMapping.GetValue("sColumnName");
-                    _Att.Name       = s;
-                    _query.Fields.Add(_Att);
-                }
-
-                ZZLogger.Debug(ZFILE_NAME, _Name);
-            }
-
-            string SQLString = _query.QuerySql;
-
-            foreach (JSONObject _AttributeMapping in _JSONRefDtl.JSONObjects) {
-                string s     = _AttributeMapping.GetValue("sAccessTableName") + "." + _AttributeMapping.GetValue("sAccessColumnName");
-                string _Name = _Prefix + "." + _ColumnName;
-                _Name = _Name.Replace("%", _ColumnName);
-                _Name = "\"+DapperUtil.AntiSQLInjection(" + _Name + ")+\"";
-
-                SQLString = SQLString.Replace("${" + s + "}" , _Name);
-            }
-
-            StringBuilder XObject = new StringBuilder();
-
-            foreach (string x in _PrivateWhere) {
-                XObject.AppendLine(x);
-            }
-            string _RsName = "_" + _Type + "_" + _ColumnName + "_" + sRef ;
-            XObject.AppendLine("if (!DapperUtil.IsNullOrEmpty(" + _Prefix + "." + _ColumnName + "))");
-            XObject.AppendLine("{");
-
-            XObject.AppendLine("QueryRows " + _RsName + "= new QueryRows(this.Trans);");
-            if (_PrivateWhere.Count>0){
-                XObject.AppendLine(_RsName + ".CommandText = \"" + SQLString + "\"+_"+sRef+"_Private;");
-            }else{
-                XObject.AppendLine(_RsName + ".CommandText = \"" + SQLString + "\";");
-            }
-            XObject.AppendLine("ZZLogger.Debug(ZFILE_NAME,"+_RsName + ".CommandText);");
-            XObject.AppendLine(_RsName + ".Open();");
-
-
-            if (_Type == "C") {
-                XObject.AppendLine("if (" + _RsName + ".EOF){");
-                XObject.AppendLine("   ZZLogger.Debug(ZFILE_NAME," + _RsName + ".CommandText);");
-                XObject.AppendLine("   entity.Exceptions.Add(new LogisticException(\"" + _TableName + "_"  + _ColumnName + "\",\"DataNotFd\"," + _Prefix + "." + _ColumnName + "));");
-                XObject.AppendLine("}else{");
-
-                foreach (JSONObject _AttributeMapping in _JSONRefDtl.JSONObjects) {
-                    sAccessType = _AttributeMapping.GetValue("sAccessType");
-
-                    if ((sType != "C" && sAccessType == "G") || sAccessType == "W" || sAccessType == "RG") {
-                        sAccessColumnName = _AttributeMapping.GetValue("sAccessColumnName");
-
-                        if (sAccessColumnName == "") {
-                            if (sAccessType == "G") {
-                                sAccessColumnName = _AttributeMapping.GetValue("sColumnName");
-                            } else if (sAccessType == "W" || sAccessType == "RG") {
-                                sAccessColumnName = _ColumnName;
-                            }
-                        }
-
-                        sAccessColumnName = sAccessColumnName.Replace("%", _ColumnName);
-
-                        if (this.HasViewColumn(new object[] {sAccessColumnName, sUID}) == "True") {
-
-                            string sTypeCode = ColumnDataType(sUID , _AttributeMapping.GetValue("sAccessTableName") , sAccessColumnName);
-                            string varName =_Prefix + "." + sAccessColumnName + " = " + _RsName;
-
-                            XObject.AppendLine(SetAccessValue(varName , sTypeCode,_AttributeMapping.GetValue("sColumnName")));
-
-                        }
-                    }
-                }
-
-                XObject.AppendLine("}");
-
-            } else if (_Type == "D") {
-
-                XObject.AppendLine("if (!" + _RsName + ".EOF){");
-
-                foreach (JSONObject _AttributeMapping in _JSONRefDtl.JSONObjects) {
-                    sAccessType = _AttributeMapping.GetValue("sAccessType");
-
-                    if ((sType != "C" && sAccessType == "G") || sAccessType == "W" || sAccessType == "RG") {
-
-                        sAccessColumnName = _AttributeMapping.GetValue("sAccessColumnName");
-
-                        if (sAccessColumnName == "") {
-                            if (sAccessType == "G") {
-                                sAccessColumnName = _AttributeMapping.GetValue("sColumnName");
-                            } else if (sAccessType == "RG" || sAccessType == "W") {
-                                sAccessColumnName = _ColumnName;
-                            }
-                        }
-
-                        sAccessColumnName = sAccessColumnName.Replace("%", _ColumnName);
-
-                        if (this.HasColumn(new object[] {sAccessColumnName, sUID}) == "True") {
-
-                            string sTypeCode = ColumnDataType(sUID , _AttributeMapping.GetValue("sAccessTableName") , sAccessColumnName);
-                            string varName =_Prefix + "." + sAccessColumnName + " = " + _RsName;
-
-                            XObject.AppendLine(SetAccessValue(varName , sTypeCode,_AttributeMapping.GetValue("sColumnName")));
-
-                        }
-                        else {
-                            Console.WriteLine("");
-                            Console.WriteLine(sUID +" "+_ColumnName+" "+ sRef +" Not Define Column [" + sAccessColumnName + "] "+this.HasColumn(new object[] {sAccessColumnName, sUID}));
-
-                        }
-                    }
-                }
-
-                XObject.AppendLine("}");
-
-            } else if (_Type == "V") {
-                XObject.AppendLine("if (!" + _RsName + ".EOF){");
-
-                foreach (JSONObject _AttributeMapping in _JSONRefDtl.JSONObjects) {
-                    sAccessType = _AttributeMapping.GetValue("sAccessType");
-
-                    if (sAccessType == "G") {
-
-                        sAccessColumnName = _AttributeMapping.GetValue("sAccessColumnName");
-
-                        if (sAccessColumnName == "") {
-                            if (sAccessType == "G") {
-                                sAccessColumnName = _AttributeMapping.GetValue("sColumnName");
-                            } else if (sAccessType == "W" || sAccessType == "RG") {
-                                sAccessColumnName = _ColumnName;
-                            }
-                        }
-
-                        sAccessColumnName = sAccessColumnName.Replace("%", _ColumnName);
-
-                        if (this.HasColumn(new object[] {sAccessColumnName, sUID}) == "True") {
-
-                            string sTypeCode = ColumnDataType(sUID , _AttributeMapping.GetValue("sAccessTableName") , sAccessColumnName);
-                            string varName =_Prefix + "." + sAccessColumnName + " = " + _RsName;
-
-                            XObject.AppendLine(SetAccessValue(varName , sTypeCode,_AttributeMapping.GetValue("sColumnName")));
-
-                        } else {
-                            Console.WriteLine("");
-                            Console.WriteLine(sUID + " Not Define Column [" + sAccessColumnName + "]");
-                            Console.WriteLine(sUID +" "+_ColumnName+" "+ sRef + " Not Define Column [" + sAccessColumnName + "] "+this.HasColumn(new object[] {sAccessColumnName, sUID}));
-
-                        }
-                    }
-                }
-
-                XObject.AppendLine("}else{");
-
-                foreach (JSONObject _AttributeMapping in _JSONRefDtl.JSONObjects) {
-                    sAccessType = _AttributeMapping.GetValue("sAccessType");
-
-                    if (sAccessType == "G") {
-
-                        sAccessColumnName = _AttributeMapping.GetValue("sAccessColumnName");
-
-                        if (sAccessColumnName == "") {
-                            if (sAccessType == "G") {
-                                sAccessColumnName = _AttributeMapping.GetValue("sColumnName");
-                            } else if (sAccessType == "W" || sAccessType == "RG") {
-                                sAccessColumnName = _ColumnName;
-                            }
-                        }
-
-                        sAccessColumnName = sAccessColumnName.Replace("%", _ColumnName);
-
-                        if (this.HasColumn(new object[] {sAccessColumnName, sUID}) == "True") {
-
-                            string sTypeCode = ColumnDataType(sUID , _AttributeMapping.GetValue("sAccessTableName") , sAccessColumnName);
-                            string varName   = _Prefix + "." + sAccessColumnName;
-                            XObject.AppendLine(SetInitializeValue(varName , sTypeCode));
-
-                        } else {
-                            Console.WriteLine("");
-                            Console.WriteLine(sUID + " Not Define Column [" + sAccessColumnName + "]");
-                            Console.WriteLine(sUID +" "+_ColumnName+" "+ sRef + " Not Define Column [" + sAccessColumnName + "] "+this.HasColumn(new object[] {sAccessColumnName, sUID}));
-
-                        }
-                    }
-                }
-
-                XObject.AppendLine("}");
-            }
-
-            XObject.AppendLine(_RsName + ".Close();");
-
-            if (_Type == "V") {
-                XObject.AppendLine("}else{");
-
-                foreach (JSONObject _AttributeMapping in _JSONRefDtl.JSONObjects) {
-                    sAccessType = _AttributeMapping.GetValue("sAccessType");
-
-                    if (sAccessType == "G") {
-
-                        sAccessColumnName = _AttributeMapping.GetValue("sAccessColumnName");
-
-                        if (sAccessColumnName == "") {
-                            if (sAccessType == "G") {
-                                sAccessColumnName = _AttributeMapping.GetValue("sColumnName");
-                            } else if (sAccessType == "W" || sAccessType == "RG") {
-                                sAccessColumnName = _ColumnName;
-                            }
-                        }
-
-                        sAccessColumnName = sAccessColumnName.Replace("%", _ColumnName);
-
-                        if (this.HasColumn(new object[] {sAccessColumnName, sUID}) == "True") {
-
-                            string sTypeCode = ColumnDataType(sUID , _AttributeMapping.GetValue("sAccessTableName") , sAccessColumnName);
-                            string varName =_Prefix + "." + sAccessColumnName;
-                            XObject.AppendLine(SetInitializeValue(varName , sTypeCode));
-                        } else {
-                            Console.WriteLine("");
-                            Console.WriteLine(sUID + " Not Define Column [" + sAccessColumnName + "]");
-                            Console.WriteLine(sUID +" "+_ColumnName+" "+ sRef + " Not Define Column [" + sAccessColumnName + "] "+this.HasColumn(new object[] {sAccessColumnName, sUID}));
-
-                        }
-                    }
-                }
-            }
-
-            XObject.AppendLine("}");
-
-            return XObject.ToString();
-        }
-
         string SetInitializeValue(string varName , string sTypeCode)
         {
             if (sTypeCode == "decimal") {
@@ -1090,85 +524,85 @@ namespace Volte.Bot.Term
             }
         }
 
-            string DefineColumn(object[] args)
-            {
+        string DefineColumn(object[] args)
+        {
 
-                    string tableName   = args[0].ToString();
-                    string columnName  = args[1].ToString();
-                    string captionCode = "" ;
-                    string type        = "nvarchar" ;
-                    int    scale       = -1 ;
+            string tableName   = args[0].ToString();
+            string columnName  = args[1].ToString();
+            string captionCode = "" ;
+            string type        = "nvarchar" ;
+            int    scale       = -1 ;
 
-                    if (args.Length > 2) {
-                        captionCode = args[2].ToString();
-                    }
+            if (args.Length > 2) {
+                captionCode = args[2].ToString();
+            }
 
-                    if (args.Length > 3) {
-                        type = args[3].ToString();
-                    }
+            if (args.Length > 3) {
+                type = args[3].ToString();
+            }
 
-                    if (args.Length > 4) {
-                        int.TryParse(args[4].ToString() , out scale);
-                    }
+            if (args.Length > 4) {
+                int.TryParse(args[4].ToString() , out scale);
+            }
 
-                    if (string.IsNullOrEmpty(captionCode)) {
-                        if ( tableName =="VARIABLE"){
-                            captionCode = "lbl_" + columnName;
-                        } else{
-                            captionCode = "lbl_" + tableName + "_" + columnName;
-                        }
-                    }
+            if (string.IsNullOrEmpty(captionCode)) {
+                if ( tableName =="VARIABLE"){
+                    captionCode = "lbl_" + columnName;
+                } else{
+                    captionCode = "lbl_" + tableName + "_" + columnName;
+                }
+            }
 
-                    int    nColumnLength      = 10;
-                    int    nColumnScale       = 2;
-                    string _NonPrintable      = "false";
-                    string sAlignColumnName = "";
-                    string sEnableMode      = "";
-                    string sDataBand          = "";
-                    string rtv                = "";
+            int    nColumnLength      = 10;
+            int    nColumnScale       = 2;
+            string _NonPrintable      = "false";
+            string sAlignColumnName = "";
+            string sEnableMode      = "";
+            string sDataBand          = "";
+            string rtv                = "";
 
-                    string key = tableName + "_" + columnName + "_" + type + "_" + captionCode + "_" + scale;
+            string key = tableName + "_" + columnName + "_" + type + "_" + captionCode + "_" + scale;
             JSONObject _DataTypeChar = AppSetting.LoadJSONObject(AppConfigs.GetValue("DevelopPath")+@"\appsettings\DataTypeChar.js");
 
-                    if (captionCode.IndexOf("=") > 0) {
-                        captionCode = captionCode + ",";
-                    }
+            if (captionCode.IndexOf("=") > 0) {
+                captionCode = captionCode + ",";
+            }
 
-                    if (captionCode.IndexOf(";") > 0 || captionCode.IndexOf(",") > 0) {
-                        string[] sName  = captionCode.Split(new char[]{';',','});
-                            captionCode = "";
+            if (captionCode.IndexOf(";") > 0 || captionCode.IndexOf(",") > 0) {
+                string[] sName  = captionCode.Split(new char[]{';',','});
+                captionCode = "";
 
-                            foreach (string s in sName) {
+                foreach (string s in sName) {
 
-                                    string ss = s;
+                    string ss = s;
 
-                                    if (s.IndexOf("=") > 0) {
+                    if (s.IndexOf("=") > 0) {
 
-                                            int _Position = s.IndexOf("=");
-                                            string cName  = s.Substring(0 , _Position);
-                                            string cValue = s.Substring(_Position + 1, s.Length - _Position - 1);
+                        int _Position = s.IndexOf("=");
+                        string cName  = s.Substring(0 , _Position);
+                        string cValue = s.Substring(_Position + 1, s.Length - _Position - 1);
 
-                                            cValue = cValue.Trim();
-                                            cName  = cName.Trim();
+                        cValue = cValue.Trim();
+                        cName  = cName.Trim();
 
-                                            if (cName.ToLower() == "captioncode") {
+                        if (cName.ToLower() == "captioncode") {
 
-                                                    captionCode = cValue;
-                                            } else if (cName.ToLower() == "type") {
+                            captionCode = cValue;
+                        } else if (cName.ToLower() == "type") {
 
-                                                    type = cValue;
-                                            } else if (cName.ToLower() == "length") {
+                            type = cValue;
+                        } else if (cName.ToLower() == "length") {
 
-                                                    int _P = cValue.IndexOf(".");
-                                                    int l  = 0;
-                                                    int _s = 0;
+                            int _P = cValue.IndexOf(".");
+                            int l  = 0;
+                            int _s = 0;
 
-                                                    if (_P > 0) {
-                                                        l  = DapperUtil.ToInt(cValue.Substring(0 , _P));
-                                                            scale = DapperUtil.ToInt(cValue.Substring(_P + 1, cValue.Length - _P - 1));
+                            if (_P > 0) {
+                                l  = DapperUtil.ToInt(cValue.Substring(0 , _P));
+                                scale = DapperUtil.ToInt(cValue.Substring(_P + 1, cValue.Length - _P - 1));
 
-                                                            if (l > 1) {
-                                                                nColumnLength = l;
+                                if (l > 1) {
+                                    nColumnLength = l;
 
                                 }
                             } else {
@@ -1588,12 +1022,12 @@ namespace Volte.Bot.Term
             return "";
         }
 
-		object ToUnderlineName(object[] args)
+        object ToUnderlineName(object[] args)
         {
             return Volte.Utils.Util.ToUnderlineName(args[0].ToString());
         }
 
-		object ToCamelCase(object[] args)
+        object ToCamelCase(object[] args)
         {
             if (args.Length == 1)
             {
@@ -1635,13 +1069,8 @@ namespace Volte.Bot.Term
             _Tmpl.RegisterFunction("DbType"                , DbType);
             _Tmpl.RegisterFunction("DataTypeDefault"       , DataTypeDefault);
             _Tmpl.RegisterFunction("StringToDataType"      , StringToDataType );
-            _Tmpl.RegisterFunction("ProcessRef"            , ProcessRef);
             _Tmpl.RegisterFunction("HasColumn"             , HasColumn);
             _Tmpl.RegisterFunction("TableColumnName"       , TableColumnName);
-            //_Tmpl.RegisterFunction("QueryPrivateWhere"   , QueryPrivateWhere);
-            //_Tmpl.RegisterFunction("PrivateWhere"        , PrivateWhere);
-            _Tmpl.RegisterFunction("AvailableColumnName"   , AvailableColumnName);
-            _Tmpl.RegisterFunction("UserMstColumnName"     , UserMstColumnName);
             _Tmpl.RegisterFunction("HasLNKColumn"          , HasLNKColumn);
             _Tmpl.RegisterFunction("TableHasColumn"        , TableHasColumn);
             _Tmpl.RegisterFunction("TOP_UID_CODE"          , TOP_UID_CODE);
@@ -1682,13 +1111,8 @@ namespace Volte.Bot.Term
             _Tmpl.RegisterFunction("DbType"                , DbType);
             _Tmpl.RegisterFunction("DataTypeDefault"       , DataTypeDefault);
             _Tmpl.RegisterFunction("StringToDataType"      , StringToDataType);
-            _Tmpl.RegisterFunction("ProcessRef"            , ProcessRef);
             _Tmpl.RegisterFunction("HasColumn"             , HasColumn);
             _Tmpl.RegisterFunction("TableColumnName"       , TableColumnName);
-            //_Tmpl.RegisterFunction("PrivateWhere"        , PrivateWhere);
-            //_Tmpl.RegisterFunction("QueryPrivateWhere"   , QueryPrivateWhere);
-            _Tmpl.RegisterFunction("AvailableColumnName"   , AvailableColumnName);
-            _Tmpl.RegisterFunction("UserMstColumnName"     , UserMstColumnName);
             _Tmpl.RegisterFunction("HasLNKColumn"          , HasLNKColumn);
             _Tmpl.RegisterFunction("TableHasColumn"        , TableHasColumn);
             _Tmpl.RegisterFunction("TOP_UID_CODE"          , TOP_UID_CODE);
@@ -1773,12 +1197,12 @@ namespace Volte.Bot.Term
                     {
                         File.Delete(tOutputFile);
                     }
-                 }else{
+                }else{
                     StreamWriter _File = new StreamWriter(OutputFile, false, _UTF8Encoding);
 
                     _File.Write(Process(Path.GetFileName(_Template) , code));
                     _File.Close();
-                 }
+                }
 
                 Dictionary<string, int> _UnUsingRegion = _Templates.UnUsing();
                 foreach (string kvp in _UnUsingRegion.Keys) {
