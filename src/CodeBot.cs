@@ -204,11 +204,6 @@ namespace Volte.Bot.Term
                 string _debugMode  = "N";
                 string _FileName   = "";
                 string sMode       = "";
-                string sS1         = "";
-                string sS2         = "";
-                string sE1         = "";
-                string sE2         = "";
-                string sE3         = "";
                 string sDefineFile = "";
                 string sTableName  = "";
                 string _IPAddress  = "";
@@ -260,22 +255,6 @@ namespace Volte.Bot.Term
 
                 if (_Arguments["File"] != null) {
                     _FileName = _Arguments["File"];
-                }
-
-                if (_Arguments["S1"] != null) {
-                    sS1 = _Arguments["S1"];
-                }
-                if (_Arguments["S2"] != null) {
-                    sS2 = _Arguments["S2"];
-                }
-                if (_Arguments["E1"] != null) {
-                    sE1 = _Arguments["E1"];
-                }
-                if (_Arguments["E2"] != null) {
-                    sE2 = _Arguments["E2"];
-                }
-                if (_Arguments["E3"] != null) {
-                    sE3 = _Arguments["E3"];
                 }
 
                 if (_Arguments["M"] != null) {
@@ -335,11 +314,6 @@ namespace Volte.Bot.Term
                                   _AutoCoder.AppConfigs = AppConfigs;
                                   _AutoCoder.FileName   = _FileName;
                                   _AutoCoder.DebugMode  = _debugMode;
-                                  _AutoCoder.sS1        = sS1;
-                                  _AutoCoder.sS2        = sS2;
-                                  _AutoCoder.sE1        = sE1;
-                                  _AutoCoder.sE2        = sE2;
-                                  _AutoCoder.sE3        = sE3;
                                   _AutoCoder.AutoEntityDb();
                                   _AutoCoder.AutoEntitySrc();
                                   break ;
