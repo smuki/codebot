@@ -38,18 +38,11 @@ namespace Volte.Bot.Term
         public  string  Mode         = "";
         public  string  UID_TP_CODE  = "N";
         public  string  DebugMode    = "N";
-        public  string  sS1          = "";
-        public  string  sS2          = "";
-        public  string  sE1          = "";
-        public  string  sE2          = "";
-        public  string  sE3          = "";
-        private string _Url          = "";
         private TableUtil _TableUtil = new TableUtil();
 
         private  List<string> _L_UID_CODE = new List<string>();
 
         public string FileName { get { return _fileName; } set { _fileName = value; }  }
-        public string sUrl     { get { return _Url;      } set { _Url      = value; }  }
 
         public void Write(object message)
         {
@@ -70,9 +63,6 @@ namespace Volte.Bot.Term
             {
                 sUID = "";
             }
-            //Console.WriteLine("sDbName   = "+AppConfigs.GetValue("sDbName"));
-            //Console.WriteLine("Provider  = "+AppConfigs.GetValue("Provider"));
-            //Console.WriteLine("dbAdapter = "+AppConfigs.GetValue("dbAdapter"));
 
             DbContext _DbContext = new DbContext(AppConfigs.GetValue("sDbName") , AppConfigs.GetValue("Provider") , AppConfigs.GetValue("dbAdapter"));
 
@@ -105,7 +95,6 @@ namespace Volte.Bot.Term
 
                 }else{
                     ZZLogger.Debug(ZFILE_NAME, "xxx not found ");
-
                 }
 
                 if (!File.Exists(Util.Separator(AppConfigs.GetValue("DevelopPath")+@"\define\functions.js")) || _JSONFunction.ContainsKey(_UID_CODE)){
@@ -281,7 +270,7 @@ namespace Volte.Bot.Term
                 if (!Directory.Exists(sPath)){
                     return "";
                 }
-                //Console.WriteLine(sPath);
+
                 DirectoryInfo dir = new DirectoryInfo(sPath);
                 FileSystemInfo[] fileinfo = dir.GetFileSystemInfos();  //获取目录下（不包含子目录）的文件和子目录
                 foreach (FileSystemInfo i in fileinfo)
@@ -310,6 +299,7 @@ namespace Volte.Bot.Term
             }
             return "";
         }
+
         private void AppGeneratorSrc(string sUID)
         {
 
@@ -365,7 +355,6 @@ namespace Volte.Bot.Term
                 _COLUMNEntity.bHasCaption    = _NameValue.GetBoolean("bHasCaption");
                 _COLUMNEntity.Height         = _NameValue.GetInteger("Height");
                 _COLUMNEntity.Index          = _NameValue.GetInteger("Index");
-                _COLUMNEntity.LNK_ColumnName = _NameValue.GetValue("LnkColumnName");
                 _COLUMNEntity.Length         = _NameValue.GetInteger("Length");
                 _COLUMNEntity.MaxLength      = _NameValue.GetInteger("MaxLength");
                 _COLUMNEntity.NewLine        = _NameValue.GetBoolean("NewLine");
@@ -466,33 +455,6 @@ namespace Volte.Bot.Term
 
         }
 
-        private void GeneratorSwagger(DbContext _DbContext , string sUID)
-        {
-
-            CoreUtil.CreateDir(Util.Separator(AppConfigs.GetValue("DevelopPath") + @"\define\functions"));
-
-            JSONObject _JSONObject = new JSONObject();
-            QueryRows RsSysCaption   = new QueryRows(_DbContext);
-            RsSysCaption.CommandText = "SELECT * FROM syscaption WHERE sCaptionLang = '" + sUID + "' ORDER BY sCaptionCode";
-            RsSysCaption.Open();
-
-            while (!RsSysCaption.EOF) {
-
-                string sCaptionCode = RsSysCaption.GetValue("sCaptionCode").ToLower();
-                string sCaption     = RsSysCaption.GetValue("sCaption");
-
-                _JSONObject.SetValue(sCaptionCode , sCaption);
-
-                RsSysCaption.MoveNext();
-            }
-            RsSysCaption.Close();
-
-            if (File.Exists(Util.Separator(AppConfigs.GetValue("DevelopPath") + @"\define\"+sUID+".js"))) {
-                File.Delete(Util.Separator(AppConfigs.GetValue("DevelopPath") + @"\define\"+sUID+".js"));
-            }
-            Utils.Util.WriteContents(Util.Separator(AppConfigs.GetValue("DevelopPath") + @"\define\"+sUID+".js") , _JSONObject.ToString());
-        }
-
         private void AppGeneratorCaption(DbContext _DbContext , string sUID)
         {
 
@@ -548,7 +510,7 @@ namespace Volte.Bot.Term
             string _ColumnName    = "";
             string _DataType      = "";
             int Keys              = 0;
-            string sLNKUID  = "";
+            string sLNKUID        = "";
             string sTableName     = "";
             string sLNK_TableName = "";
             string sColumnName    = "";
@@ -612,7 +574,6 @@ namespace Volte.Bot.Term
                 _COLUMNEntity.bHasCaption    = RsZUPRGDTM.GetBoolean("bHasCaption");
                 _COLUMNEntity.Height         = RsZUPRGDTM.GetInteger("nHeight");
                 _COLUMNEntity.Index          = RsZUPRGDTM.GetInteger("nIndex");
-                _COLUMNEntity.LNK_ColumnName = "";//RsZUPRGDTM.GetValue("LNK_COLUMN_NAME");
                 _COLUMNEntity.Length         = RsZUPRGDTM.GetInteger("nWidth");
                 _COLUMNEntity.MaxLength      = RsZUPRGDTM.GetInteger("nWidth");
                 _COLUMNEntity.NewLine        = RsZUPRGDTM.GetBoolean("bNewLine");
@@ -727,27 +688,6 @@ namespace Volte.Bot.Term
 
                     _COLUMNEntity.Length =_JSONObject3.GetInteger(nMax.ToString());
                 }
-                /*
-                if (_COLUMNEntity.Options!=""){
-                    QueryRows _SysPopupType = new QueryRows(_DbContext);
-
-                    _SysPopupType.CommandText = "SELECT * FROM syspopuptype WHERE sPopupType='" +_COLUMNEntity.Options + "'";
-                    _SysPopupType.Open();
-
-                    if (!_SysPopupType.EOF) {
-                        _COLUMNEntity.OptionType= _SysPopupType.GetValue("sCategory");
-                    } else {
-                        _SysPopupType = new QueryRows(_DbContext);
-
-                        _SysPopupType.CommandText = "SELECT * FROM usrpopuptype WHERE sPopupType='" +_COLUMNEntity.Options + "'";
-                        _SysPopupType.Open();
-                        if (!_SysPopupType.EOF) {
-                            _COLUMNEntity.OptionType= _SysPopupType.GetValue("sCategory");
-                        }
-                    }
-                    _SysPopupType.Close();
-                }
-                */
 
                 if (_COLUMNEntity.IsPKColumn) {
                     Keys++;
@@ -845,7 +785,6 @@ namespace Volte.Bot.Term
                 _entity.SetValue("CaptionAlign"     , _COLUMNEntity.CaptionAlign);
                 _entity.SetValue("ColumnAlign"      , _COLUMNEntity.ColumnAlign);
                 _entity.SetValue("EnableMode"       , _COLUMNEntity.EnableMode);
-                _entity.SetValue("LnkColumnName"    , _COLUMNEntity.LNK_ColumnName);
                 _entity.SetValue("Options"          , _COLUMNEntity.Options);
                 if (_TableName.ToLower() == "variable" && (_COLUMNEntity.ColumnName == "sHash" || _COLUMNEntity.ColumnName == "sHash2" || _COLUMNEntity.ColumnName == "sHash3")) {
 
@@ -1568,6 +1507,7 @@ namespace Volte.Bot.Term
             }
 
         }
+
         public void Templates()
         {
 
@@ -1685,7 +1625,7 @@ namespace Volte.Bot.Term
             RsSysFunction.Open();
 
             if (!RsSysFunction.EOF) {
-                sValue=RsSysFunction.GetValue("sTableName");
+                sValue = RsSysFunction.GetValue("sTableName");
             }
             RsSysFunction.Close();
             return sValue;
@@ -1702,8 +1642,6 @@ namespace Volte.Bot.Term
             _SysFunction.Open();
 
             if (!_SysFunction.EOF) {
-                //sLNKUID = _SysFunction.GetValue("sLNKUID");
-                //return Root_LNKUID(_DbContext , sLNKUID);
                 return sLNKUID;
             }else{
                 return sLNKUID;
