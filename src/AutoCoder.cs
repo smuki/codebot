@@ -206,6 +206,7 @@ namespace Volte.Bot.Term
                         Console.WriteLine(AppConfigs.GetValue("ProjectPath")+@"\apps\addons\"+sUID+".dll");
                         File.Copy(fileNameDll , AppConfigs.GetValue("ProjectPath")+@"\apps\addons\"+sUID+".dll",true);
                         File.Copy(fileNameDll.Replace(".dll",".pdb") , AppConfigs.GetValue("ProjectPath")+@"\apps\addons\"+sUID+".pdb",true);
+                        File.Copy(fileNameDll.Replace(".dll",".deps.json") , AppConfigs.GetValue("ProjectPath")+@"\apps\addons\"+sUID+".pdb",true);
                     }
                 }
             } else {
