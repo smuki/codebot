@@ -192,21 +192,36 @@ namespace Volte.Bot.Term
 
             if (sCommand.SUCCESS) {
                 if (Directory.Exists(sCommand.sDirectory)) {
-                    Console.WriteLine("Search In "+sCommand.sDirectory+@"\obj");
-                    string fileNameDll = SearchFile(sCommand.sDirectory +@"\obj" , sUID+".dll");
+                    Console.WriteLine("Search In "+sCommand.sDirectory+@"\bin");
+                    string fileNameDll = SearchFile(sCommand.sDirectory +@"\bin" , sUID+".dll");
                     if (string.IsNullOrEmpty(fileNameDll)){
-                        Console.WriteLine("Search In "+sCommand.sDirectory+@"\bin");
-                        fileNameDll = SearchFile(sCommand.sDirectory +@"\bin" , sUID+".dll");
+                        Console.WriteLine("Search In "+sCommand.sDirectory+@"\obj");
+                        fileNameDll = SearchFile(sCommand.sDirectory +@"\obj" , sUID+".dll");
                     }
                     if (string.IsNullOrEmpty(fileNameDll)){
                         Console.WriteLine("fileName "+sUID+".dll Not Found!! ");
                     }else{
                         Console.WriteLine("fileName "+fileNameDll);
                         Console.WriteLine("Copy file to");
-                        Console.WriteLine(AppConfigs.GetValue("ProjectPath")+@"\apps\addons\"+sUID+".dll");
-                        File.Copy(fileNameDll , AppConfigs.GetValue("ProjectPath")+@"\apps\addons\"+sUID+".dll",true);
-                        File.Copy(fileNameDll.Replace(".dll",".pdb") , AppConfigs.GetValue("ProjectPath")+@"\apps\addons\"+sUID+".pdb",true);
-                        File.Copy(fileNameDll.Replace(".dll",".deps.json") , AppConfigs.GetValue("ProjectPath")+@"\apps\addons\"+sUID+".pdb",true);
+                        string sPath = AppConfigs.GetValue("ProjectPath")+@"\apps\addons\";
+
+                        Console.WriteLine("  "+fileNameDll+" ==> "+sPath+sUID+".dll");
+                        File.Copy(fileNameDll ,sPath +sUID+".dll",true);
+
+                        string fileName = fileNameDll.Replace(".dll" , ".pdb");
+                        if (File.Exists(fileName)) {
+                            Console.WriteLine("   "+fileName+" ==> "+sPath+sUID+".pdb");
+                            File.Copy(fileName , sPath+sUID+".pdb" , true);
+                        }else{
+                            Console.WriteLine("   "+fileName+" Not Found!!");
+                        }
+                        fileName = fileNameDll.Replace(".dll" , ".deps.json");
+                        if (File.Exists(fileName)) {
+                            Console.WriteLine("   "+fileName+" ==> "+sPath+sUID+".dept.json");
+                            File.Copy(fileName , sPath+sUID+".dept.json" , true);
+                        }else{
+                            Console.WriteLine("   "+fileName+" Not Found!!");
+                        }
                     }
                 }
             } else {
