@@ -205,7 +205,7 @@ namespace Volte.Bot.Term
                         Console.WriteLine("Copy file to");
                         string sPath = AppConfigs.GetValue("ProjectPath")+@"\apps\addons\";
 
-                        Console.WriteLine("  "+fileNameDll+" ==> "+sPath+sUID+".dll");
+                        Console.WriteLine("   "+fileNameDll+" ==> "+sPath+sUID+".dll");
                         File.Copy(fileNameDll ,sPath +sUID+".dll",true);
 
                         string fileName = fileNameDll.Replace(".dll" , ".pdb");
