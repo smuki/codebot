@@ -88,7 +88,7 @@ namespace Volte.Bot.Term
                     COLUMN_NAME AS sColumnName,
                     COLUMNS.EXTRA AS sAutoIncrement,
                     COLUMN_KEY AS COLUMN_PK_BIT,
-                    COLUMN_TYPE sDataType,
+                    COLUMN_TYPE AS sDataType,
                     CHARACTER_MAXIMUM_LENGTH AS sColumnLength,
                     NUMERIC_PRECISION AS nNumericPrecision,
                     NUMERIC_SCALE AS sColumnScale,
