@@ -288,7 +288,12 @@ namespace Volte.Bot.Term
 
                     fileName= _Arguments["S"];
                 }
-
+                if (!File.Exists(fileName)) {
+                    Console.WriteLine("["+fileName+"] Not Found");
+                }
+                if (!File.Exists(fileName.Replace(".ini",".json"))) {
+                    Console.WriteLine("["+fileName.Replace(".ini",".json")+"] Not Found");
+                }
                 AppSettings AppSetting = new AppSettings(fileName);
                 AppConfigs AppConfigs  = new AppConfigs(fileName.Replace(".ini",".json"));
 
