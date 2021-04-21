@@ -76,9 +76,16 @@ namespace Volte.Bot.Term
                 using(StreamReader sr = new StreamReader(_FileName, _UTF8Encoding)) {
                     sValue = sr.ReadToEnd();
                 }
+                
+                string DirectoryName = System.IO.Path.GetFileNameWithoutExtension(System.IO.Directory.GetCurrentDirectory());
+                string CurrentDirectory = System.IO.Directory.GetCurrentDirectory();
+                CurrentDirectory=CurrentDirectory.Replace("\\","/");
+                DirectoryName=DirectoryName.Replace("\\","/");
 
                 sValue = Utils.Util.ReplaceWith(sValue , "%AppPath%" , _AppPath);
                 sValue = Utils.Util.ReplaceWith(sValue , "%Sep%"     , _Separator);
+                sValue = Utils.Util.ReplaceWith(sValue , "%DirectoryName%" , DirectoryName);
+                sValue = Utils.Util.ReplaceWith(sValue , "%CurrentDirectory%" , CurrentDirectory);
 
                 _JSONObject = new JSONObject(sValue);
 
