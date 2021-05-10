@@ -7,6 +7,7 @@ namespace Volte.Bot.Term
     public class COLUMNEntity {
         private bool   _ColumnNullable = true;
         private bool   _IsPKColumn     = false;
+        private bool   _AutoIdentity   = false;
         private bool   _NewLine        = false;
         private bool   _HasCaption     = false;
         private bool   _Writeable      = false;
@@ -39,6 +40,7 @@ namespace Volte.Bot.Term
 
         public string EnableMode     { get { return _EnableMode;     } set { _EnableMode     = value; }  }
         public bool   ColumnNullable { get { return _ColumnNullable; } set { _ColumnNullable = value; }  }
+        public bool   AutoIdentity   { get { return _AutoIdentity;   } set { _AutoIdentity   = value; }  }
         public string TableName      { get { return _TableName;      } set { _TableName      = value; }  }
         public string ColumnName     { get { return _ColumnName;     } set { _ColumnName     = value; }  }
         public int    Height         { get { return _Height;         } set { _Height         = value; }  }
