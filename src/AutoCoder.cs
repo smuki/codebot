@@ -394,6 +394,7 @@ namespace Volte.Bot.Term
                 _COLUMNEntity.sRefBrowseType = _NameValue.GetValue("sType");
                 _COLUMNEntity.sRefViewer     = _NameValue.GetValue("sRefViewer");
                 _COLUMNEntity.IsPKColumn     = _NameValue.GetBoolean("IsPKColumn");
+                _COLUMNEntity.AutoIdentity   = _NameValue.GetBoolean("AutoIdentity");
 
                 if (_TableName.ToLower() != "variable" && (_DataTypeCode == "nvarchar" || _DataTypeCode == "ntext")) {
                     if (_ColumnName != "sOriginal") {
@@ -954,6 +955,7 @@ namespace Volte.Bot.Term
                                 _ColumnEntity.SetValue("sColumnName" , sColumnName);
                                 _ColumnEntity.SetValue("sDataType"   , sDataType);
                                 _ColumnEntity.SetValue("IsPKColumn"  , RsSysFields.GetBoolean("IsPKColumn"));
+                                _ColumnEntity.SetValue("AutoIdentity", RsSysFields.GetBoolean("AutoIncrement"));
                                 _ColumnEntity.SetInteger("nLength"   , nColumnLength);
 
                                 if (sDataType == "nvarchar") {
@@ -1042,6 +1044,7 @@ namespace Volte.Bot.Term
                                     _COLUMNEntity.ColumnName   = _JSONObject.GetValue("sColumnName");
                                     _COLUMNEntity.DataTypeCode = _JSONObject.GetValue("sDataType");
                                     _COLUMNEntity.IsPKColumn   = _JSONObject.GetBoolean("IsPKColumn");
+                                    _COLUMNEntity.AutoIdentity = _JSONObject.GetBoolean("AutoIdentity");
                                     _COLUMNEntity.Length       = _JSONObject.GetInteger("nLength");
                                     ColumnEntity.Add(_COLUMNEntity);
                                 }
