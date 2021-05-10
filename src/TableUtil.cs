@@ -478,8 +478,13 @@ namespace Volte.Bot.Term
                     _Column.SetValue("IsPKColumn"        , Utils.Util.StringToBoolean(_Fields.GetValue("COLUMN_PK_BIT")) || _Fields.GetValue("COLUMN_PK_BIT") == "PRI" );
                     _Column.SetValue("bColumnNullable"   , Utils.Util.StringToBoolean(_Fields.GetValue("sColumnNullable")));
                     string sAutoIncrement = _Fields.GetValue("sAutoIncrement");
+
                     if (sAutoIncrement.IndexOf("auto_increment")>=0){
                         _Column.SetValue("AutoIncrement" , true);
+                    }else if (sAutoIncrement=="Y"){
+                        _Column.SetValue("AutoIncrement" , true);
+                    }else if (sAutoIncrement=="N"){
+                        _Column.SetValue("AutoIncrement" , false);
                     }else{
                         _Column.SetValue("AutoIncrement" , false);
                     }
