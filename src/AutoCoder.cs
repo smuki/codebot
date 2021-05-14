@@ -131,9 +131,11 @@ namespace Volte.Bot.Term
                 this.WriteLine("\n*** update hash *** " + _FileNameValue.Name + " " + _FileNameValue.FullName);
                 _DbContext.Execute("UPDATE sysfunction Set sHash='" + _FileNameValue.Name + "' WHERE sUID = '" + _FileNameValue.FullName + "'");
             }
-            this.WriteLine("\n*** _FAILURE List *** ");
-            foreach (var c in _FAILURE) {
-                this.WriteLine(c);
+            if (_FAILURE.Count>0){
+                this.WriteLine("\n*** _FAILURE List *** ");
+                foreach (var c in _FAILURE) {
+                    this.WriteLine(c);
+                }
             }
         }
         public void Process(string sUID)
@@ -181,9 +183,11 @@ namespace Volte.Bot.Term
             _AutoTemplate.OutputFile = Util.Separator(AppConfigs.GetValue("AppPath") + "\\temp\\Build_Result.html");
             _AutoTemplate.Process();
             _AutoTemplate.Close();
-            this.WriteLine("\n*** _FAILURE List *** ");
-            foreach (var c in _FAILURE) {
-                this.WriteLine(c);
+            if (_FAILURE.Count>0){
+                this.WriteLine("\n*** _FAILURE List *** ");
+                foreach (var c in _FAILURE) {
+                    this.WriteLine(c);
+                }
             }
         }
         private void Prettify(string sUID)
