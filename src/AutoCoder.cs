@@ -103,14 +103,7 @@ namespace Volte.Bot.Term
 
                     _L_UID_CODE.Add(_UID_CODE);
 
-                    if (Mode.ToUpper()=="D" || !File.Exists(Util.Separator(AppConfigs.GetValue("DevelopPath")+"\\definition\\functions\\"+sUID+".js"))){
-                        this.GeneratorActivityDefinition(_DbContext , _UID_CODE);
-                    }else{
-                        ZZLogger.Debug(ZFILE_NAME, "zzz not found ");
-                        ZZLogger.Debug(ZFILE_NAME, "zzz not found smode "+Mode);
-                        ZZLogger.Debug(ZFILE_NAME, "zzz not found suid  "+sUID);
-                        ZZLogger.Debug(ZFILE_NAME, "zzz not found file  "+AppConfigs.GetValue("DevelopPath")+"\\definition\\functions\\"+sUID+".js");
-                    }
+                    this.GeneratorActivityDefinition(_DbContext , _UID_CODE);
                     this.GeneratorActivity(_UID_CODE);
                 }else{
                     ZZLogger.Debug(ZFILE_NAME, "yyy not found ");
@@ -152,18 +145,29 @@ namespace Volte.Bot.Term
             _L_UID_CODE = new List<string>();
             JSONObject _JSONFunction = AppConfigs.LoadJSONObject(AppConfigs.GetValue("DevelopPath")+@"\definition\functions.js");
 
-            if (!File.Exists(Util.Separator(AppConfigs.GetValue("DevelopPath")+@"\definition\functions.js")) || _JSONFunction.ContainsKey(sUID)){
+            DirectoryInfo dir = new DirectoryInfo(AppConfigs.GetValue("DevelopPath")+@"\definition\functions");
 
-                this.WriteLine("");
-                this.Write(sUID);
+            FileSystemInfo[] fileinfo = dir.GetFileSystemInfos();
+            foreach (FileSystemInfo i in fileinfo)
+            {
+                if (i is DirectoryInfo)//判断是否文件夹
+                {
+                }
+                else
+                {
+                    string fileName=Path.GetFileNameWithoutExtension(i.FullName);
 
-                _L_UID_CODE.Add(sUID);
+                    if (fileName.Contains(sUID) && _JSONFunction.ContainsKey(fileName)){
+                        this.WriteLine("");
+                        this.Write(fileName);
 
-                this.GeneratorActivity(sUID);
-            }else{
-                ZZLogger.Debug(ZFILE_NAME, "["+sUID+"] Not found ");
+                        _L_UID_CODE.Add(fileName);
+
+                        this.GeneratorActivity(fileName);
+                    }
+                }
             }
-
+        
             foreach (string _UID_CODE in _L_UID_CODE) {
                 Prettify(_UID_CODE);
                 Build(_UID_CODE);
