@@ -55,7 +55,7 @@ namespace Volte.Bot.Term
             this.Write("\n");
         }
 
-        public void Process(string sUID)
+        public void Generator(string sUID)
         {
             Message = new StringBuilder();
             if (string.IsNullOrEmpty(sUID))
@@ -131,6 +131,41 @@ namespace Volte.Bot.Term
                 this.WriteLine("\n*** update hash *** " + _FileNameValue.Name + " " + _FileNameValue.FullName);
                 _DbContext.Execute("UPDATE sysfunction Set sHash='" + _FileNameValue.Name + "' WHERE sUID = '" + _FileNameValue.FullName + "'");
             }
+            this.WriteLine("\n*** _FAILURE List *** ");
+            foreach (var c in _FAILURE) {
+                this.WriteLine(c);
+            }
+        }
+        public void Process(string sUID)
+        {
+            Message = new StringBuilder();
+            if (string.IsNullOrEmpty(sUID))
+            {
+                sUID = "";
+            }
+
+            this.WriteLine("");
+            this.Write(sUID);
+
+            _L_UID_CODE = new List<string>();
+            JSONObject _JSONFunction = AppConfigs.LoadJSONObject(AppConfigs.GetValue("DevelopPath")+@"\definition\functions.js");
+
+            if (!File.Exists(Util.Separator(AppConfigs.GetValue("DevelopPath")+@"\definition\functions.js")) || _JSONFunction.ContainsKey(sUID)){
+
+                this.WriteLine("");
+                this.Write(sUID);
+
+                _L_UID_CODE.Add(sUID);
+
+                this.GeneratorActivity(sUID);
+            }else{
+                ZZLogger.Debug(ZFILE_NAME, "["+sUID+"] Not found ");
+            }
+
+            foreach (string _UID_CODE in _L_UID_CODE) {
+                Prettify(_UID_CODE);
+                Build(_UID_CODE);
+            }
 
             AutoTemplate _AutoTemplate = new AutoTemplate();
             _AutoTemplate.DebugMode    = this.DebugMode;
@@ -146,12 +181,11 @@ namespace Volte.Bot.Term
             _AutoTemplate.OutputFile = Util.Separator(AppConfigs.GetValue("AppPath") + "\\temp\\Build_Result.html");
             _AutoTemplate.Process();
             _AutoTemplate.Close();
-
+            this.WriteLine("\n*** _FAILURE List *** ");
             foreach (var c in _FAILURE) {
                 this.WriteLine(c);
             }
         }
-
         private void Prettify(string sUID)
         {
             CommandEntity sCommand = new CommandEntity();
@@ -987,7 +1021,7 @@ namespace Volte.Bot.Term
         public void GeneratorEntity()
         {
 
-            CoreUtil.CreateDir(Util.Separator(AppConfigs.GetValue("DevelopPath") + "\\define"));
+            CoreUtil.CreateDir(Util.Separator(AppConfigs.GetValue("DevelopPath") + "\\definition"));
             CoreUtil.CreateDir(Util.Separator(AppConfigs.GetValue("DevelopPath") + "\\definition\\entity"));
             CoreUtil.CreateDir(Util.Separator(AppConfigs.GetValue("ProjectPath") + "\\src"));
             CoreUtil.CreateDir(Util.Separator(AppConfigs.GetValue("ProjectPath") + "\\src\\entity"));
