@@ -30,7 +30,6 @@ namespace Volte.Bot.Term
         public List<CommandEntity> sCommandEntity = new List<CommandEntity>();
 
         public  StringBuilder Message  = new StringBuilder();
-        public  AppSettings  AppSetting;
         public  AppConfigs   AppConfigs;
 
         public DirectoryInfo BaseDirectory;
@@ -72,7 +71,7 @@ namespace Volte.Bot.Term
             if (sUID.ToLower() == "a") {
                 sUID = "%";
             }
-            JSONObject _JSONFunction = AppSetting.LoadJSONObject(AppConfigs.GetValue("DevelopPath")+@"\define\functions.js");
+            JSONObject _JSONFunction = AppConfigs.LoadJSONObject(AppConfigs.GetValue("DevelopPath")+@"\define\functions.js");
 
             if (File.Exists(Util.Separator(AppConfigs.GetValue("DevelopPath")+@"\define\functions.js"))){
                 RsSysFunction.CommandText = "SELECT sUID FROM sysfunction WHERE sUID LIKE '%" + sUID + "%' ORDER BY sUID DESC";
@@ -135,7 +134,6 @@ namespace Volte.Bot.Term
 
             AutoTemplate _AutoTemplate = new AutoTemplate();
             _AutoTemplate.DebugMode    = this.DebugMode;
-            _AutoTemplate.AppSetting   = AppSetting;
             _AutoTemplate.AppConfigs   = AppConfigs;
             _AutoTemplate.Initialize();
             _AutoTemplate.SetValue("ProjectName"   , AppConfigs.GetValue("ProjectName"));
@@ -326,11 +324,10 @@ namespace Volte.Bot.Term
             string _ColumnName   = "";
             string _DataTypeCode = "";
 
-            JSONObject _JSONFunction = AppSetting.LoadJSONObject(AppConfigs.GetValue("DevelopPath")+@"\define\functions\"+sUID+".js");
+            JSONObject _JSONFunction = AppConfigs.LoadJSONObject(AppConfigs.GetValue("DevelopPath")+@"\define\functions\"+sUID+".js");
 
             AutoTemplate _AutoTemplate = new AutoTemplate();
             _AutoTemplate.DebugMode    = this.DebugMode;
-            _AutoTemplate.AppSetting   = AppSetting;
             _AutoTemplate.AppConfigs   = AppConfigs;
             _AutoTemplate.sUID         = sUID;
             _AutoTemplate.Initialize();
@@ -412,7 +409,7 @@ namespace Volte.Bot.Term
 
             }
 
-            JSONObject _JSONObject = AppSetting.LoadJSONObject(AppConfigs.GetValue("DevelopPath")+@"\appsettings\ColumnScale.js");
+            JSONObject _JSONObject = AppConfigs.LoadJSONObject(AppConfigs.GetValue("DevelopPath")+@"\appsettings\ColumnScale.js");
 
             foreach (string sName in _JSONObject.Names) {
                 if (_JSONObject.ContainsKey(sName)){
@@ -666,7 +663,7 @@ namespace Volte.Bot.Term
 
                     if (_COLUMNEntity.ColumnScale < 0) {
 
-                        JSONObject _JSONObject2= AppSetting.LoadJSONObject(AppConfigs.GetValue("DevelopPath")+@"\appsettings\ColumnScale.js");
+                        JSONObject _JSONObject2= AppConfigs.LoadJSONObject(AppConfigs.GetValue("DevelopPath")+@"\appsettings\ColumnScale.js");
 
                         if (_JSONObject2.ContainsKey(sColumnClass)){
                             _COLUMNEntity.ColumnScale =_JSONObject2.GetInteger(sColumnClass);
@@ -681,7 +678,7 @@ namespace Volte.Bot.Term
                     _COLUMNEntity.Length = 60;
                 }
 
-                JSONObject _JSONObject3= AppSetting.LoadJSONObject(AppConfigs.GetValue("DevelopPath")+@"\appsettings\AdjustmentLength.js");
+                JSONObject _JSONObject3= AppConfigs.LoadJSONObject(AppConfigs.GetValue("DevelopPath")+@"\appsettings\AdjustmentLength.js");
                 if (_DataType == "datetime") {
                     _COLUMNEntity.MaxLength = 10;
                 }
@@ -913,8 +910,8 @@ namespace Volte.Bot.Term
                 int n = 0;
                 string cExclude = "dtproperties,sysfunctiondtl";
 
-                JSONObject oExcludeTables  = AppSetting.LoadJSONObject(AppConfigs.GetValue("DevelopPath")+@"\define\executetables.js");
-                JSONObject oExcludeColumns = AppSetting.LoadJSONObject(AppConfigs.GetValue("DevelopPath")+@"\define\executecolumns.js");
+                JSONObject oExcludeTables  = AppConfigs.LoadJSONObject(AppConfigs.GetValue("DevelopPath")+@"\define\executetables.js");
+                JSONObject oExcludeColumns = AppConfigs.LoadJSONObject(AppConfigs.GetValue("DevelopPath")+@"\define\executecolumns.js");
 
                 foreach (JSONObject _Table in _JSONObject) {
                     string _sTableName = _Table.GetValue("sTableName");
@@ -1000,7 +997,6 @@ namespace Volte.Bot.Term
 
             AutoTemplate _AutoTemplate = new AutoTemplate();
             _AutoTemplate.DebugMode    = this.DebugMode;
-            _AutoTemplate.AppSetting   = this.AppSetting;
             _AutoTemplate.AppConfigs   = this.AppConfigs;
 
             _AutoTemplate.SetValue("AppPath"     , AppConfigs.GetValue("AppPath"));
@@ -1025,7 +1021,7 @@ namespace Volte.Bot.Term
 
                     if (_FileInfo != null) {
 
-                        JSONObject _JSONTableNames =  AppSetting.LoadJSONObject(_FileInfo.FullName);
+                        JSONObject _JSONTableNames =  AppConfigs.LoadJSONObject(_FileInfo.FullName);
 
                         foreach (string _s in _JSONTableNames.Names) {
 
@@ -1106,7 +1102,7 @@ namespace Volte.Bot.Term
             return true;
         }
 
-        public void AddFunction(AppSettings AppSetting , string sUID , string sTableName , string sColumnName)
+        public void AddFunction(string sUID , string sTableName , string sColumnName)
         {
             try {
                 TableUtil _TableUtil = new TableUtil();
@@ -1536,7 +1532,6 @@ namespace Volte.Bot.Term
 
             AutoTemplate _AutoTemplate = new AutoTemplate();
             _AutoTemplate.DebugMode    = this.DebugMode;
-            _AutoTemplate.AppSetting   = AppSetting;
             _AutoTemplate.AppConfigs   = AppConfigs;
             _AutoTemplate.sUID         = "";
             _AutoTemplate.SetValue("sUID"        , "");
@@ -1596,7 +1591,7 @@ namespace Volte.Bot.Term
 
         private string DataTypeChar(string dataType)
         {
-            string sValue = AppSetting.LoadJSONObject(AppConfigs.GetValue("DevelopPath")+@"\appsettings\DataTypeChar.js").GetValue(dataType);
+            string sValue = AppConfigs.LoadJSONObject(AppConfigs.GetValue("DevelopPath")+@"\appsettings\DataTypeChar.js").GetValue(dataType);
             if (sValue==""){
                 return "undefine";
             }else{
