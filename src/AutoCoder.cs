@@ -83,7 +83,7 @@ namespace Volte.Bot.Term
 
             _L_UID_CODE = new List<string>();
             if (sUID.ToLower() == "en") {
-                this.AppGeneratorCaption(_DbContext , sUID.ToLower());
+                this.GeneratorCaptionDefine(_DbContext , sUID.ToLower());
             }
 
             while (!RsSysFunction.EOF) {
@@ -111,7 +111,7 @@ namespace Volte.Bot.Term
                         ZZLogger.Debug(ZFILE_NAME, "zzz not found suid  "+sUID);
                         ZZLogger.Debug(ZFILE_NAME, "zzz not found file  "+AppConfigs.GetValue("DevelopPath")+"\\define\\functions\\"+sUID+".js");
                     }
-                    this.AppGeneratorSrc(_UID_CODE);
+                    this.GeneratorActivity(_UID_CODE);
                 }else{
                     ZZLogger.Debug(ZFILE_NAME, "yyy not found ");
                 }
@@ -146,7 +146,6 @@ namespace Volte.Bot.Term
             _AutoTemplate.OutputFile = Util.Separator(AppConfigs.GetValue("AppPath") + "\\temp\\Build_Result.html");
             _AutoTemplate.Process();
             _AutoTemplate.Close();
-
 
             foreach (var c in _FAILURE) {
                 this.WriteLine(c);
@@ -314,7 +313,7 @@ namespace Volte.Bot.Term
             return "";
         }
 
-        private void AppGeneratorSrc(string sUID)
+        private void GeneratorActivity(string sUID)
         {
 
             CoreUtil.CreateDir(Util.Separator(AppConfigs.GetValue("ProjectPath") + @"\apps\addons"));
@@ -469,7 +468,7 @@ namespace Volte.Bot.Term
 
         }
 
-        private void AppGeneratorCaption(DbContext _DbContext , string sUID)
+        private void GeneratorCaptionDefine(DbContext _DbContext , string sUID)
         {
 
             CoreUtil.CreateDir(Util.Separator(AppConfigs.GetValue("DevelopPath") + @"\define\functions"));
@@ -898,7 +897,7 @@ namespace Volte.Bot.Term
 
         }
 
-        public void AutoEntityDb()
+        public void GeneratorEntityDefinition()
         {
             DbContext  _Trans = new DbContext(AppConfigs.GetValue("sDbName") , AppConfigs.GetValue("Provider") , AppConfigs.GetValue("dbAdapter"));
             try {
@@ -985,7 +984,7 @@ namespace Volte.Bot.Term
             }
         }
 
-        public void AutoEntitySrc()
+        public void GeneratorEntity()
         {
 
             CoreUtil.CreateDir(Util.Separator(AppConfigs.GetValue("DevelopPath") + "\\define"));
