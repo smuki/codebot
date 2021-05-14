@@ -303,7 +303,6 @@ namespace Volte.Bot.Term
                 switch (sCommand) {
                     case "B": {
                                   AutoCoder _AutoCoder  = new AutoCoder();
-                                  //_AutoCoder.AppSetting = AppSetting;
                                   _AutoCoder.AppConfigs = AppConfigs;
                                   _AutoCoder.FileName   = _FileName;
                                   _AutoCoder.DebugMode  = _debugMode;
@@ -315,7 +314,6 @@ namespace Volte.Bot.Term
                               }
                     case "T": {
                                   AutoCoder _AutoCoder  = new AutoCoder();
-                                  //_AutoCoder.AppSetting = AppSetting;
                                   _AutoCoder.AppConfigs = AppConfigs;
                                   _AutoCoder.FileName   = _FileName;
                                   _AutoCoder.DebugMode  = _debugMode;
@@ -327,7 +325,6 @@ namespace Volte.Bot.Term
                     case "RUN": {
 
                                     AutoCoder _AutoCoder  = new AutoCoder();
-                                    //_AutoCoder.AppSetting = AppSetting;
                                     _AutoCoder.AppConfigs = AppConfigs;
                                     _AutoCoder.DebugMode  = _debugMode;
                                     _AutoCoder.FileName   = _FileName;
@@ -340,7 +337,6 @@ namespace Volte.Bot.Term
                     case "FIELDS": {
 
                                 AutoCoder _AutoCoder  = new AutoCoder();
-                                //_AutoCoder.AppSetting = AppSetting;
                                 _AutoCoder.AppConfigs = AppConfigs;
                                 _AutoCoder.DebugMode  = _debugMode;
                                 _AutoCoder.FileName   = _FileName;
