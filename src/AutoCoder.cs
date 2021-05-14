@@ -71,9 +71,9 @@ namespace Volte.Bot.Term
             if (sUID.ToLower() == "a") {
                 sUID = "%";
             }
-            JSONObject _JSONFunction = AppConfigs.LoadJSONObject(AppConfigs.GetValue("DevelopPath")+@"\define\functions.js");
+            JSONObject _JSONFunction = AppConfigs.LoadJSONObject(AppConfigs.GetValue("DevelopPath")+@"\definition\functions.js");
 
-            if (File.Exists(Util.Separator(AppConfigs.GetValue("DevelopPath")+@"\define\functions.js"))){
+            if (File.Exists(Util.Separator(AppConfigs.GetValue("DevelopPath")+@"\definition\functions.js"))){
                 RsSysFunction.CommandText = "SELECT sUID FROM sysfunction WHERE sUID LIKE '%" + sUID + "%' ORDER BY sUID DESC";
             }else{
                 RsSysFunction.CommandText = "SELECT sUID FROM sysfunction WHERE bActive<>0 AND sUID LIKE '%" + sUID + "%' ORDER BY sUID DESC";
@@ -88,7 +88,7 @@ namespace Volte.Bot.Term
 
             while (!RsSysFunction.EOF) {
                 string _UID_CODE = RsSysFunction.GetValue("sUID");
-                if (File.Exists(Util.Separator(AppConfigs.GetValue("DevelopPath")+@"\define\functions.js")) && _JSONFunction.ContainsKey(_UID_CODE)){
+                if (File.Exists(Util.Separator(AppConfigs.GetValue("DevelopPath")+@"\definition\functions.js")) && _JSONFunction.ContainsKey(_UID_CODE)){
 
                     _DbContext.Execute("UPDATE sysfunction Set bActive=1 WHERE sUID = '" + _UID_CODE+ "'");
 
@@ -96,20 +96,20 @@ namespace Volte.Bot.Term
                     ZZLogger.Debug(ZFILE_NAME, "xxx not found ");
                 }
 
-                if (!File.Exists(Util.Separator(AppConfigs.GetValue("DevelopPath")+@"\define\functions.js")) || _JSONFunction.ContainsKey(_UID_CODE)){
+                if (!File.Exists(Util.Separator(AppConfigs.GetValue("DevelopPath")+@"\definition\functions.js")) || _JSONFunction.ContainsKey(_UID_CODE)){
 
                     this.WriteLine("");
                     this.Write(_UID_CODE);
 
                     _L_UID_CODE.Add(_UID_CODE);
 
-                    if (Mode.ToUpper()=="D" || !File.Exists(Util.Separator(AppConfigs.GetValue("DevelopPath")+"\\define\\functions\\"+sUID+".js"))){
+                    if (Mode.ToUpper()=="D" || !File.Exists(Util.Separator(AppConfigs.GetValue("DevelopPath")+"\\definition\\functions\\"+sUID+".js"))){
                         this.GeneratorActivityDefinition(_DbContext , _UID_CODE);
                     }else{
                         ZZLogger.Debug(ZFILE_NAME, "zzz not found ");
                         ZZLogger.Debug(ZFILE_NAME, "zzz not found smode "+Mode);
                         ZZLogger.Debug(ZFILE_NAME, "zzz not found suid  "+sUID);
-                        ZZLogger.Debug(ZFILE_NAME, "zzz not found file  "+AppConfigs.GetValue("DevelopPath")+"\\define\\functions\\"+sUID+".js");
+                        ZZLogger.Debug(ZFILE_NAME, "zzz not found file  "+AppConfigs.GetValue("DevelopPath")+"\\definition\\functions\\"+sUID+".js");
                     }
                     this.GeneratorActivity(_UID_CODE);
                 }else{
@@ -323,7 +323,7 @@ namespace Volte.Bot.Term
             string _ColumnName   = "";
             string _DataTypeCode = "";
 
-            JSONObject _JSONFunction = AppConfigs.LoadJSONObject(AppConfigs.GetValue("DevelopPath")+@"\define\functions\"+sUID+".js");
+            JSONObject _JSONFunction = AppConfigs.LoadJSONObject(AppConfigs.GetValue("DevelopPath")+@"\definition\functions\"+sUID+".js");
 
             AutoTemplate _AutoTemplate = new AutoTemplate();
             _AutoTemplate.DebugMode    = this.DebugMode;
@@ -471,7 +471,7 @@ namespace Volte.Bot.Term
         private void GeneratorCaptionDefine(DbContext _DbContext , string sUID)
         {
 
-            CoreUtil.CreateDir(Util.Separator(AppConfigs.GetValue("DevelopPath") + @"\define\functions"));
+            CoreUtil.CreateDir(Util.Separator(AppConfigs.GetValue("DevelopPath") + @"\definition\functions"));
 
             JSONObject _JSONObject = new JSONObject();
             QueryRows RsSysCaption   = new QueryRows(_DbContext);
@@ -489,20 +489,20 @@ namespace Volte.Bot.Term
             }
             RsSysCaption.Close();
 
-            if (File.Exists(Util.Separator(AppConfigs.GetValue("DevelopPath") + @"\define\"+sUID+".js"))) {
-                File.Delete(Util.Separator(AppConfigs.GetValue("DevelopPath") + @"\define\"+sUID+".js"));
+            if (File.Exists(Util.Separator(AppConfigs.GetValue("DevelopPath") + @"\definition\"+sUID+".js"))) {
+                File.Delete(Util.Separator(AppConfigs.GetValue("DevelopPath") + @"\definition\"+sUID+".js"));
             }
-            Utils.Util.WriteContents(Util.Separator(AppConfigs.GetValue("DevelopPath") + @"\define\"+sUID+".js") , _JSONObject.ToString());
+            Utils.Util.WriteContents(Util.Separator(AppConfigs.GetValue("DevelopPath") + @"\definition\"+sUID+".js") , _JSONObject.ToString());
         }
 
         private void GeneratorActivityDefinition(DbContext _DbContext , string sUID)
         {
 
-            CoreUtil.CreateDir(Util.Separator(AppConfigs.GetValue("DevelopPath") + @"\define\functions"));
+            CoreUtil.CreateDir(Util.Separator(AppConfigs.GetValue("DevelopPath") + @"\definition\functions"));
 
 
-            if (File.Exists(Util.Separator(AppConfigs.GetValue("DevelopPath") + "\\define\\functions\\"+sUID+".js"))) {
-                File.Delete(Util.Separator(AppConfigs.GetValue("DevelopPath") + "\\define\\functions\\"+sUID+".js"));
+            if (File.Exists(Util.Separator(AppConfigs.GetValue("DevelopPath") + "\\definition\\functions\\"+sUID+".js"))) {
+                File.Delete(Util.Separator(AppConfigs.GetValue("DevelopPath") + "\\definition\\functions\\"+sUID+".js"));
             }
 
             QueryRows RsZUPRGDTM = new QueryRows(_DbContext);
@@ -893,7 +893,7 @@ namespace Volte.Bot.Term
             _JSONFunction.SetValue("entitys"         , _entitys);
             _JSONFunction.SetValue("sysref"          , _JSONRefs);
 
-            Utils.Util.WriteContents(Util.Separator(AppConfigs.GetValue("DevelopPath") + "\\define\\functions\\"+sUID+".js") , JsonFormatter.PrettyPrint(_JSONFunction.ToString()));
+            Utils.Util.WriteContents(Util.Separator(AppConfigs.GetValue("DevelopPath") + "\\definition\\functions\\"+sUID+".js") , JsonFormatter.PrettyPrint(_JSONFunction.ToString()));
 
         }
 
@@ -909,8 +909,8 @@ namespace Volte.Bot.Term
                 int n = 0;
                 string cExclude = "dtproperties,sysfunctiondtl";
 
-                JSONObject oExcludeTables  = AppConfigs.LoadJSONObject(AppConfigs.GetValue("DevelopPath")+@"\define\executetables.js");
-                JSONObject oExcludeColumns = AppConfigs.LoadJSONObject(AppConfigs.GetValue("DevelopPath")+@"\define\executecolumns.js");
+                JSONObject oExcludeTables  = AppConfigs.LoadJSONObject(AppConfigs.GetValue("DevelopPath")+@"\definition\executetables.js");
+                JSONObject oExcludeColumns = AppConfigs.LoadJSONObject(AppConfigs.GetValue("DevelopPath")+@"\definition\executecolumns.js");
 
                 foreach (JSONObject _Table in _JSONObject) {
                     string _sTableName = _Table.GetValue("sTableName");
@@ -923,8 +923,8 @@ namespace Volte.Bot.Term
 
                         List<JSONObject> _JSONColumn = _TableUtil.DatabaseTableColumns(_Trans , _sTableName);
 
-                        if (File.Exists(Util.Separator(AppConfigs.GetValue("DevelopPath") + "\\define\\entity\\"+_sTableName+".js"))) {
-                            File.Delete(Util.Separator(AppConfigs.GetValue("DevelopPath") + "\\define\\entity\\"+_sTableName+".js"));
+                        if (File.Exists(Util.Separator(AppConfigs.GetValue("DevelopPath") + "\\definition\\entity\\"+_sTableName+".js"))) {
+                            File.Delete(Util.Separator(AppConfigs.GetValue("DevelopPath") + "\\definition\\entity\\"+_sTableName+".js"));
                         }
 
                         JSONArray _Fields = new JSONArray();
@@ -972,7 +972,7 @@ namespace Volte.Bot.Term
 
                         _JSONTableName.SetValue(_sTableName , _Fields);
 
-                        Utils.Util.WriteContents(Util.Separator(AppConfigs.GetValue("DevelopPath") + "\\define\\entity\\"+_sTableName+".js") , JsonFormatter.PrettyPrint(_JSONTableName.ToString()));
+                        Utils.Util.WriteContents(Util.Separator(AppConfigs.GetValue("DevelopPath") + "\\definition\\entity\\"+_sTableName+".js") , JsonFormatter.PrettyPrint(_JSONTableName.ToString()));
 
                     }
                 }
@@ -988,7 +988,7 @@ namespace Volte.Bot.Term
         {
 
             CoreUtil.CreateDir(Util.Separator(AppConfigs.GetValue("DevelopPath") + "\\define"));
-            CoreUtil.CreateDir(Util.Separator(AppConfigs.GetValue("DevelopPath") + "\\define\\entity"));
+            CoreUtil.CreateDir(Util.Separator(AppConfigs.GetValue("DevelopPath") + "\\definition\\entity"));
             CoreUtil.CreateDir(Util.Separator(AppConfigs.GetValue("ProjectPath") + "\\src"));
             CoreUtil.CreateDir(Util.Separator(AppConfigs.GetValue("ProjectPath") + "\\src\\entity"));
 
@@ -1003,7 +1003,7 @@ namespace Volte.Bot.Term
             _AutoTemplate.SetValue("ProjectPath" , AppConfigs.GetValue("ProjectPath"));
             _AutoTemplate.SetValue("ProjectName" , AppConfigs.GetValue("ProjectName"));
 
-            string localDirectory = Util.Separator(AppConfigs.GetValue("DevelopPath") + @"\define\entity\");
+            string localDirectory = Util.Separator(AppConfigs.GetValue("DevelopPath") + @"\definition\entity\");
 
             WriteLine("localDirectory = "+ localDirectory);
 
