@@ -104,7 +104,7 @@ namespace Volte.Bot.Term
                     _L_UID_CODE.Add(_UID_CODE);
 
                     if (Mode.ToUpper()=="D" || !File.Exists(Util.Separator(AppConfigs.GetValue("DevelopPath")+"\\define\\functions\\"+sUID+".js"))){
-                        this.AppGeneratorJson(_DbContext , _UID_CODE);
+                        this.GeneratorActivityDefinition(_DbContext , _UID_CODE);
                     }else{
                         ZZLogger.Debug(ZFILE_NAME, "zzz not found ");
                         ZZLogger.Debug(ZFILE_NAME, "zzz not found smode "+Mode);
@@ -495,7 +495,7 @@ namespace Volte.Bot.Term
             Utils.Util.WriteContents(Util.Separator(AppConfigs.GetValue("DevelopPath") + @"\define\"+sUID+".js") , _JSONObject.ToString());
         }
 
-        private void AppGeneratorJson(DbContext _DbContext , string sUID)
+        private void GeneratorActivityDefinition(DbContext _DbContext , string sUID)
         {
 
             CoreUtil.CreateDir(Util.Separator(AppConfigs.GetValue("DevelopPath") + @"\define\functions"));
