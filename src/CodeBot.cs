@@ -216,6 +216,9 @@ namespace Volte.Bot.Term
                 if (_Arguments["Build"] != null) {
                     sCommand = "B";
                 }
+                if (_Arguments["Generator"] != null) {
+                    sCommand = "G";
+                }
 
                 if (_Arguments["H"] != null) {
                     _IPAddress = _Arguments["H"];
@@ -312,6 +315,20 @@ namespace Volte.Bot.Term
                                   sUID = "";
                                   break;
                               }
+
+                    case "G": {
+                                  AutoCoder _AutoCoder  = new AutoCoder();
+                                  _AutoCoder.AppConfigs = AppConfigs;
+                                  _AutoCoder.FileName   = _FileName;
+                                  _AutoCoder.DebugMode  = _debugMode;
+                                  _AutoCoder.Mode       = sMode;
+                                  _AutoCoder.GeneratorEntityDefinition();
+                                  _AutoCoder.Generator(sUID);
+
+                                  sUID = "";
+                                  break;
+                              }
+                              
                     case "T": {
                                   AutoCoder _AutoCoder  = new AutoCoder();
                                   _AutoCoder.AppConfigs = AppConfigs;
