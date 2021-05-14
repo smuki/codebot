@@ -319,8 +319,8 @@ namespace Volte.Bot.Term
                                   _AutoCoder.AppConfigs = AppConfigs;
                                   _AutoCoder.FileName   = _FileName;
                                   _AutoCoder.DebugMode  = _debugMode;
-                                  _AutoCoder.AutoEntityDb();
-                                  _AutoCoder.AutoEntitySrc();
+                                  _AutoCoder.GeneratorEntityDefinition();
+                                  _AutoCoder.GeneratorEntity();
                                   break ;
                               }
 
