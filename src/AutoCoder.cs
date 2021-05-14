@@ -105,8 +105,6 @@ namespace Volte.Bot.Term
 
                     this.GeneratorActivityDefinition(_DbContext , _UID_CODE);
                     this.GeneratorActivity(_UID_CODE);
-                }else{
-                    ZZLogger.Debug(ZFILE_NAME, "yyy not found ");
                 }
 
                 RsSysFunction.MoveNext();
