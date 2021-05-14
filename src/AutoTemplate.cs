@@ -42,7 +42,6 @@ namespace Volte.Bot.Term
         private VoltEngine _Tmpl     = VoltEngine.Parser("");
         private Substitute _Substitute=new Substitute();
 
-        public AppSettings AppSetting;
         public AppConfigs AppConfigs;
 
         public string DebugMode  { get { return _debugMode;  } set { _debugMode  = value; }  }
@@ -109,7 +108,7 @@ namespace Volte.Bot.Term
             string sColumnName = args[0].ToString();
             string sUID = args[1].ToString();
 
-            JSONObject _JSONObject = AppSetting.LoadJSONObject(AppConfigs.GetValue("DevelopPath")+@"\define\functions\"+sUID+".js");
+            JSONObject _JSONObject = AppConfigs.LoadJSONObject(AppConfigs.GetValue("DevelopPath")+@"\define\functions\"+sUID+".js");
 
             string sKey = sUID+"."+sColumnName;
             string rtv  = "";
@@ -222,7 +221,7 @@ namespace Volte.Bot.Term
         {
             string sColumnName  = args[0].ToString();
 
-            JSONObject _JSONObject= AppSetting.LoadJSONObject(AppConfigs.GetValue("DevelopPath")+@"\appsettings\IgnoreCopyColumn.js");
+            JSONObject _JSONObject= AppConfigs.LoadJSONObject(AppConfigs.GetValue("DevelopPath")+@"\appsettings\IgnoreCopyColumn.js");
             return  _JSONObject.GetBoolean(sColumnName).ToString();
         }
 
@@ -317,7 +316,7 @@ namespace Volte.Bot.Term
                 TableUtil _TableUtil = new TableUtil();
                 List<JSONObject> aryColumns =  _TableUtil.DatabaseTableColumns(this.Trans , sTableName);
 
-                JSONObject _obj=AppSetting.LoadJSONObject(AppConfigs.GetValue("DevelopPath")+@"\AppSettings\DataType.js");
+                JSONObject _obj=AppConfigs.LoadJSONObject(AppConfigs.GetValue("DevelopPath")+@"\AppSettings\DataType.js");
                 foreach (JSONObject colname in aryColumns) {
 
                     string s = colname.GetValue("sTableName") + "." + colname.GetValue("sColumnName");
@@ -413,14 +412,14 @@ namespace Volte.Bot.Term
 
             string sUID = args[0].ToString();
 
-            JSONObject _JSONObject= AppSetting.LoadJSONObject(AppConfigs.GetValue("DevelopPath")+@"\define\functions\"+sUID+".js");
+            JSONObject _JSONObject= AppConfigs.LoadJSONObject(AppConfigs.GetValue("DevelopPath")+@"\define\functions\"+sUID+".js");
             return  _JSONObject.GetValue("bActive");
         }
 
         string FunctionColumnName(object[] args)
         {
             string sUID       = args[0].ToString();
-            JSONObject _JSONObject = AppSetting.LoadJSONObject(AppConfigs.GetValue("DevelopPath")+@"\define\functions\"+sUID+".js");
+            JSONObject _JSONObject = AppConfigs.LoadJSONObject(AppConfigs.GetValue("DevelopPath")+@"\define\functions\"+sUID+".js");
             return  _JSONObject.GetValue("sColumnName");
         }
 
@@ -428,21 +427,21 @@ namespace Volte.Bot.Term
         {
 
             string sUID       = args[0].ToString();
-            JSONObject _JSONObject = AppSetting.LoadJSONObject(AppConfigs.GetValue("DevelopPath")+@"\define\functions\"+sUID+".js");
+            JSONObject _JSONObject = AppConfigs.LoadJSONObject(AppConfigs.GetValue("DevelopPath")+@"\define\functions\"+sUID+".js");
             return  _JSONObject.GetValue("sHash");
         }
 
         string FunctionTableName(object[] args)
         {
             string sUID       = args[0].ToString();
-            JSONObject _JSONObject = AppSetting.LoadJSONObject(AppConfigs.GetValue("DevelopPath")+@"\define\functions\"+sUID+".js");
+            JSONObject _JSONObject = AppConfigs.LoadJSONObject(AppConfigs.GetValue("DevelopPath")+@"\define\functions\"+sUID+".js");
             return  _JSONObject.GetValue("sTableName");
         }
 
         public string TOP_UID_CODE(object[] args)
         {
             string sUID       = args[0].ToString();
-            JSONObject _JSONObject = AppSetting.LoadJSONObject(AppConfigs.GetValue("DevelopPath")+@"\define\functions\"+sUID+".js");
+            JSONObject _JSONObject = AppConfigs.LoadJSONObject(AppConfigs.GetValue("DevelopPath")+@"\define\functions\"+sUID+".js");
             if (_JSONObject.GetValue("sTopUID_CODE")=="")
             {
                 return sUID;
@@ -455,7 +454,7 @@ namespace Volte.Bot.Term
         {
             string dataType = args[0].ToString();
 
-            string sValue = AppSetting.LoadJSONObject(AppConfigs.GetValue("DevelopPath")+@"\appsettings\DbType.js").GetValue(dataType);
+            string sValue = AppConfigs.LoadJSONObject(AppConfigs.GetValue("DevelopPath")+@"\appsettings\DbType.js").GetValue(dataType);
             if (sValue==""){
                 return "undefine"+dataType;
             }else{
@@ -468,7 +467,7 @@ namespace Volte.Bot.Term
 
             string dataType = args[0].ToString();
 
-            string sValue = AppSetting.LoadJSONObject(AppConfigs.GetValue("DevelopPath")+@"\appsettings\SqlDataTypeToDataType.js").GetValue(dataType);
+            string sValue = AppConfigs.LoadJSONObject(AppConfigs.GetValue("DevelopPath")+@"\appsettings\SqlDataTypeToDataType.js").GetValue(dataType);
             if (sValue==""){
                 return "undefine-"+dataType;
             }else{
@@ -481,7 +480,7 @@ namespace Volte.Bot.Term
 
             string dataType = args[0].ToString();
 
-            string sValue = AppSetting.LoadJSONObject(AppConfigs.GetValue("DevelopPath")+@"\appsettings\StringToDataType.js").GetValue(dataType);
+            string sValue = AppConfigs.LoadJSONObject(AppConfigs.GetValue("DevelopPath")+@"\appsettings\StringToDataType.js").GetValue(dataType);
             if (sValue==""){
                 return "undefine"+dataType;
             }else{
@@ -494,7 +493,7 @@ namespace Volte.Bot.Term
 
             string dataType = args[0].ToString();
 
-            string sValue = AppSetting.LoadJSONObject(AppConfigs.GetValue("DevelopPath")+@"\appsettings\DataTypeDefault.js").GetValue(dataType);
+            string sValue = AppConfigs.LoadJSONObject(AppConfigs.GetValue("DevelopPath")+@"\appsettings\DataTypeDefault.js").GetValue(dataType);
             if (sValue==""){
                 return "=\"" + dataType + "\"";
             }else{
@@ -562,7 +561,7 @@ namespace Volte.Bot.Term
             string rtv                = "";
 
             string key = tableName + "_" + columnName + "_" + type + "_" + captionCode + "_" + scale;
-            JSONObject _DataTypeChar = AppSetting.LoadJSONObject(AppConfigs.GetValue("DevelopPath")+@"\appsettings\DataTypeChar.js");
+            JSONObject _DataTypeChar = AppConfigs.LoadJSONObject(AppConfigs.GetValue("DevelopPath")+@"\appsettings\DataTypeChar.js");
 
             if (captionCode.IndexOf("=") > 0) {
                 captionCode = captionCode + ",";
@@ -661,7 +660,7 @@ namespace Volte.Bot.Term
                     string sColumnClass = RsZUCOLUTM.GetValue("sColumnClass");
 
                     if (nColumnScale < 0) {
-                        JSONObject _JSONObject2= AppSetting.LoadJSONObject(AppConfigs.GetValue("DevelopPath")+@"\appsettings\ColumnScale.js");
+                        JSONObject _JSONObject2= AppConfigs.LoadJSONObject(AppConfigs.GetValue("DevelopPath")+@"\appsettings\ColumnScale.js");
 
                         if (_JSONObject2.ContainsKey(sColumnClass)){
                             nColumnScale =_JSONObject2.GetInteger(sColumnClass);
@@ -669,7 +668,7 @@ namespace Volte.Bot.Term
                     }
                 } else {
                     if (tableName != "ZZFields" && tableName != "VARIABLE") {
-                        JSONObject _JSONObject2= AppSetting.LoadJSONObject(AppConfigs.GetValue("DevelopPath")+@"\appsettings\AppSettings.js");
+                        JSONObject _JSONObject2= AppConfigs.LoadJSONObject(AppConfigs.GetValue("DevelopPath")+@"\appsettings\AppSettings.js");
                         Console.WriteLine();
                         Console.WriteLine("*************************");
                         Console.WriteLine(tableName + "." + columnName + " Is Invalid , Please Use Table Name [Variable].");
