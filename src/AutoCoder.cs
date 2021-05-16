@@ -4,6 +4,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Xml;
 using System.IO;
+using System.Linq;
 using System.Data;
 using System.Data.OleDb;
 using System.Data.SqlClient;
@@ -947,17 +948,19 @@ namespace Volte.Bot.Term
 
                 int i = 0;
                 int n = 0;
-                string cExclude = "dtproperties,sysfunctiondtl";
 
-                JSONObject oExcludeTables  = AppConfigs.LoadJSONObject(AppConfigs.GetValue("DevelopPath")+@"\definition\executetables.js");
-                JSONObject oExcludeColumns = AppConfigs.LoadJSONObject(AppConfigs.GetValue("DevelopPath")+@"\definition\executecolumns.js");
+                JSONObject Ignore = AppConfigs.JSONObject("Ignore");
+                string IgnoreTables=Ignore.GetValue("Tables");
+                string IgnoreTableColumns=Ignore.GetValue("TableColumns");
+                List<string> hIgnoreTables = (IgnoreTables + ",").Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries).ToList<string>();
+                List<string> hIgnoreTableColumns = (IgnoreTableColumns + ",").Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries).ToList<string>();
+                hIgnoreTables.Add("dtproperties");
+                hIgnoreTables.Add("sysfunctiondtl");
 
                 foreach (JSONObject _Table in _JSONObject) {
                     string _sTableName = _Table.GetValue("sTableName");
 
-                    if (oExcludeTables.ContainsKey(_sTableName)) {
-
-                    }else if (cExclude.IndexOf(_sTableName) >= 0) {
+                    if (hIgnoreTables.Contains(_sTableName)) {
 
                     } else {
 
@@ -972,10 +975,10 @@ namespace Volte.Bot.Term
                         foreach (JSONObject RsSysFields in _JSONColumn) {
 
                             bool bActive=true;
-                            if (oExcludeColumns.ContainsKey(RsSysFields.GetValue("sColumnName"))) {
+                            if (hIgnoreTableColumns.Contains(RsSysFields.GetValue("sColumnName"))) {
                                 bActive=false;
                             }
-                            if (oExcludeColumns.ContainsKey(_sTableName +"."+ RsSysFields.GetValue("sColumnName"))) {
+                            if (hIgnoreTableColumns.Contains(_sTableName +"."+ RsSysFields.GetValue("sColumnName"))) {
                                 bActive=false;
                             }
 
