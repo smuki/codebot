@@ -58,20 +58,14 @@ namespace Volte.Bot.Term
 
             AppDomain.CurrentDomain.AssemblyResolve += new ResolveEventHandler(CurrentDomain_AssemblyResolve);
             CG _CG = new CG();
-
-            if (!_CG.DetectionUpdate()) {
-                _CG.Process(args);
-            }
-
+            _CG.Process(args);
         }
-
     }
 
     public class CG {
 
         const string ZFILE_NAME = "CG";
 
-        private static string _WorkSpacePath = "";
         private readonly object _PENDING     = new object();
         private FileSystemWatcher[] watcher  = new FileSystemWatcher[20];
         private string[] _filePath           = new string[20];
@@ -110,65 +104,6 @@ namespace Volte.Bot.Term
             Console.WriteLine("/debug [debug mode]");
             Console.WriteLine("");
 
-        }
-
-        public bool DetectionUpdate()
-        {
-            try {
-
-                string m_exePath = AppDomain.CurrentDomain.BaseDirectory;
-                string separator = Path.DirectorySeparatorChar.ToString();
-                m_exePath        = m_exePath.Replace("/", separator);
-                string m_exeName = System.IO.Path.GetFileName(System.Diagnostics.Process.GetCurrentProcess().MainModule.FileName);
-
-                if (m_exePath.Substring(m_exePath.Length - 1) != separator) {
-                    m_exePath = m_exePath + separator;
-                }
-
-                if (File.Exists(m_exePath + m_exeName + ".old")) {
-                    File.Delete(m_exePath + m_exeName + ".old");
-                }
-
-
-                if (_WorkSpacePath.Length > 2) {
-                    if (_WorkSpacePath.Substring(_WorkSpacePath.Length - 1) != separator) {
-                        _WorkSpacePath = _WorkSpacePath + separator;
-                    }
-                }
-
-                string sDistPath=_WorkSpacePath+"dist\\";
-
-                string New_exeName = "";
-
-                if (File.Exists(sDistPath + m_exeName)) {
-
-                    New_exeName = sDistPath+ m_exeName;
-                    string Old_exeName = m_exePath+ m_exeName;
-
-                    if (AppSettings.GetFileDateTime(New_exeName) > AppSettings.GetFileDateTime(Old_exeName)) {
-                        string m_pdbName = m_exeName.Replace(".exe", ".pdb");
-
-                        if (File.Exists(m_exePath + m_pdbName)) {
-                            File.Delete(m_exePath + m_pdbName);
-                        }
-
-                        File.Move(m_exePath + m_exeName, m_exePath + m_exeName + ".old");
-                        File.Copy(New_exeName , m_exePath + m_exeName);
-                        File.Copy(New_exeName.Replace(".exe", ".pdb") , m_exePath + m_pdbName);
-
-                        Console.WriteLine("");
-                        Console.WriteLine(New_exeName + "-->" + m_exePath + m_exeName);
-                        Console.WriteLine(New_exeName.Replace(".exe", ".pdb") + "-->" + m_exePath + m_pdbName);
-                        Console.WriteLine("File Updated.");
-                        Console.WriteLine("Please Try Again...");
-                        return true;
-                    }
-                }
-            } catch (Exception ex) {
-                Console.WriteLine(ex.Message);
-            }
-
-            return false;
         }
 
         public void PrintConfig(JSONObject obj , int level)
@@ -297,7 +232,6 @@ namespace Volte.Bot.Term
                 if (!File.Exists(fileName.Replace(".ini",".json"))) {
                     Console.WriteLine("["+fileName.Replace(".ini",".json")+"] Not Found");
                 }
-                //AppSettings AppSetting = new AppSettings(fileName);
                 AppConfigs AppConfigs  = new AppConfigs(fileName.Replace(".ini",".json"));
 
                 Console.WriteLine("AppSetting : ["+fileName+"]");
@@ -328,7 +262,7 @@ namespace Volte.Bot.Term
                                   sUID = "";
                                   break;
                               }
-                              
+
                     case "T": {
                                   AutoCoder _AutoCoder  = new AutoCoder();
                                   _AutoCoder.AppConfigs = AppConfigs;

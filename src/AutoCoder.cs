@@ -56,80 +56,6 @@ namespace Volte.Bot.Term
             this.Write("\n");
         }
 
-        public void Generator(string sUID)
-        {
-            Message = new StringBuilder();
-            if (string.IsNullOrEmpty(sUID))
-            {
-                sUID = "";
-            }
-
-            DbContext _DbContext = new DbContext(AppConfigs.GetValue("sDbName") , AppConfigs.GetValue("Provider") , AppConfigs.GetValue("dbAdapter"));
-
-            QueryRows RsSysFunction = new QueryRows(_DbContext);
-            sUID = sUID.Replace("$", "%");
-
-            if (sUID.ToLower() == "a") {
-                sUID = "%";
-            }
-            JSONObject _JSONFunction = AppConfigs.LoadJSONObject(AppConfigs.GetValue("DevelopPath")+@"\definition\functions.js");
-
-            if (File.Exists(Util.Separator(AppConfigs.GetValue("DevelopPath")+@"\definition\functions.js"))){
-                RsSysFunction.CommandText = "SELECT sUID FROM sysfunction WHERE sUID LIKE '%" + sUID + "%' ORDER BY sUID DESC";
-            }else{
-                RsSysFunction.CommandText = "SELECT sUID FROM sysfunction WHERE bActive<>0 AND sUID LIKE '%" + sUID + "%' ORDER BY sUID DESC";
-            }
-
-            RsSysFunction.Open();
-
-            _L_UID_CODE = new List<string>();
-            if (sUID.ToLower() == "en") {
-                this.GeneratorCaptionDefine(_DbContext , sUID.ToLower());
-            }
-
-            while (!RsSysFunction.EOF) {
-                string _UID_CODE = RsSysFunction.GetValue("sUID");
-                if (File.Exists(Util.Separator(AppConfigs.GetValue("DevelopPath")+@"\definition\functions.js")) && _JSONFunction.ContainsKey(_UID_CODE)){
-
-                    _DbContext.Execute("UPDATE sysfunction Set bActive=1 WHERE sUID = '" + _UID_CODE+ "'");
-
-                }else{
-                    ZZLogger.Debug(ZFILE_NAME, "xxx not found ");
-                }
-
-                if (!File.Exists(Util.Separator(AppConfigs.GetValue("DevelopPath")+@"\definition\functions.js")) || _JSONFunction.ContainsKey(_UID_CODE)){
-
-                    this.WriteLine("");
-                    this.Write(_UID_CODE);
-
-                    _L_UID_CODE.Add(_UID_CODE);
-
-                    this.GeneratorActivityDefinition(_DbContext , _UID_CODE);
-                    this.GeneratorActivity(_UID_CODE);
-                }
-
-                RsSysFunction.MoveNext();
-            }
-
-            RsSysFunction.Close();
-
-            foreach (string _UID_CODE in _L_UID_CODE) {
-                Prettify(_UID_CODE);
-                Build(_UID_CODE);
-            }
-
-            foreach (FileNameValue _FileNameValue in _Hashs) {
-
-                this.WriteLine("\n*** update hash *** " + _FileNameValue.Name + " " + _FileNameValue.FullName);
-                _DbContext.Execute("UPDATE sysfunction Set sHash='" + _FileNameValue.Name + "' WHERE sUID = '" + _FileNameValue.FullName + "'");
-            }
-            if (_FAILURE.Count>0){
-                this.WriteLine("\n*** _FAILURE List *** ");
-                foreach (var c in _FAILURE) {
-                    this.WriteLine(c);
-                }
-            }
-        }
         public void Process(string sUID)
         {
             Message = new StringBuilder();
@@ -166,7 +92,7 @@ namespace Volte.Bot.Term
                     }
                 }
             }
-        
+
             foreach (string _UID_CODE in _L_UID_CODE) {
                 Prettify(_UID_CODE);
                 Build(_UID_CODE);

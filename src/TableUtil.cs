@@ -37,6 +37,7 @@ namespace Volte.Bot.Term
         private string _dbAdapter     = "";
         private string _Target        = "MsSqlServer";
         private long   _FileIndex     = 0;
+        private AppConfigs AppSetting = new AppConfigs("");
 
         private Dictionary<string , bool>   _WriteFile  = new Dictionary<string , bool>();
         public  List<JSONObject> AlterTable             = new List<JSONObject>();
@@ -1735,7 +1736,6 @@ namespace Volte.Bot.Term
             StringBuilder sbColumns     = new StringBuilder(string.Empty);
             StringBuilder PKColumns     = new StringBuilder(string.Empty);
 
-            AppSettings AppSetting   = new AppSettings("");
             JSONObject _AlterColumns = new JSONObject();
 
             JSONObject _JSONObject = AppSetting.LoadJSONObject(AppSetting.AppPath+@"\appsettings\MsSqlToMySqlDataType.js");
@@ -1900,7 +1900,6 @@ namespace Volte.Bot.Term
             StringBuilder sbColumns     = new StringBuilder(string.Empty);
             StringBuilder PKColumns     = new StringBuilder(string.Empty);
 
-            AppSettings AppSetting   = new AppSettings("");
             JSONObject _AlterColumns = new JSONObject();
 
             foreach (JSONObject colname in nameValues) {
