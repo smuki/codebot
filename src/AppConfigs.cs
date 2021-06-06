@@ -153,8 +153,32 @@ namespace Volte.Bot.Term
             } 
          }
 
-        public List<string> Names  
-         {
+        public string AddonLocation
+        {
+            get
+            {
+                return this.DevelopPath+@"\definition\functions\";
+            } 
+        }
+        
+        public string DevelopPath
+        {
+            get
+            {
+                return this.GetValue("DevelopPath");
+            }
+        }
+
+        public string ProjectPath
+        {
+            get
+            {
+                return this.GetValue("ProjectPath");
+            }
+        }
+        
+        public List<string> Names
+        {
             get { 
                 return _JSONObject.Names; 
             } 
