@@ -359,7 +359,7 @@ namespace Volte.Bot.Term
                 col.SetValue("nLength"        , colname.GetInteger("nColumnLength"));
                 col.SetValue("bNullable"      , colname.GetBoolean("bColumnNullable"));
                 col.SetValue("bAutoIncrement" , colname.GetBoolean("AutoIncrement"));
-                col.SetValue("bPrimaryKey"    , colname.GetBoolean("IsPKColumn"));
+                col.SetValue("bPrimaryKey"    , colname.GetBoolean("bPrimaryKey"));
                 col.SetValue("sDefault"       , sDefault);
                 col.SetValue("sBefName"       , sBefName);
                 col.SetValue("nIndex"         , colname.GetInteger("nIndex"));
@@ -476,7 +476,7 @@ namespace Volte.Bot.Term
                     _Column.SetValue("nIndex"            , _Fields.GetInteger("nIndex"));
                     _Column.SetValue("sDataType"         , sDataType);
                     _Column.SetValue("nColumnLength"     , sColumnLength);
-                    _Column.SetValue("IsPKColumn"        , Utils.Util.StringToBoolean(_Fields.GetValue("COLUMN_PK_BIT")) || _Fields.GetValue("COLUMN_PK_BIT") == "PRI" );
+                    _Column.SetValue("bPrimaryKey"        , Utils.Util.StringToBoolean(_Fields.GetValue("COLUMN_PK_BIT")) || _Fields.GetValue("COLUMN_PK_BIT") == "PRI" );
                     _Column.SetValue("bColumnNullable"   , Utils.Util.StringToBoolean(_Fields.GetValue("sColumnNullable")));
                     string sAutoIncrement = _Fields.GetValue("sAutoIncrement");
 
@@ -655,7 +655,7 @@ namespace Volte.Bot.Term
                     col.SetValue("nLength"        , colname.GetInteger("nColumnLength"));
                     col.SetValue("bNullable"      , colname.GetBoolean("bColumnNullable"));
                     col.SetValue("bAutoIncrement" , colname.GetBoolean("AutoIncrement"));
-                    col.SetValue("bPrimaryKey"    , colname.GetBoolean("IsPKColumn"));
+                    col.SetValue("bPrimaryKey"    , colname.GetBoolean("bPrimaryKey"));
                     col.SetValue("sDefault"       , sDefault);
                     col.SetValue("sBefName"       , sBefName);
                     col.SetValue("nIndex"         , colname.GetInteger("nIndex"));
@@ -964,7 +964,7 @@ namespace Volte.Bot.Term
 
             foreach (JSONObject colname in aryColumns) {
 
-                if (colname.GetBoolean("IsPKColumn")) {
+                if (colname.GetBoolean("bPrimaryKey")) {
 
                     if (sbColumns.ToString() != string.Empty) {
                         sbColumns.Append(", ");
@@ -1059,7 +1059,7 @@ namespace Volte.Bot.Term
 
                                     row.SetValue(col , string.Format("{0}" , dr[col]));
 
-                                    if (colname.GetBoolean("IsPKColumn")) {
+                                    if (colname.GetBoolean("bPrimaryKey")) {
                                         if (sbKeyValues.ToString() != string.Empty) {
                                             sbKeyValues.Append(" AND ");
                                         }
@@ -1081,7 +1081,7 @@ namespace Volte.Bot.Term
                                         row.SetDateTime(col , null);
                                     }
 
-                                    if (colname.GetBoolean("IsPKColumn")) {
+                                    if (colname.GetBoolean("bPrimaryKey")) {
                                         if (sbKeyValues.ToString() != string.Empty) {
                                             sbKeyValues.Append(" AND ");
                                         }
@@ -1121,7 +1121,7 @@ namespace Volte.Bot.Term
                                     } else {
                                         row.SetValue(col , dr[col]);
 
-                                        if (colname.GetBoolean("IsPKColumn")) {
+                                        if (colname.GetBoolean("bPrimaryKey")) {
                                             if (sbKeyValues.ToString() != string.Empty) {
                                                 sbKeyValues.Append(" AND ");
                                             }
@@ -1142,7 +1142,7 @@ namespace Volte.Bot.Term
                                         //sbValues.Append(System.Convert.ToString(dr[col]));
                                         row.SetValue(col , dr[col]);
 
-                                        if (colname.GetBoolean("IsPKColumn")) {
+                                        if (colname.GetBoolean("bPrimaryKey")) {
                                             if (sbKeyValues.ToString() != string.Empty) {
                                                 sbKeyValues.Append(" AND ");
                                             }
@@ -1203,7 +1203,7 @@ namespace Volte.Bot.Term
 
             foreach (JSONObject colname in aryColumns) {
 
-                if (colname.GetBoolean("IsPKColumn")) {
+                if (colname.GetBoolean("bPrimaryKey")) {
 
                     if (sbColumns.ToString() != string.Empty) {
                         sbColumns.Append(", ");
@@ -1429,7 +1429,7 @@ namespace Volte.Bot.Term
                                         sbValues.Append((System.Convert.ToBoolean(dr[col]) == true ? "1" : "0"));
                                     }
 
-                                    if (colname.GetBoolean("IsPKColumn")) {
+                                    if (colname.GetBoolean("bPrimaryKey")) {
                                         if (sbKeyValues.ToString() != string.Empty) {
                                             sbKeyValues.Append(" AND ");
                                         }
@@ -1449,7 +1449,7 @@ namespace Volte.Bot.Term
                                 case "char":
                                     sbValues.Append(_Unicode+string.Format("'{0}'", QuoteString(dr[col])));
 
-                                    if (colname.GetBoolean("IsPKColumn")) {
+                                    if (colname.GetBoolean("bPrimaryKey")) {
                                         if (sbKeyValues.ToString() != string.Empty) {
                                             sbKeyValues.Append(" AND ");
                                         }
@@ -1472,7 +1472,7 @@ namespace Volte.Bot.Term
                                     }
 
 
-                                    if (colname.GetBoolean("IsPKColumn")) {
+                                    if (colname.GetBoolean("bPrimaryKey")) {
                                         if (sbKeyValues.ToString() != string.Empty) {
                                             sbKeyValues.Append(" AND ");
                                         }
@@ -1511,7 +1511,7 @@ namespace Volte.Bot.Term
                                     } else {
                                         sbValues.Append(System.Convert.ToDouble(dr[col]).ToString("0.########"));
 
-                                        if (colname.GetBoolean("IsPKColumn")) {
+                                        if (colname.GetBoolean("bPrimaryKey")) {
                                             if (sbKeyValues.ToString() != string.Empty) {
                                                 sbKeyValues.Append(" AND ");
                                             }
@@ -1530,7 +1530,7 @@ namespace Volte.Bot.Term
                                     } else {
                                         sbValues.Append(System.Convert.ToString(dr[col]));
 
-                                        if (colname.GetBoolean("IsPKColumn")) {
+                                        if (colname.GetBoolean("bPrimaryKey")) {
                                             if (sbKeyValues.ToString() != string.Empty) {
                                                 sbKeyValues.Append(" AND ");
                                             }
@@ -1738,7 +1738,7 @@ namespace Volte.Bot.Term
 
             JSONObject _AlterColumns = new JSONObject();
 
-            JSONObject _JSONObject = AppSetting.LoadJSONObject(AppSetting.AppPath+@"\appsettings\MsSqlToMySqlDataType.js");
+            JSONObject _JSONObject = AppSetting.LoadJSONObject(AppSetting.AppPath+@"\appsettings\MsSqlToMySqlDataType.json");
 
             string sPrev = "";
             foreach (JSONObject colname in nameValues) {
@@ -1778,7 +1778,7 @@ namespace Volte.Bot.Term
                     ColumnType = _JSONObject.GetValue(ColumnType);
                 }
 
-                if (colname.GetBoolean("IsPKColumn")) {
+                if (colname.GetBoolean("bPrimaryKey")) {
                     if (PKColumns.ToString() != string.Empty) {
                         PKColumns.Append(",");
                     }
@@ -1825,7 +1825,7 @@ namespace Volte.Bot.Term
 
                 StringBuilder _alter = new StringBuilder();
 
-                if (colname.GetBoolean("IsPKColumn")) {
+                if (colname.GetBoolean("bPrimaryKey")) {
                     _alter.Append("UPDATE " + TargetMarksStart + tableName + TargetMarksEnd + " set " + TargetMarksStart + sColumnName + TargetMarksEnd + "='' WHERE " + TargetMarksStart + sColumnName + TargetMarksEnd + " IS NULL");
 
                     WriteSqlClose(ref _alter);
@@ -1922,7 +1922,7 @@ namespace Volte.Bot.Term
                     ColumnType = "ntext";
                 }
 
-                if (colname.GetBoolean("IsPKColumn")) {
+                if (colname.GetBoolean("bPrimaryKey")) {
                     if (PKColumns.ToString() != string.Empty) {
                         PKColumns.Append(",");
                     }
@@ -1976,7 +1976,7 @@ namespace Volte.Bot.Term
 
                 _AlterColumns.SetValue(tableName+"_"+sColumnName , _alter.ToString());
 
-                if (colname.GetBoolean("IsPKColumn")) {
+                if (colname.GetBoolean("bPrimaryKey")) {
                     _alter.Append("UPDATE " + TargetMarksStart + tableName + TargetMarksEnd + " set " + TargetMarksStart + sColumnName + TargetMarksEnd + "='' WHERE " + TargetMarksStart + sColumnName + TargetMarksEnd + " IS NULL");
 
                     WriteSqlClose(ref _alter);
