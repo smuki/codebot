@@ -20,7 +20,7 @@ namespace Volte.Bot.Term
 
             private bool _bColumnUsage=false;
 
-            private bool _bIsPKColumn=false;
+            private bool _bPrimaryKey=false;
 
             private bool _bVerified=false;
 
@@ -119,23 +119,23 @@ namespace Volte.Bot.Term
                 }
 
             //<Summary>
-            //SysFields,bIsPKColumn
+            //SysFields,bPrimaryKey
             //</Summary>
             [AttributeMapping(Type=DbType.Boolean)]
-                public bool bIsPKColumn
+                public bool bPrimaryKey
                 {
-                    get { return _bIsPKColumn; }
+                    get { return _bPrimaryKey; }
                     set
                     {
                         if (this.Verified)
                         {
-                            if (value!=_bIsPKColumn)
+                            if (value!=_bPrimaryKey)
                             {
-                                _bIsPKColumn = value;
-                                this.PropertyChange("bIsPKColumn");
+                                _bPrimaryKey = value;
+                                this.PropertyChange("bPrimaryKey");
                             }
                         }else{
-                            _bIsPKColumn = value;
+                            _bPrimaryKey = value;
                         }
                     }
                 }
