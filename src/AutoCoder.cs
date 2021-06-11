@@ -225,7 +225,7 @@ namespace Volte.Bot.Term
                     string sColumnName = colname.GetValue("sColumnName");
                     string sDataType = colname.GetValue("sDataType");
                     int nColumnLength = colname.GetInteger("nColumnLength");
-                    bool bIsPKColumn = colname.GetBoolean("IsPKColumn");
+                    bool bIsPKColumn = colname.GetBoolean("bPrimaryKey");
                     int IsPKColumn = 0;
                     if (bIsPKColumn)
                     {
@@ -234,7 +234,7 @@ namespace Volte.Bot.Term
                     sSQLString = "delete from SysFields where sTableName='" + sTableName + "' AND sColumnName='"+ sColumnName + "'";
                     _Trans.Execute(sSQLString);
 
-                    sSQLString = "INSERT INTO SysFields (sTableName, sColumnName, sDataType, nColumnLength, bIsPKColumn) ";
+                    sSQLString = "INSERT INTO SysFields (sTableName, sColumnName, sDataType, nColumnLength, bPrimaryKey) ";
                     sSQLString = sSQLString + " VALUES('" + sTableName + "', '" + sColumnName + "', '" + sDataType + "', " + nColumnLength + "," + IsPKColumn + ")";
                     _Trans.Execute(sSQLString);
 
@@ -332,14 +332,13 @@ namespace Volte.Bot.Term
                 _COLUMNEntity.ColumnNullable = _NameValue.GetBoolean("ColumnNullable");
                 _COLUMNEntity.EnableMode     = _NameValue.GetValue("EnableMode");
                 _COLUMNEntity.bHasCaption    = _NameValue.GetBoolean("bHasCaption");
-                _COLUMNEntity.Height         = _NameValue.GetInteger("Height");
+                //_COLUMNEntity.Height         = _NameValue.GetInteger("Height");
                 _COLUMNEntity.Index          = _NameValue.GetInteger("Index");
                 _COLUMNEntity.Length         = _NameValue.GetInteger("Length");
                 _COLUMNEntity.MaxLength      = _NameValue.GetInteger("MaxLength");
-                _COLUMNEntity.NewLine        = _NameValue.GetBoolean("NewLine");
                 _COLUMNEntity.Options        = _NameValue.GetValue("Options");
-                _COLUMNEntity.ColumnAlign    = _NameValue.GetValue("sColumnAlign");
-                _COLUMNEntity.CaptionAlign   = _NameValue.GetValue("sCaptionAlign");
+                //_COLUMNEntity.ColumnAlign    = _NameValue.GetValue("sColumnAlign");
+                //_COLUMNEntity.CaptionAlign   = _NameValue.GetValue("sCaptionAlign");
                 _COLUMNEntity.Sequency       = _NameValue.GetInteger("Sequency");
                 _COLUMNEntity.bWriteable     = _NameValue.GetBoolean("Writeable");
                 _COLUMNEntity.sRefBrowse     = _NameValue.GetValue("sRefBrowse");
@@ -349,14 +348,13 @@ namespace Volte.Bot.Term
                 _COLUMNEntity.DataTypeChar   = _NameValue.GetValue("DataTypeChar");
                 _COLUMNEntity.ColumnScale    = _NameValue.GetInteger("ColumnScale");
                 _COLUMNEntity.EnableMode     = _NameValue.GetValue("EnableMode");
-                _COLUMNEntity.RowSpan        = _NameValue.GetInteger("RowSpan");
                 _COLUMNEntity.Release        = _NameValue.GetBoolean("Release");
-                _COLUMNEntity.ColSpan        = _NameValue.GetInteger("ColSpan");
+                //_COLUMNEntity.ColSpan        = _NameValue.GetInteger("ColSpan");
                 _COLUMNEntity.sRefCheck      = _NameValue.GetValue("sCheckId");
                 _COLUMNEntity.sRefBrowse     = _NameValue.GetValue("sRefBrowse");
                 _COLUMNEntity.sRefBrowseType = _NameValue.GetValue("sType");
                 _COLUMNEntity.sRefViewer     = _NameValue.GetValue("sRefViewer");
-                _COLUMNEntity.IsPKColumn     = _NameValue.GetBoolean("IsPKColumn");
+                _COLUMNEntity.bPrimaryKey    = _NameValue.GetBoolean("bPrimaryKey");
                 _COLUMNEntity.AutoIdentity   = _NameValue.GetBoolean("AutoIdentity");
 
                 if (_TableName.ToLower() != "variable" && (_DataTypeCode == "nvarchar" || _DataTypeCode == "ntext")) {
@@ -546,21 +544,19 @@ namespace Volte.Bot.Term
 
                 COLUMNEntity _COLUMNEntity   = new COLUMNEntity();
                 _COLUMNEntity.CaptionCode    = RsZUPRGDTM.GetValue("sCaptionCode");
-                _COLUMNEntity.ColSpan        = RsZUPRGDTM.GetInteger("nColSpan");
+                //_COLUMNEntity.ColSpan        = RsZUPRGDTM.GetInteger("nColSpan");
                 _COLUMNEntity.ColumnName     = _ColumnName;
                 _COLUMNEntity.ColumnNullable = RsZUPRGDTM.GetBoolean("bColumnNullable");
                 _COLUMNEntity.DataTypeCode   = _DataType;
                 _COLUMNEntity.EnableMode     = RsZUPRGDTM.GetValue("sEnableMode");
                 _COLUMNEntity.bHasCaption    = RsZUPRGDTM.GetBoolean("bHasCaption");
-                _COLUMNEntity.Height         = RsZUPRGDTM.GetInteger("nHeight");
+                //_COLUMNEntity.Height         = RsZUPRGDTM.GetInteger("nHeight");
                 _COLUMNEntity.Index          = RsZUPRGDTM.GetInteger("nIndex");
                 _COLUMNEntity.Length         = RsZUPRGDTM.GetInteger("nWidth");
                 _COLUMNEntity.MaxLength      = RsZUPRGDTM.GetInteger("nWidth");
-                _COLUMNEntity.NewLine        = RsZUPRGDTM.GetBoolean("bNewLine");
                 _COLUMNEntity.Options        = RsZUPRGDTM.GetValue("sOption");
-                _COLUMNEntity.ColumnAlign    = RsZUPRGDTM.GetValue("sColumnAlign");
-                _COLUMNEntity.CaptionAlign   = RsZUPRGDTM.GetValue("sCaptionAlign");
-                _COLUMNEntity.RowSpan        = RsZUPRGDTM.GetInteger("nRowSpan");
+                //_COLUMNEntity.ColumnAlign    = RsZUPRGDTM.GetValue("sColumnAlign");
+                //_COLUMNEntity.CaptionAlign   = RsZUPRGDTM.GetValue("sCaptionAlign");
                 _COLUMNEntity.Sequency       = RsZUPRGDTM.GetInteger("nSequency");
                 _COLUMNEntity.TableName      = _TableName;
                 _COLUMNEntity.bWriteable     = RsZUPRGDTM.GetBoolean("bWriteable");
@@ -623,7 +619,7 @@ namespace Volte.Bot.Term
 
                     _COLUMNEntity.Length      = RsSysFields.GetInteger("nColumnLength");
                     _COLUMNEntity.ColumnScale = RsSysFields.GetInteger("nColumnScale");
-                    _COLUMNEntity.IsPKColumn  = RsSysFields.GetBoolean("bIsPKColumn");
+                    _COLUMNEntity.bPrimaryKey = RsSysFields.GetBoolean("bPrimaryKey");
 
                     string sColumnClass = RsSysFields.GetValue("sColumnClass");
 
@@ -669,13 +665,13 @@ namespace Volte.Bot.Term
                     _COLUMNEntity.Length =_JSONObject3.GetInteger(nMax.ToString());
                 }
 
-                if (_COLUMNEntity.IsPKColumn) {
+                if (_COLUMNEntity.bPrimaryKey) {
                     Keys++;
                 }
 
-                if (_DataType == "ntext" && _COLUMNEntity.Height <= 2) {
-                    _COLUMNEntity.Height = 3;
-                }
+                //if (_DataType == "ntext" && _COLUMNEntity.Height <= 2) {
+                    //_COLUMNEntity.Height = 3;
+                //}
 
                 _COLUMNEntity.DataTypeCode   = _DataType;
 
@@ -750,20 +746,18 @@ namespace Volte.Bot.Term
                 _entity.SetValue("CaptionCode"      , _COLUMNEntity.CaptionCode);
                 _entity.SetBoolean("ColumnNullable" , _COLUMNEntity.ColumnNullable);
                 _entity.SetBoolean("bHasCaption"    , _COLUMNEntity.bHasCaption);
-                _entity.SetBoolean("NewLine"        , _COLUMNEntity.NewLine);
                 _entity.SetBoolean("Writeable"      , _COLUMNEntity.bWriteable);
-                _entity.SetBoolean("IsPKColumn"     , _COLUMNEntity.IsPKColumn);
+                _entity.SetBoolean("bPrimaryKey"    , _COLUMNEntity.bPrimaryKey);
                 _entity.SetBoolean("Release"        , _COLUMNEntity.Release);
-                _entity.SetInteger("ColSpan"        , _COLUMNEntity.ColSpan);
-                _entity.SetInteger("Height"         , _COLUMNEntity.Height);
+                //_entity.SetInteger("ColSpan"        , _COLUMNEntity.ColSpan);
+                //_entity.SetInteger("Height"         , _COLUMNEntity.Height);
                 _entity.SetInteger("Index"          , _COLUMNEntity.Index);
                 _entity.SetInteger("Length"         , _COLUMNEntity.Length);
                 _entity.SetInteger("MaxLength"      , _COLUMNEntity.MaxLength);
-                _entity.SetInteger("RowSpan"        , _COLUMNEntity.RowSpan);
                 _entity.SetInteger("Sequency"       , _COLUMNEntity.Sequency);
                 _entity.SetInteger("ColumnScale"    , _COLUMNEntity.ColumnScale);
-                _entity.SetValue("CaptionAlign"     , _COLUMNEntity.CaptionAlign);
-                _entity.SetValue("ColumnAlign"      , _COLUMNEntity.ColumnAlign);
+                //_entity.SetValue("CaptionAlign"     , _COLUMNEntity.CaptionAlign);
+                //_entity.SetValue("ColumnAlign"      , _COLUMNEntity.ColumnAlign);
                 _entity.SetValue("EnableMode"       , _COLUMNEntity.EnableMode);
                 _entity.SetValue("Options"          , _COLUMNEntity.Options);
                 if (_TableName.ToLower() == "variable" && (_COLUMNEntity.ColumnName == "sHash" || _COLUMNEntity.ColumnName == "sHash2" || _COLUMNEntity.ColumnName == "sHash3")) {
@@ -919,7 +913,7 @@ namespace Volte.Bot.Term
                                 _ColumnEntity.SetValue("sTableName"  , sTableName.Trim());
                                 _ColumnEntity.SetValue("sColumnName" , sColumnName);
                                 _ColumnEntity.SetValue("sDataType"   , sDataType);
-                                _ColumnEntity.SetValue("IsPKColumn"  , RsSysFields.GetBoolean("IsPKColumn"));
+                                _ColumnEntity.SetValue("bPrimaryKey" , RsSysFields.GetBoolean("bPrimaryKey"));
                                 _ColumnEntity.SetValue("AutoIdentity", RsSysFields.GetBoolean("AutoIncrement"));
                                 _ColumnEntity.SetInteger("nLength"   , nColumnLength);
 
@@ -1007,7 +1001,7 @@ namespace Volte.Bot.Term
                                     _COLUMNEntity.TableName    = sTableName;
                                     _COLUMNEntity.ColumnName   = _JSONObject.GetValue("sColumnName");
                                     _COLUMNEntity.DataTypeCode = _JSONObject.GetValue("sDataType");
-                                    _COLUMNEntity.IsPKColumn   = _JSONObject.GetBoolean("IsPKColumn");
+                                    _COLUMNEntity.bPrimaryKey  = _JSONObject.GetBoolean("bPrimaryKey");
                                     _COLUMNEntity.AutoIdentity = _JSONObject.GetBoolean("AutoIdentity");
                                     _COLUMNEntity.Length       = _JSONObject.GetInteger("nLength");
                                     ColumnEntity.Add(_COLUMNEntity);
@@ -1144,7 +1138,7 @@ namespace Volte.Bot.Term
                     }
 
                     foreach (JSONObject colname in aryColumns) {
-                        if (colname.GetBoolean("IsPKColumn")) {
+                        if (colname.GetBoolean("bPrimaryKey")) {
                             sTableName = colname.GetValue("sTableName");
                             _Column    = colname.GetValue("sColumnName");
                             _PKColumn  = colname.GetValue("sColumnName");
@@ -1236,7 +1230,7 @@ namespace Volte.Bot.Term
                         _VariableColumn.SetValue("nColumnScale"      , 0);
                         _VariableColumn.SetValue("sDataType"       , "nvarchar");
                         _VariableColumn.SetValue("nColumnLength"     , 10);
-                        _VariableColumn.SetValue("IsPKColumn"        , false);
+                        _VariableColumn.SetValue("bPrimaryKey"       , false);
                         _VariableColumn.SetValue("bColumnNullable"   , true);
                         _VariableColumn.SetValue("AutoIncrement"     , false);
                         _VariableColumn.SetValue("sDefault"          , "");
@@ -1251,7 +1245,7 @@ namespace Volte.Bot.Term
                     }
 
                     foreach (JSONObject colname in aryColumns) {
-                        if (colname.GetBoolean("IsPKColumn")) {
+                        if (colname.GetBoolean("bPrimaryKey")) {
                             sTableName = colname.GetValue("sTableName");
                             _Column    = colname.GetValue("sColumnName");
                             _PKColumn  = colname.GetValue("sColumnName");
@@ -1322,10 +1316,9 @@ namespace Volte.Bot.Term
                         }
                         _Trans.Execute("UPDATE sysfunctiondtl SET bWriteable = 1 WHERE sKey = '" + sUID_DT + "'");
                         _Trans.Execute("UPDATE sysfunctiondtl SET bHasCaption = 1 WHERE sKey = '" + sUID_DT + "'");
-                        _Trans.Execute("UPDATE sysfunctiondtl SET bNewLine   = 1 WHERE sKey = '" + sUID_DT + "'");
                         _Trans.Execute("UPDATE sysfunctiondtl SET bNewCell   = 1 WHERE sKey = '" + sUID_DT + "'");
-                        _Trans.Execute("UPDATE sysfunctiondtl SET nColSpan  = 1 WHERE sKey = '" + sUID_DT + "'");
-                        _Trans.Execute("UPDATE sysfunctiondtl SET nRowSpan  = 1 WHERE sKey = '" + sUID_DT + "'");
+                        //_Trans.Execute("UPDATE sysfunctiondtl SET nColSpan  = 1 WHERE sKey = '" + sUID_DT + "'");
+                        //_Trans.Execute("UPDATE sysfunctiondtl SET nRowSpan  = 1 WHERE sKey = '" + sUID_DT + "'");
 
                         _Trans.Execute("UPDATE sysfunctiondtl SET nIndex=999999 WHERE sKey='" + sUID_DT + "'");
                         _Trans.Execute("UPDATE sysfunctiondtl SET bColumnNullable=1 WHERE sKey='" + sUID_DT + "'");
@@ -1353,8 +1346,8 @@ namespace Volte.Bot.Term
                 _Trans.Execute("UPDATE sysfunctiondtl SET sysfunctiondtl.nWidth=sysfields.nColumnLength From sysfunctiondtl INNER JOIN sysfields ON sysfunctiondtl.sTableName = sysfields.sTableName AND sysfunctiondtl.sColumnName = sysfields.sColumnName Where sysfunctiondtl.sTableName<>'VARIABLE'");
 
 
-                _Trans.Execute("UPDATE sysfunctiondtl SET nColSpan=1 WHERE nColSpan<=0");
-                _Trans.Execute("UPDATE sysfunctiondtl SET nRowSpan=1 WHERE nRowSpan<=0");
+                //_Trans.Execute("UPDATE sysfunctiondtl SET nColSpan=1 WHERE nColSpan<=0");
+                //_Trans.Execute("UPDATE sysfunctiondtl SET nRowSpan=1 WHERE nRowSpan<=0");
                 _Trans.Execute("UPDATE sysdata SET bDistinct=0 WHERE bDistinct IS NULL");
                 _Trans.Execute("UPDATE sysdata SET bGroupBy=0 WHERE bGroupBy IS NULL");
 
@@ -1415,7 +1408,7 @@ namespace Volte.Bot.Term
 
                                 _SysFieldsEntity.bAutoIncrement  = _Fields.GetBoolean("bAutoIncrement");
                                 _SysFieldsEntity.bColumnNullable = _Fields.GetBoolean("bColumnNullable");
-                                _SysFieldsEntity.bIsPKColumn     = _Fields.GetBoolean("IsPKColumn");
+                                _SysFieldsEntity.bPrimaryKey     = _Fields.GetBoolean("bPrimaryKey");
                                 _SysFieldsEntity.nColumnLength   = _Fields.GetInteger("nColumnLength");
                                 _SysFieldsEntity.nColumnScale    = _Fields.GetInteger("nColumnScale");
                                 _SysFieldsEntity.sCaptionCode    = _CaptionCode;
@@ -1454,7 +1447,7 @@ namespace Volte.Bot.Term
                                     _SysFieldsEntity.sDataType = _Fields.GetValue("sDataType");
                                 }
 
-                                _SysFieldsEntity.bIsPKColumn     = _Fields.GetBoolean("IsPKColumn");
+                                _SysFieldsEntity.bPrimaryKey     = _Fields.GetBoolean("bPrimaryKey");
                                 _SysFieldsEntity.bColumnNullable = _Fields.GetBoolean("bColumnNullable");
                                 _SysFieldsEntity.bAutoIncrement  = _Fields.GetBoolean("bAutoIncrement");
 
