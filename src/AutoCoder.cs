@@ -79,7 +79,7 @@ namespace Volte.Bot.Term
                 }
                 else
                 {
-                    string fileName = Path.GetFileNameWithoutExtension(i.FullName);
+                    string fileName=Path.GetFileNameWithoutExtension(i.FullName);
 
                     if (fileName.Contains(sUID))
                     {
@@ -287,6 +287,7 @@ namespace Volte.Bot.Term
             return "";
         }
 
+
         public void Generator(string sUID)
         {
             Message = new StringBuilder();
@@ -328,7 +329,7 @@ namespace Volte.Bot.Term
                 Prettify(_UID_CODE);
                 Build(_UID_CODE);
             }
-
+            
             if (_FAILURE.Count <= 0)
             {
                 return;
@@ -412,7 +413,7 @@ namespace Volte.Bot.Term
                 _COLUMNEntity.sRefBrowseType = _NameValue.GetValue("sType");
                 _COLUMNEntity.sRefViewer     = _NameValue.GetValue("sRefViewer");
                 _COLUMNEntity.bPrimaryKey    = _NameValue.GetBoolean("bPrimaryKey");
-                _COLUMNEntity.bAutoIdentity  = _NameValue.GetBoolean("bAutoIdentity");
+                _COLUMNEntity.bAutoIdentity   = _NameValue.GetBoolean("bAutoIdentity");
 
                 if (_TableName.ToLower() != "variable" && (_DataTypeCode == "nvarchar" || _DataTypeCode == "ntext")) {
                     if (_ColumnName != "sOriginal") {
