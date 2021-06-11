@@ -288,22 +288,14 @@ namespace Volte.Bot.Term
             {
                 sUID = "";
             }
-            DbContext _DbContext = new DbContext(AppConfigs.GetValue("sDbName"), AppConfigs.GetValue("Provider"), AppConfigs.GetValue("dbAdapter"));
-            QueryRows RsSysFunction = new QueryRows(_DbContext);
             sUID = sUID.Replace("$", "%");
             if (sUID.ToLower() == "a")
             {
                 sUID = "%";
             }
-            JSONObject _JSONFunction = AppConfigs.LoadJSONObject(AppConfigs.DevelopPath + "\\definition\\functions.json");
-            if (File.Exists(Util.Separator(AppConfigs.DevelopPath + "\\definition\\functions.json")))
-            {
-                RsSysFunction.CommandText="SELECT sUID FROM sysfunction WHERE sUID LIKE '%" + sUID + "%' ORDER BY sUID DESC";
-            }
-            else
-            {
-                RsSysFunction.CommandText="SELECT sUID FROM sysfunction WHERE bActive<>0 AND sUID LIKE '%" + sUID + "%' ORDER BY sUID DESC";
-            }
+            DbContext _DbContext = new DbContext(AppConfigs.GetValue("sDbName"), AppConfigs.GetValue("Provider"), AppConfigs.GetValue("dbAdapter"));
+            QueryRows RsSysFunction = new QueryRows(_DbContext);
+            RsSysFunction.CommandText="SELECT sUID FROM sysfunction WHERE sUID LIKE '%" + sUID + "%' ORDER BY sUID DESC";
             RsSysFunction.Open();
             _L_UID_CODE = new List<string>();
             if (sUID.ToLower() == "en")
@@ -316,26 +308,12 @@ namespace Volte.Bot.Term
             {
                 string _UID_CODE = RsSysFunction.GetValue("sUID");
                 WriteLine(_UID_CODE);
-                if (File.Exists(Util.Separator(AppConfigs.DevelopPath + "\\definition\\functions.json")) && _JSONFunction.ContainsKey(_UID_CODE))
-                {
-                    _DbContext.Execute("UPDATE sysfunction Set bActive=1 WHERE sUID = '" + _UID_CODE + "'");
-                }
-                else
-                {
-                    WriteLine(Util.Separator(AppConfigs.DevelopPath + "\\definition\\functions.json") + " Not Found!");
-                }
-                if (!File.Exists(Util.Separator(AppConfigs.DevelopPath + "\\definition\\functions.json")) || _JSONFunction.ContainsKey(_UID_CODE))
-                {
-                    WriteLine("");
-                    Write(_UID_CODE);
-                    _L_UID_CODE.Add(_UID_CODE);
-                    GeneratorActivityDefinition(_DbContext, _UID_CODE);
-                    GeneratorActivity(_UID_CODE);
-                }
-                else
-                {
-                    WriteLine(Util.Separator(AppConfigs.DevelopPath + "\\definition\\functions.json") + " Not Found!");
-                }
+
+                WriteLine("");
+                Write(_UID_CODE);
+                _L_UID_CODE.Add(_UID_CODE);
+                GeneratorActivityDefinition(_DbContext, _UID_CODE);
+                GeneratorActivity(_UID_CODE);
                 RsSysFunction.MoveNext();
             }
             RsSysFunction.Close();
@@ -344,11 +322,7 @@ namespace Volte.Bot.Term
                 Prettify(_UID_CODE);
                 Build(_UID_CODE);
             }
-            foreach (FileNameValue _FileNameValue in _Hashs)
-            {
-                WriteLine("\n*** update hash *** " + _FileNameValue.Name + " " + _FileNameValue.FullName);
-                _DbContext.Execute("UPDATE sysfunction Set sHash='" + _FileNameValue.Name + "' WHERE sUID = '" + _FileNameValue.FullName + "'");
-            }
+            
             if (_FAILURE.Count <= 0)
             {
                 return;
