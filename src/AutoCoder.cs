@@ -344,7 +344,7 @@ namespace Volte.Bot.Term
             string _ColumnName   = "";
             string _DataTypeCode = "";
 
-            JSONObject _JSONFunction = AppConfigs.LoadJSONObject(AppConfigs.AddonLocation+sUID+".js");
+            JSONObject _JSONFunction = AppConfigs.LoadJSONObject(AppConfigs.AddonLocation+sUID+".json");
 
             AutoTemplate _AutoTemplate = new AutoTemplate();
             _AutoTemplate.DebugMode    = this.DebugMode;
@@ -508,10 +508,10 @@ namespace Volte.Bot.Term
             }
             RsSysCaption.Close();
 
-            if (File.Exists(Util.Separator(AppConfigs.GetValue("DevelopPath") + @"\definition\"+sUID+".js"))) {
-                File.Delete(Util.Separator(AppConfigs.GetValue("DevelopPath") + @"\definition\"+sUID+".js"));
+            if (File.Exists(Util.Separator(AppConfigs.GetValue("DevelopPath") + @"\definition\"+sUID+".json"))) {
+                File.Delete(Util.Separator(AppConfigs.GetValue("DevelopPath") + @"\definition\"+sUID+".json"));
             }
-            Utils.Util.WriteContents(Util.Separator(AppConfigs.GetValue("DevelopPath") + @"\definition\"+sUID+".js") , _JSONObject.ToString());
+            Utils.Util.WriteContents(Util.Separator(AppConfigs.GetValue("DevelopPath") + @"\definition\"+sUID+".json") , _JSONObject.ToString());
         }
 
         private void GeneratorActivityDefinition(DbContext _DbContext , string sUID)
@@ -520,8 +520,8 @@ namespace Volte.Bot.Term
             CoreUtil.CreateDir(Util.Separator(AppConfigs.GetValue("DevelopPath") + @"\definition\functions"));
 
 
-            if (File.Exists(Util.Separator(AppConfigs.GetValue("DevelopPath") + "\\definition\\functions\\"+sUID+".js"))) {
-                File.Delete(Util.Separator(AppConfigs.GetValue("DevelopPath") + "\\definition\\functions\\"+sUID+".js"));
+            if (File.Exists(Util.Separator(AppConfigs.GetValue("DevelopPath") + "\\definition\\functions\\"+sUID+".json"))) {
+                File.Delete(Util.Separator(AppConfigs.GetValue("DevelopPath") + "\\definition\\functions\\"+sUID+".json"));
             }
 
             QueryRows RsZUPRGDTM = new QueryRows(_DbContext);
@@ -908,7 +908,7 @@ namespace Volte.Bot.Term
             _JSONFunction.SetValue("entitys"         , _entitys);
             _JSONFunction.SetValue("sysref"          , _JSONRefs);
 
-            Utils.Util.WriteContents(Util.Separator(AppConfigs.GetValue("DevelopPath") + "\\definition\\functions\\"+sUID+".js") , JsonFormatter.PrettyPrint(_JSONFunction.ToString()));
+            Utils.Util.WriteContents(Util.Separator(AppConfigs.GetValue("DevelopPath") + "\\definition\\functions\\"+sUID+".json") , JsonFormatter.PrettyPrint(_JSONFunction.ToString()));
 
         }
 
@@ -940,8 +940,8 @@ namespace Volte.Bot.Term
 
                         List<JSONObject> _JSONColumn = _TableUtil.DatabaseTableColumns(_Trans , _sTableName);
 
-                        if (File.Exists(Util.Separator(AppConfigs.GetValue("DevelopPath") + "\\definition\\entity\\"+_sTableName+".js"))) {
-                            File.Delete(Util.Separator(AppConfigs.GetValue("DevelopPath") + "\\definition\\entity\\"+_sTableName+".js"));
+                        if (File.Exists(Util.Separator(AppConfigs.GetValue("DevelopPath") + "\\definition\\entity\\"+_sTableName+".json"))) {
+                            File.Delete(Util.Separator(AppConfigs.GetValue("DevelopPath") + "\\definition\\entity\\"+_sTableName+".json"));
                         }
 
                         JSONArray _Fields = new JSONArray();
@@ -968,7 +968,7 @@ namespace Volte.Bot.Term
                                 _ColumnEntity.SetValue("sColumnName" , sColumnName);
                                 _ColumnEntity.SetValue("sDataType"   , sDataType);
                                 _ColumnEntity.SetValue("bPrimaryKey" , RsSysFields.GetBoolean("bPrimaryKey"));
-                                _ColumnEntity.SetValue("AutoIdentity", RsSysFields.GetBoolean("AutoIncrement"));
+                                _ColumnEntity.SetValue("AutoIdentity", RsSysFields.GetBoolean("bAutoIncrement"));
                                 _ColumnEntity.SetInteger("nLength"   , nColumnLength);
 
                                 if (sDataType == "nvarchar") {
@@ -989,7 +989,7 @@ namespace Volte.Bot.Term
 
                         _JSONTableName.SetValue(_sTableName , _Fields);
 
-                        Utils.Util.WriteContents(Util.Separator(AppConfigs.GetValue("DevelopPath") + "\\definition\\entity\\"+_sTableName+".js") , JsonFormatter.PrettyPrint(_JSONTableName.ToString()));
+                        Utils.Util.WriteContents(Util.Separator(AppConfigs.GetValue("DevelopPath") + "\\definition\\entity\\"+_sTableName+".json") , JsonFormatter.PrettyPrint(_JSONTableName.ToString()));
 
                     }
                 }
@@ -1286,7 +1286,7 @@ namespace Volte.Bot.Term
                         _VariableColumn.SetValue("nColumnLength"     , 10);
                         _VariableColumn.SetValue("bPrimaryKey"       , false);
                         _VariableColumn.SetValue("bColumnNullable"   , true);
-                        _VariableColumn.SetValue("AutoIncrement"     , false);
+                        _VariableColumn.SetValue("bAutoIncrement"     , false);
                         _VariableColumn.SetValue("sDefault"          , "");
                         _VariableColumn.SetValue("nNumericPrecision" , 0);
 
