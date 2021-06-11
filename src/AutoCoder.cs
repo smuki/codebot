@@ -104,7 +104,7 @@ namespace Volte.Bot.Term
             _AutoTemplate.Initialize();
             _AutoTemplate.SetValue("ProjectName"   , AppConfigs.GetValue("ProjectName"));
             _AutoTemplate.SetValue("AppPath"       , AppConfigs.GetValue("AppPath"));
-            _AutoTemplate.SetValue("ProjectPath"   , AppConfigs.GetValue("ProjectPath"));
+            _AutoTemplate.SetValue("ProjectPath"   , AppConfigs.ProjectPath);
             _AutoTemplate.SetValue("DevelopPath"   , AppConfigs.GetValue("DevelopPath"));
             _AutoTemplate.SetValue("CommandEntity" , sCommandEntity);
 
@@ -127,7 +127,7 @@ namespace Volte.Bot.Term
             if (!string.IsNullOrEmpty(Prettify.GetValue("sCommand"))){
                 string Argument = Utils.Util.ReplaceWith(Prettify.GetValue("Argument") , "{sUID}" , sUID);
 
-                sCommand.sDirectory = Util.Separator(AppConfigs.GetValue("ProjectPath") + @"\src\"+ sUID);
+                sCommand.sDirectory = Util.Separator(AppConfigs.ProjectPath + @"\src\"+ sUID);
                 sCommand.sCommand   = Prettify.GetValue("sCommand");
                 sCommand.sArguments = Util.Separator(Argument);
 
@@ -145,7 +145,7 @@ namespace Volte.Bot.Term
 
             sArguments = Utils.Util.ReplaceWith(sArguments , "{sUID}" , sUID);
 
-            sCommand.sDirectory = Util.Separator(AppConfigs.GetValue("ProjectPath") + @"\src\"+ sUID);
+            sCommand.sDirectory = Util.Separator(AppConfigs.ProjectPath + @"\src\"+ sUID);
             sCommand.sCommand   = AppConfigs.GetValue("Compiler");
             sCommand.sArguments = sArguments;
 
@@ -167,7 +167,7 @@ namespace Volte.Bot.Term
                     }else{
                         Console.WriteLine("fileName "+fileNameDll);
                         Console.WriteLine("Copy file to");
-                        string sPath = AppConfigs.GetValue("ProjectPath")+@"\apps\addons\";
+                        string sPath = AppConfigs.ProjectPath+@"\apps\addons\";
 
                         Console.WriteLine("   "+fileNameDll+" ==> "+sPath+sUID+".dll");
                         File.Copy(fileNameDll ,sPath +sUID+".dll",true);
@@ -280,17 +280,99 @@ namespace Volte.Bot.Term
             return "";
         }
 
+
+public void Generator(string sUID)
+{
+    Message = new StringBuilder();
+    if (string.IsNullOrEmpty(sUID))
+    {
+        sUID = "";
+    }
+    DbContext _DbContext = (DbContext)(object)new DbContext(AppConfigs.GetValue("sDbName"), AppConfigs.GetValue("Provider"), AppConfigs.GetValue("dbAdapter"));
+    QueryRows RsSysFunction = (QueryRows)(object)new QueryRows(_DbContext);
+    sUID = sUID.Replace("$", "%");
+    if (sUID.ToLower() == "a")
+    {
+        sUID = "%";
+    }
+    JSONObject _JSONFunction = AppConfigs.LoadJSONObject(AppConfigs.DevelopPath + "\\definition\\functions.json");
+    if (File.Exists(Util.Separator(AppConfigs.DevelopPath + "\\definition\\functions.json")))
+    {
+        RsSysFunction.CommandText="SELECT sUID FROM sysfunction WHERE sUID LIKE '%" + sUID + "%' ORDER BY sUID DESC";
+    }
+    else
+    {
+        RsSysFunction.CommandText="SELECT sUID FROM sysfunction WHERE bActive<>0 AND sUID LIKE '%" + sUID + "%' ORDER BY sUID DESC";
+    }
+    RsSysFunction.Open();
+    _L_UID_CODE = new List<string>();
+    if (sUID.ToLower() == "en")
+    {
+        GeneratorCaptionDefine(_DbContext, sUID.ToLower());
+    }
+    WriteLine("EOF-->" + RsSysFunction.EOF);
+    WriteLine("CommandText-->" + RsSysFunction.CommandText);
+    while (!RsSysFunction.EOF)
+    {
+        string _UID_CODE = RsSysFunction.GetValue("sUID");
+        WriteLine(_UID_CODE);
+        if (File.Exists(Util.Separator(AppConfigs.DevelopPath + "\\definition\\functions.json")) && _JSONFunction.ContainsKey(_UID_CODE))
+        {
+            _DbContext.Execute("UPDATE sysfunction Set bActive=1 WHERE sUID = '" + _UID_CODE + "'");
+        }
+        else
+        {
+            WriteLine(Util.Separator(AppConfigs.DevelopPath + "\\definition\\functions.json") + " Not Found!");
+        }
+        if (!File.Exists(Util.Separator(AppConfigs.DevelopPath + "\\definition\\functions.json")) || _JSONFunction.ContainsKey(_UID_CODE))
+        {
+            WriteLine("");
+            Write(_UID_CODE);
+            _L_UID_CODE.Add(_UID_CODE);
+            GeneratorActivityDefinition(_DbContext, _UID_CODE);
+            GeneratorActivity(_UID_CODE);
+        }
+        else
+        {
+            WriteLine(Util.Separator(AppConfigs.DevelopPath + "\\definition\\functions.json") + " Not Found!");
+        }
+        RsSysFunction.MoveNext();
+    }
+    RsSysFunction.Close();
+    foreach (string _UID_CODE in _L_UID_CODE)
+    {
+        Prettify(_UID_CODE);
+        Build(_UID_CODE);
+    }
+    foreach (FileNameValue _FileNameValue in _Hashs)
+    {
+        WriteLine("\n*** update hash *** " + _FileNameValue.Name + " " + _FileNameValue.FullName);
+        _DbContext.Execute("UPDATE sysfunction Set sHash='" + _FileNameValue.Name + "' WHERE sUID = '" + _FileNameValue.FullName + "'");
+    }
+    if (_FAILURE.Count <= 0)
+    {
+        return;
+    }
+    WriteLine("\n*** _FAILURE List *** ");
+    foreach (string c in _FAILURE)
+    {
+        WriteLine(c);
+    }
+}
+
+        
+
         private void GeneratorActivity(string sUID)
         {
 
-            CoreUtil.CreateDir(Util.Separator(AppConfigs.GetValue("ProjectPath") + @"\apps\addons"));
-            CoreUtil.CreateDir(Util.Separator(AppConfigs.GetValue("ProjectPath") + @"\src"));
+            CoreUtil.CreateDir(Util.Separator(AppConfigs.ProjectPath + @"\apps\addons"));
+            CoreUtil.CreateDir(Util.Separator(AppConfigs.ProjectPath + @"\src"));
 
             string _TableName    = "";
             string _ColumnName   = "";
             string _DataTypeCode = "";
 
-            JSONObject _JSONFunction = AppConfigs.LoadJSONObject(AppConfigs.GetValue("DevelopPath")+@"\definition\functions\"+sUID+".js");
+            JSONObject _JSONFunction = AppConfigs.LoadJSONObject(AppConfigs.AddonLocation+sUID+".js");
 
             AutoTemplate _AutoTemplate = new AutoTemplate();
             _AutoTemplate.DebugMode    = this.DebugMode;
@@ -301,7 +383,7 @@ namespace Volte.Bot.Term
             _AutoTemplate.SetValue("DistPath"        , AppConfigs.GetValue("DistPath"));
             _AutoTemplate.SetValue("AppPath"         , AppConfigs.GetValue("AppPath"));
             _AutoTemplate.SetValue("ProjectName"     , AppConfigs.GetValue("ProjectName"));
-            _AutoTemplate.SetValue("ProjectPath"     , AppConfigs.GetValue("ProjectPath"));
+            _AutoTemplate.SetValue("ProjectPath"     , AppConfigs.ProjectPath);
             _AutoTemplate.SetValue("DevelopPath"     , AppConfigs.GetValue("DevelopPath"));
             _AutoTemplate.SetValue("RefCode"         , "QD" + sUID.ToUpper());
             _AutoTemplate.SetValue("sSqlCode"        , "Q" + sUID.ToUpper());
@@ -387,7 +469,7 @@ namespace Volte.Bot.Term
 
             string newhash   = "";
             string _App_Path = Util.Separator(AppConfigs.GetValue("DevelopPath") + "\\");
-            string _Path     = Util.Separator(AppConfigs.GetValue("ProjectPath") + "\\src\\");
+            string _Path     = Util.Separator(AppConfigs.ProjectPath + "\\src\\");
 
             if (File.Exists(_App_Path + UID_TP_CODE + ".tpl")) {
 
@@ -409,7 +491,7 @@ namespace Volte.Bot.Term
                             cName  = cName.Replace("{UID_TP_CODE}"  , UID_TP_CODE);
                             cValue = cValue.Replace("{sUID}"        , sUID);
                             cValue = cValue.Replace("{AppPath}"     , AppConfigs.GetValue("AppPath"));
-                            cValue = cValue.Replace("{ProjectPath}" , AppConfigs.GetValue("ProjectPath"));
+                            cValue = cValue.Replace("{ProjectPath}" , AppConfigs.ProjectPath);
                             cValue = cValue.Replace("{DevelopPath}" , AppConfigs.GetValue("DevelopPath"));
                             cValue = cValue.Replace("{UID_TP_CODE}" , UID_TP_CODE);
 
@@ -952,8 +1034,8 @@ namespace Volte.Bot.Term
 
             CoreUtil.CreateDir(Util.Separator(AppConfigs.GetValue("DevelopPath") + "\\definition"));
             CoreUtil.CreateDir(Util.Separator(AppConfigs.GetValue("DevelopPath") + "\\definition\\entity"));
-            CoreUtil.CreateDir(Util.Separator(AppConfigs.GetValue("ProjectPath") + "\\src"));
-            CoreUtil.CreateDir(Util.Separator(AppConfigs.GetValue("ProjectPath") + "\\src\\entity"));
+            CoreUtil.CreateDir(Util.Separator(AppConfigs.ProjectPath + "\\src"));
+            CoreUtil.CreateDir(Util.Separator(AppConfigs.ProjectPath + "\\src\\entity"));
 
             List<string> sTableNames = new List<string>();
 
@@ -963,7 +1045,7 @@ namespace Volte.Bot.Term
 
             _AutoTemplate.SetValue("AppPath"     , AppConfigs.GetValue("AppPath"));
             _AutoTemplate.SetValue("DistPath"    , AppConfigs.GetValue("DistPath"));
-            _AutoTemplate.SetValue("ProjectPath" , AppConfigs.GetValue("ProjectPath"));
+            _AutoTemplate.SetValue("ProjectPath" , AppConfigs.ProjectPath);
             _AutoTemplate.SetValue("ProjectName" , AppConfigs.GetValue("ProjectName"));
 
             string localDirectory = Util.Separator(AppConfigs.GetValue("DevelopPath") + @"\definition\entity\");
@@ -1012,7 +1094,7 @@ namespace Volte.Bot.Term
                             _AutoTemplate.SetValue("sTableName" , sTableName);
 
                             _AutoTemplate.Template   = "N_Entity_Template.cs";
-                            _AutoTemplate.OutputFile = Util.Separator(AppConfigs.GetValue("ProjectPath") + "\\src\\entity\\" +Volte.Utils.Util.ToCamelCase(sTableName) + "Entity.cs");
+                            _AutoTemplate.OutputFile = Util.Separator(AppConfigs.ProjectPath + "\\src\\entity\\" +Volte.Utils.Util.ToCamelCase(sTableName) + "Entity.cs");
                             _AutoTemplate.Process();
 
                             sTableNames.Add(sTableName);
@@ -1025,11 +1107,11 @@ namespace Volte.Bot.Term
                 _AutoTemplate.SetValue("sTableNames" , sTableNames);
 
                 _AutoTemplate.Template   = "N_Entity_Build_Template.cs";
-                _AutoTemplate.OutputFile = Util.Separator(AppConfigs.GetValue("ProjectPath")  + @"\src\entity\\entity.Build");
+                _AutoTemplate.OutputFile = Util.Separator(AppConfigs.ProjectPath  + @"\src\entity\\entity.Build");
                 _AutoTemplate.Process();
 
                 _AutoTemplate.Template = "N_Entity_Build_Template.csproj";
-                _AutoTemplate.OutputFile = Util.Separator(AppConfigs.GetValue("ProjectPath") + @"\src\entity\\entity.csproj");
+                _AutoTemplate.OutputFile = Util.Separator(AppConfigs.ProjectPath + @"\src\entity\\entity.csproj");
                 _AutoTemplate.Process();
 
                 Prettify("entity");
@@ -1039,7 +1121,7 @@ namespace Volte.Bot.Term
                 sArguments = Utils.Util.ReplaceWith(sArguments , "{sUID}" , Util.Separator(@"entity"));
 
                 CommandEntity sCommand = new CommandEntity();
-                sCommand.sDirectory    = Util.Separator(AppConfigs.GetValue("ProjectPath") + @"\src\entity");
+                sCommand.sDirectory    = Util.Separator(AppConfigs.ProjectPath + @"\src\entity");
                 sCommand.sCommand      = AppConfigs.GetValue("Compiler");
                 sCommand.sArguments    = sArguments;
 
@@ -1487,8 +1569,8 @@ namespace Volte.Bot.Term
         public void Templates()
         {
 
-            CoreUtil.CreateDir(Util.Separator(AppConfigs.GetValue("ProjectPath") + "\\apps\\ddons"));
-            CoreUtil.CreateDir(Util.Separator(AppConfigs.GetValue("ProjectPath") + "\\src"));
+            CoreUtil.CreateDir(Util.Separator(AppConfigs.ProjectPath + "\\apps\\ddons"));
+            CoreUtil.CreateDir(Util.Separator(AppConfigs.ProjectPath + "\\src"));
 
 
             AutoTemplate _AutoTemplate = new AutoTemplate();
@@ -1498,11 +1580,11 @@ namespace Volte.Bot.Term
             _AutoTemplate.SetValue("sUID"        , "");
             _AutoTemplate.SetValue("ProjectName" , AppConfigs.GetValue("ProjectName"));
             _AutoTemplate.SetValue("AppPath"     , AppConfigs.GetValue("AppPath"));
-            _AutoTemplate.SetValue("ProjectPath" , AppConfigs.GetValue("ProjectPath"));
+            _AutoTemplate.SetValue("ProjectPath" , AppConfigs.ProjectPath);
             _AutoTemplate.SetValue("DevelopPath" , AppConfigs.GetValue("DevelopPath"));
 
             string _App_Path = Util.Separator(AppConfigs.GetValue("DevelopPath") + "\\");
-            string _Path     = Util.Separator(AppConfigs.GetValue("ProjectPath") + "\\src\\");
+            string _Path     = Util.Separator(AppConfigs.ProjectPath + "\\src\\");
 
             string sFile=this.FileName;
             if (!File.Exists(sFile)) {
@@ -1528,7 +1610,7 @@ namespace Volte.Bot.Term
                             cName  = cName.Replace("{UID_TP_CODE}"  , UID_TP_CODE);
 
                             cValue = cValue.Replace("{AppPath}"     , AppConfigs.GetValue("AppPath"));
-                            cValue = cValue.Replace("{ProjectPath}" , AppConfigs.GetValue("ProjectPath"));
+                            cValue = cValue.Replace("{ProjectPath}" , AppConfigs.ProjectPath);
                             cValue = cValue.Replace("{UID_TP_CODE}" , UID_TP_CODE);
 
 
