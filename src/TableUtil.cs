@@ -1738,7 +1738,7 @@ namespace Volte.Bot.Term
 
             JSONObject _AlterColumns = new JSONObject();
 
-            JSONObject _JSONObject = AppSetting.LoadJSONObject(AppSetting.AppSetting+@"MsSqlToMySqlDataType.json");
+            JSONObject _JSONObject = AppSetting.LoadSetting("MsSqlToMySqlDataType.json");
 
             string sPrev = "";
             foreach (JSONObject colname in nameValues) {
