@@ -68,9 +68,9 @@ namespace Volte.Bot.Term
             this.Write(sUID);
 
             _L_UID_CODE = new List<string>();
-            JSONObject _JSONFunction = AppConfigs.LoadJSONObject(AppConfigs.GetValue("DevelopPath")+@"\definition\functions.js");
+            JSONObject _JSONFunction = AppConfigs.LoadJSONObject(AppConfigs.AddonLocation+"functions.js");
 
-            DirectoryInfo dir = new DirectoryInfo(AppConfigs.GetValue("DevelopPath")+@"\definition\functions");
+            DirectoryInfo dir = new DirectoryInfo(AppConfigs.AddonLocation);
 
             FileSystemInfo[] fileinfo = dir.GetFileSystemInfos();
             foreach (FileSystemInfo i in fileinfo)
