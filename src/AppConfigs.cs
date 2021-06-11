@@ -192,7 +192,7 @@ namespace Volte.Bot.Term
             } 
          }
         public JSONObject LoadSetting(string fileName){
-            return AppConfigs.LoadJSONObject(this.AppSetting+fileName);
+            return this.LoadJSONObject(this.AppSetting+fileName);
         }
         public JSONObject LoadJSONObject(string fileName){
             string s = Util.Separator(fileName);
