@@ -14,7 +14,7 @@ namespace Volte.Bot.Term
             public class SysFields: EntityObject
         {
 
-            private bool _bAutoIncrement=false;
+            private bool _bAutoIdentity=false;
 
             private bool _bColumnNullable=false;
 
@@ -53,23 +53,23 @@ namespace Volte.Bot.Term
             private string _sTableName="";
 
             //<Summary>
-            //SysFields,bAutoIncrement
+            //SysFields,bAutoIdentity
             //</Summary>
             [AttributeMapping(Type=DbType.Boolean)]
-                public bool bAutoIncrement
+                public bool bAutoIdentity
                 {
-                    get { return _bAutoIncrement; }
+                    get { return _bAutoIdentity; }
                     set
                     {
                         if (this.Verified)
                         {
-                            if (value!=_bAutoIncrement)
+                            if (value!=_bAutoIdentity)
                             {
-                                _bAutoIncrement = value;
-                                this.PropertyChange("bAutoIncrement");
+                                _bAutoIdentity = value;
+                                this.PropertyChange("bAutoIdentity");
                             }
                         }else{
-                            _bAutoIncrement = value;
+                            _bAutoIdentity = value;
                         }
                     }
                 }
