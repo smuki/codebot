@@ -358,7 +358,7 @@ namespace Volte.Bot.Term
                 col.SetValue("nScale"         , colname.GetInteger("nColumnScale"));
                 col.SetValue("nLength"        , colname.GetInteger("nColumnLength"));
                 col.SetValue("bNullable"      , colname.GetBoolean("bColumnNullable"));
-                col.SetValue("bAutoIncrement" , colname.GetBoolean("AutoIncrement"));
+                col.SetValue("bAutoIncrement" , colname.GetBoolean("bAutoIncrement"));
                 col.SetValue("bPrimaryKey"    , colname.GetBoolean("bPrimaryKey"));
                 col.SetValue("sDefault"       , sDefault);
                 col.SetValue("sBefName"       , sBefName);
@@ -481,13 +481,13 @@ namespace Volte.Bot.Term
                     string sAutoIncrement = _Fields.GetValue("sAutoIncrement");
 
                     if (sAutoIncrement.IndexOf("auto_increment")>=0){
-                        _Column.SetValue("AutoIncrement" , true);
+                        _Column.SetValue("bAutoIncrement" , true);
                     }else if (sAutoIncrement=="Y"){
-                        _Column.SetValue("AutoIncrement" , true);
+                        _Column.SetValue("bAutoIncrement" , true);
                     }else if (sAutoIncrement=="N"){
-                        _Column.SetValue("AutoIncrement" , false);
+                        _Column.SetValue("bAutoIncrement" , false);
                     }else{
-                        _Column.SetValue("AutoIncrement" , false);
+                        _Column.SetValue("bAutoIncrement" , false);
                     }
                     _Column.SetValue("sDefault"          , _Fields.GetValue("sDefault"));
                     _Column.SetValue("nNumericPrecision" , _Fields.GetValue("nNumericPrecision"));
@@ -654,7 +654,7 @@ namespace Volte.Bot.Term
                     col.SetValue("nScale"         , colname.GetInteger("nColumnScale"));
                     col.SetValue("nLength"        , colname.GetInteger("nColumnLength"));
                     col.SetValue("bNullable"      , colname.GetBoolean("bColumnNullable"));
-                    col.SetValue("bAutoIncrement" , colname.GetBoolean("AutoIncrement"));
+                    col.SetValue("bAutoIncrement" , colname.GetBoolean("bAutoIncrement"));
                     col.SetValue("bPrimaryKey"    , colname.GetBoolean("bPrimaryKey"));
                     col.SetValue("sDefault"       , sDefault);
                     col.SetValue("sBefName"       , sBefName);
@@ -700,7 +700,7 @@ namespace Volte.Bot.Term
                             change=true;
                         }
                         if (TargetCol.GetBoolean("bAutoIncrement")!=field.GetBoolean("bAutoIncrement")){
-                            s.AppendLine(" AutoIncrement "+TargetCol.GetBoolean("bAutoIncrement") +"->"+ field.GetBoolean("bAutoIncrement"));
+                            s.AppendLine(" bAutoIncrement "+TargetCol.GetBoolean("bAutoIncrement") +"->"+ field.GetBoolean("bAutoIncrement"));
                             change=true;
                         }
                         if ("order"==sMode.ToLower()){
