@@ -68,7 +68,6 @@ namespace Volte.Bot.Term
             this.Write(sUID);
 
             _L_UID_CODE = new List<string>();
-            JSONObject _JSONFunction = AppConfigs.LoadJSONObject(AppConfigs.AddonLocation+"functions.json");
 
             DirectoryInfo dir = new DirectoryInfo(AppConfigs.AddonLocation);
 
@@ -80,9 +79,9 @@ namespace Volte.Bot.Term
                 }
                 else
                 {
-                    string fileName=Path.GetFileNameWithoutExtension(i.FullName);
+                    string fileName = Path.GetFileNameWithoutExtension(i.FullName);
 
-                    if (fileName.Contains(sUID) && _JSONFunction.ContainsKey(fileName)){
+                    if (fileName.Contains(sUID)){
                         this.WriteLine("");
                         this.Write(fileName);
 
