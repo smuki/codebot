@@ -221,7 +221,7 @@ namespace Volte.Bot.Term
         {
             string sColumnName  = args[0].ToString();
 
-            JSONObject _JSONObject= AppConfigs.LoadJSONObject(AppConfigs.DevelopPath+@"\appsettings\IgnoreCopyColumn.json");
+            JSONObject _JSONObject= AppConfigs.LoadJSONObject(AppConfigs.AppSettings+@"IgnoreCopyColumn.json");
             return  _JSONObject.GetBoolean(sColumnName).ToString();
         }
 
@@ -316,7 +316,7 @@ namespace Volte.Bot.Term
                 TableUtil _TableUtil = new TableUtil();
                 List<JSONObject> aryColumns =  _TableUtil.DatabaseTableColumns(this.Trans , sTableName);
 
-                JSONObject _obj=AppConfigs.LoadJSONObject(AppConfigs.DevelopPath+@"\AppSettings\DataType.json");
+                JSONObject _obj=AppConfigs.LoadJSONObject(AppConfigs.AppSettings+@"DataType.json");
                 foreach (JSONObject colname in aryColumns) {
 
                     string s = colname.GetValue("sTableName") + "." + colname.GetValue("sColumnName");
@@ -454,7 +454,7 @@ namespace Volte.Bot.Term
         {
             string dataType = args[0].ToString();
 
-            string sValue = AppConfigs.LoadJSONObject(AppConfigs.DevelopPath+@"\appsettings\DbType.json").GetValue(dataType);
+            string sValue = AppConfigs.LoadJSONObject(AppConfigs.AppSettings+@"DbType.json").GetValue(dataType);
             if (sValue==""){
                 return "undefine"+dataType;
             }else{
@@ -467,7 +467,7 @@ namespace Volte.Bot.Term
 
             string dataType = args[0].ToString();
 
-            string sValue = AppConfigs.LoadJSONObject(AppConfigs.DevelopPath+@"\appsettings\SqlDataTypeToDataType.json").GetValue(dataType);
+            string sValue = AppConfigs.LoadJSONObject(AppConfigs.AppSettings+@"SqlDataTypeToDataType.json").GetValue(dataType);
             if (sValue==""){
                 return "undefine-"+dataType;
             }else{
@@ -480,7 +480,7 @@ namespace Volte.Bot.Term
 
             string dataType = args[0].ToString();
 
-            string sValue = AppConfigs.LoadJSONObject(AppConfigs.DevelopPath+@"\appsettings\StringToDataType.json").GetValue(dataType);
+            string sValue = AppConfigs.LoadJSONObject(AppConfigs.AppSettings+@"StringToDataType.json").GetValue(dataType);
             if (sValue==""){
                 return "undefine"+dataType;
             }else{
@@ -493,7 +493,7 @@ namespace Volte.Bot.Term
 
             string dataType = args[0].ToString();
 
-            string sValue = AppConfigs.LoadJSONObject(AppConfigs.DevelopPath+@"\appsettings\DataTypeDefault.json").GetValue(dataType);
+            string sValue = AppConfigs.LoadJSONObject(AppConfigs.AppSettings+@"DataTypeDefault.json").GetValue(dataType);
             if (sValue==""){
                 return "=\"" + dataType + "\"";
             }else{
@@ -561,7 +561,7 @@ namespace Volte.Bot.Term
             string rtv                = "";
 
             string key = tableName + "_" + columnName + "_" + type + "_" + captionCode + "_" + scale;
-            JSONObject _DataTypeChar = AppConfigs.LoadJSONObject(AppConfigs.DevelopPath+@"\appsettings\DataTypeChar.json");
+            JSONObject _DataTypeChar = AppConfigs.LoadJSONObject(AppConfigs.AppSettings+@"DataTypeChar.json");
 
             if (captionCode.IndexOf("=") > 0) {
                 captionCode = captionCode + ",";
@@ -660,7 +660,7 @@ namespace Volte.Bot.Term
                     string sColumnClass = RsZUCOLUTM.GetValue("sColumnClass");
 
                     if (nColumnScale < 0) {
-                        JSONObject _JSONObject2= AppConfigs.LoadJSONObject(AppConfigs.DevelopPath+@"\appsettings\ColumnScale.json");
+                        JSONObject _JSONObject2= AppConfigs.LoadJSONObject(AppConfigs.AppSettings+@"ColumnScale.json");
 
                         if (_JSONObject2.ContainsKey(sColumnClass)){
                             nColumnScale =_JSONObject2.GetInteger(sColumnClass);
@@ -668,7 +668,7 @@ namespace Volte.Bot.Term
                     }
                 } else {
                     if (tableName != "ZZFields" && tableName != "VARIABLE") {
-                        JSONObject _JSONObject2= AppConfigs.LoadJSONObject(AppConfigs.DevelopPath+@"\appsettings\AppSettings.json");
+                        JSONObject _JSONObject2= AppConfigs.LoadJSONObject(AppConfigs.AppSettings+@"AppSettings.json");
                         Console.WriteLine();
                         Console.WriteLine("*************************");
                         Console.WriteLine(tableName + "." + columnName + " Is Invalid , Please Use Table Name [Variable].");
