@@ -375,7 +375,7 @@ namespace Volte.Bot.Term
 
             }
 
-            JSONObject _JSONObject = AppConfigs.LoadJSONObject(AppConfigs.GetValue("DevelopPath")+@"\appsettings\ColumnScale.js");
+            JSONObject _JSONObject = AppConfigs.LoadSetting(+@"ColumnScale.js");
 
             foreach (string sName in _JSONObject.Names) {
                 if (_JSONObject.ContainsKey(sName)){
@@ -629,7 +629,7 @@ namespace Volte.Bot.Term
 
                     if (_COLUMNEntity.ColumnScale < 0) {
 
-                        JSONObject _JSONObject2= AppConfigs.LoadJSONObject(AppConfigs.GetValue("DevelopPath")+@"\appsettings\ColumnScale.js");
+                        JSONObject _JSONObject2= AppConfigs.LoadSetting(+@"ColumnScale.js");
 
                         if (_JSONObject2.ContainsKey(sColumnClass)){
                             _COLUMNEntity.ColumnScale =_JSONObject2.GetInteger(sColumnClass);
@@ -644,7 +644,7 @@ namespace Volte.Bot.Term
                     _COLUMNEntity.Length = 60;
                 }
 
-                JSONObject _JSONObject3= AppConfigs.LoadJSONObject(AppConfigs.GetValue("DevelopPath")+@"\appsettings\AdjustmentLength.js");
+                JSONObject _JSONObject3= AppConfigs.LoadSetting(+@"AdjustmentLength.js");
                 if (_DataType == "datetime") {
                     _COLUMNEntity.MaxLength = 10;
                 }
@@ -1559,7 +1559,7 @@ namespace Volte.Bot.Term
 
         private string DataTypeChar(string dataType)
         {
-            string sValue = AppConfigs.LoadJSONObject(AppConfigs.GetValue("DevelopPath")+@"\appsettings\DataTypeChar.js").GetValue(dataType);
+            string sValue = AppConfigs.LoadSetting(+@"DataTypeChar.js").GetValue(dataType);
             if (sValue==""){
                 return "undefine";
             }else{
