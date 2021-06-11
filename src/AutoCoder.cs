@@ -281,86 +281,84 @@ namespace Volte.Bot.Term
         }
 
 
-public void Generator(string sUID)
-{
-    Message = new StringBuilder();
-    if (string.IsNullOrEmpty(sUID))
-    {
-        sUID = "";
-    }
-    DbContext _DbContext = (DbContext)(object)new DbContext(AppConfigs.GetValue("sDbName"), AppConfigs.GetValue("Provider"), AppConfigs.GetValue("dbAdapter"));
-    QueryRows RsSysFunction = (QueryRows)(object)new QueryRows(_DbContext);
-    sUID = sUID.Replace("$", "%");
-    if (sUID.ToLower() == "a")
-    {
-        sUID = "%";
-    }
-    JSONObject _JSONFunction = AppConfigs.LoadJSONObject(AppConfigs.DevelopPath + "\\definition\\functions.json");
-    if (File.Exists(Util.Separator(AppConfigs.DevelopPath + "\\definition\\functions.json")))
-    {
-        RsSysFunction.CommandText="SELECT sUID FROM sysfunction WHERE sUID LIKE '%" + sUID + "%' ORDER BY sUID DESC";
-    }
-    else
-    {
-        RsSysFunction.CommandText="SELECT sUID FROM sysfunction WHERE bActive<>0 AND sUID LIKE '%" + sUID + "%' ORDER BY sUID DESC";
-    }
-    RsSysFunction.Open();
-    _L_UID_CODE = new List<string>();
-    if (sUID.ToLower() == "en")
-    {
-        GeneratorCaptionDefine(_DbContext, sUID.ToLower());
-    }
-    WriteLine("EOF-->" + RsSysFunction.EOF);
-    WriteLine("CommandText-->" + RsSysFunction.CommandText);
-    while (!RsSysFunction.EOF)
-    {
-        string _UID_CODE = RsSysFunction.GetValue("sUID");
-        WriteLine(_UID_CODE);
-        if (File.Exists(Util.Separator(AppConfigs.DevelopPath + "\\definition\\functions.json")) && _JSONFunction.ContainsKey(_UID_CODE))
+        public void Generator(string sUID)
         {
-            _DbContext.Execute("UPDATE sysfunction Set bActive=1 WHERE sUID = '" + _UID_CODE + "'");
+            Message = new StringBuilder();
+            if (string.IsNullOrEmpty(sUID))
+            {
+                sUID = "";
+            }
+            DbContext _DbContext = new DbContext(AppConfigs.GetValue("sDbName"), AppConfigs.GetValue("Provider"), AppConfigs.GetValue("dbAdapter"));
+            QueryRows RsSysFunction = new QueryRows(_DbContext);
+            sUID = sUID.Replace("$", "%");
+            if (sUID.ToLower() == "a")
+            {
+                sUID = "%";
+            }
+            JSONObject _JSONFunction = AppConfigs.LoadJSONObject(AppConfigs.DevelopPath + "\\definition\\functions.json");
+            if (File.Exists(Util.Separator(AppConfigs.DevelopPath + "\\definition\\functions.json")))
+            {
+                RsSysFunction.CommandText="SELECT sUID FROM sysfunction WHERE sUID LIKE '%" + sUID + "%' ORDER BY sUID DESC";
+            }
+            else
+            {
+                RsSysFunction.CommandText="SELECT sUID FROM sysfunction WHERE bActive<>0 AND sUID LIKE '%" + sUID + "%' ORDER BY sUID DESC";
+            }
+            RsSysFunction.Open();
+            _L_UID_CODE = new List<string>();
+            if (sUID.ToLower() == "en")
+            {
+                GeneratorCaptionDefine(_DbContext, sUID.ToLower());
+            }
+            WriteLine("EOF-->" + RsSysFunction.EOF);
+            WriteLine("CommandText-->" + RsSysFunction.CommandText);
+            while (!RsSysFunction.EOF)
+            {
+                string _UID_CODE = RsSysFunction.GetValue("sUID");
+                WriteLine(_UID_CODE);
+                if (File.Exists(Util.Separator(AppConfigs.DevelopPath + "\\definition\\functions.json")) && _JSONFunction.ContainsKey(_UID_CODE))
+                {
+                    _DbContext.Execute("UPDATE sysfunction Set bActive=1 WHERE sUID = '" + _UID_CODE + "'");
+                }
+                else
+                {
+                    WriteLine(Util.Separator(AppConfigs.DevelopPath + "\\definition\\functions.json") + " Not Found!");
+                }
+                if (!File.Exists(Util.Separator(AppConfigs.DevelopPath + "\\definition\\functions.json")) || _JSONFunction.ContainsKey(_UID_CODE))
+                {
+                    WriteLine("");
+                    Write(_UID_CODE);
+                    _L_UID_CODE.Add(_UID_CODE);
+                    GeneratorActivityDefinition(_DbContext, _UID_CODE);
+                    GeneratorActivity(_UID_CODE);
+                }
+                else
+                {
+                    WriteLine(Util.Separator(AppConfigs.DevelopPath + "\\definition\\functions.json") + " Not Found!");
+                }
+                RsSysFunction.MoveNext();
+            }
+            RsSysFunction.Close();
+            foreach (string _UID_CODE in _L_UID_CODE)
+            {
+                Prettify(_UID_CODE);
+                Build(_UID_CODE);
+            }
+            foreach (FileNameValue _FileNameValue in _Hashs)
+            {
+                WriteLine("\n*** update hash *** " + _FileNameValue.Name + " " + _FileNameValue.FullName);
+                _DbContext.Execute("UPDATE sysfunction Set sHash='" + _FileNameValue.Name + "' WHERE sUID = '" + _FileNameValue.FullName + "'");
+            }
+            if (_FAILURE.Count <= 0)
+            {
+                return;
+            }
+            WriteLine("\n*** _FAILURE List *** ");
+            foreach (string c in _FAILURE)
+            {
+                WriteLine(c);
+            }
         }
-        else
-        {
-            WriteLine(Util.Separator(AppConfigs.DevelopPath + "\\definition\\functions.json") + " Not Found!");
-        }
-        if (!File.Exists(Util.Separator(AppConfigs.DevelopPath + "\\definition\\functions.json")) || _JSONFunction.ContainsKey(_UID_CODE))
-        {
-            WriteLine("");
-            Write(_UID_CODE);
-            _L_UID_CODE.Add(_UID_CODE);
-            GeneratorActivityDefinition(_DbContext, _UID_CODE);
-            GeneratorActivity(_UID_CODE);
-        }
-        else
-        {
-            WriteLine(Util.Separator(AppConfigs.DevelopPath + "\\definition\\functions.json") + " Not Found!");
-        }
-        RsSysFunction.MoveNext();
-    }
-    RsSysFunction.Close();
-    foreach (string _UID_CODE in _L_UID_CODE)
-    {
-        Prettify(_UID_CODE);
-        Build(_UID_CODE);
-    }
-    foreach (FileNameValue _FileNameValue in _Hashs)
-    {
-        WriteLine("\n*** update hash *** " + _FileNameValue.Name + " " + _FileNameValue.FullName);
-        _DbContext.Execute("UPDATE sysfunction Set sHash='" + _FileNameValue.Name + "' WHERE sUID = '" + _FileNameValue.FullName + "'");
-    }
-    if (_FAILURE.Count <= 0)
-    {
-        return;
-    }
-    WriteLine("\n*** _FAILURE List *** ");
-    foreach (string c in _FAILURE)
-    {
-        WriteLine(c);
-    }
-}
-
-        
 
         private void GeneratorActivity(string sUID)
         {
@@ -752,7 +750,7 @@ public void Generator(string sUID)
                 }
 
                 //if (_DataType == "ntext" && _COLUMNEntity.Height <= 2) {
-                    //_COLUMNEntity.Height = 3;
+                //_COLUMNEntity.Height = 3;
                 //}
 
                 _COLUMNEntity.DataTypeCode   = _DataType;
