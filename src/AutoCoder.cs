@@ -68,7 +68,7 @@ namespace Volte.Bot.Term
             this.Write(sUID);
 
             _L_UID_CODE = new List<string>();
-            JSONObject _JSONFunction = AppConfigs.LoadJSONObject(AppConfigs.AddonLocation+"functions.js");
+            JSONObject _JSONFunction = AppConfigs.LoadJSONObject(AppConfigs.AddonLocation+"functions.json");
 
             DirectoryInfo dir = new DirectoryInfo(AppConfigs.AddonLocation);
 
@@ -409,7 +409,7 @@ namespace Volte.Bot.Term
                 _COLUMNEntity.sRefBrowseType = _NameValue.GetValue("sType");
                 _COLUMNEntity.sRefViewer     = _NameValue.GetValue("sRefViewer");
                 _COLUMNEntity.bPrimaryKey    = _NameValue.GetBoolean("bPrimaryKey");
-                _COLUMNEntity.AutoIdentity   = _NameValue.GetBoolean("AutoIdentity");
+                _COLUMNEntity.bAutoIdentity   = _NameValue.GetBoolean("bAutoIdentity");
 
                 if (_TableName.ToLower() != "variable" && (_DataTypeCode == "nvarchar" || _DataTypeCode == "ntext")) {
                     if (_ColumnName != "sOriginal") {
@@ -427,7 +427,7 @@ namespace Volte.Bot.Term
 
             }
 
-            JSONObject _JSONObject = AppConfigs.LoadSetting("ColumnScale.js");
+            JSONObject _JSONObject = AppConfigs.LoadSetting("ColumnScale.json");
 
             foreach (string sName in _JSONObject.Names) {
                 if (_JSONObject.ContainsKey(sName)){
@@ -679,7 +679,7 @@ namespace Volte.Bot.Term
 
                     if (_COLUMNEntity.ColumnScale < 0) {
 
-                        JSONObject _JSONObject2= AppConfigs.LoadSetting("ColumnScale.js");
+                        JSONObject _JSONObject2= AppConfigs.LoadSetting("ColumnScale.json");
 
                         if (_JSONObject2.ContainsKey(sColumnClass)){
                             _COLUMNEntity.ColumnScale =_JSONObject2.GetInteger(sColumnClass);
@@ -694,7 +694,7 @@ namespace Volte.Bot.Term
                     _COLUMNEntity.Length = 60;
                 }
 
-                JSONObject _JSONObject3= AppConfigs.LoadSetting("AdjustmentLength.js");
+                JSONObject _JSONObject3= AppConfigs.LoadSetting("AdjustmentLength.json");
                 if (_DataType == "datetime") {
                     _COLUMNEntity.MaxLength = 10;
                 }
@@ -968,7 +968,7 @@ namespace Volte.Bot.Term
                                 _ColumnEntity.SetValue("sColumnName" , sColumnName);
                                 _ColumnEntity.SetValue("sDataType"   , sDataType);
                                 _ColumnEntity.SetValue("bPrimaryKey" , RsSysFields.GetBoolean("bPrimaryKey"));
-                                _ColumnEntity.SetValue("AutoIdentity", RsSysFields.GetBoolean("bAutoIncrement"));
+                                _ColumnEntity.SetValue("bAutoIdentity", RsSysFields.GetBoolean("bAutoIdentity"));
                                 _ColumnEntity.SetInteger("nLength"   , nColumnLength);
 
                                 if (sDataType == "nvarchar") {
@@ -1030,7 +1030,7 @@ namespace Volte.Bot.Term
 
                 DirectoryInfo _DirInfo = new DirectoryInfo(localDirectory);
 
-                FileSystemInfo[] objFiles = _DirInfo.GetFileSystemInfos("*.js");
+                FileSystemInfo[] objFiles = _DirInfo.GetFileSystemInfos("*.json");
 
                 for (int i = 0; i < objFiles.Length; i++) {
                     FileInfo _FileInfo = objFiles[i] as FileInfo;
@@ -1056,7 +1056,7 @@ namespace Volte.Bot.Term
                                     _COLUMNEntity.ColumnName   = _JSONObject.GetValue("sColumnName");
                                     _COLUMNEntity.DataTypeCode = _JSONObject.GetValue("sDataType");
                                     _COLUMNEntity.bPrimaryKey  = _JSONObject.GetBoolean("bPrimaryKey");
-                                    _COLUMNEntity.AutoIdentity = _JSONObject.GetBoolean("AutoIdentity");
+                                    _COLUMNEntity.bAutoIdentity = _JSONObject.GetBoolean("bAutoIdentity");
                                     _COLUMNEntity.Length       = _JSONObject.GetInteger("nLength");
                                     ColumnEntity.Add(_COLUMNEntity);
                                 }
@@ -1286,7 +1286,7 @@ namespace Volte.Bot.Term
                         _VariableColumn.SetValue("nColumnLength"     , 10);
                         _VariableColumn.SetValue("bPrimaryKey"       , false);
                         _VariableColumn.SetValue("bColumnNullable"   , true);
-                        _VariableColumn.SetValue("bAutoIncrement"     , false);
+                        _VariableColumn.SetValue("bAutoIdentity"     , false);
                         _VariableColumn.SetValue("sDefault"          , "");
                         _VariableColumn.SetValue("nNumericPrecision" , 0);
 
@@ -1460,7 +1460,7 @@ namespace Volte.Bot.Term
                             {
                                 _SysFieldsEntity = new SysFields();
 
-                                _SysFieldsEntity.bAutoIncrement  = _Fields.GetBoolean("bAutoIncrement");
+                                _SysFieldsEntity.bAutoIdentity  = _Fields.GetBoolean("bAutoIdentity");
                                 _SysFieldsEntity.bColumnNullable = _Fields.GetBoolean("bColumnNullable");
                                 _SysFieldsEntity.bPrimaryKey     = _Fields.GetBoolean("bPrimaryKey");
                                 _SysFieldsEntity.nColumnLength   = _Fields.GetInteger("nColumnLength");
@@ -1503,7 +1503,7 @@ namespace Volte.Bot.Term
 
                                 _SysFieldsEntity.bPrimaryKey     = _Fields.GetBoolean("bPrimaryKey");
                                 _SysFieldsEntity.bColumnNullable = _Fields.GetBoolean("bColumnNullable");
-                                _SysFieldsEntity.bAutoIncrement  = _Fields.GetBoolean("bAutoIncrement");
+                                _SysFieldsEntity.bAutoIdentity  = _Fields.GetBoolean("bAutoIdentity");
 
                                 if (_SysFieldsEntity.sDataType == "nvarchar")
                                 {
@@ -1606,7 +1606,7 @@ namespace Volte.Bot.Term
 
         private string DataTypeChar(string dataType)
         {
-            string sValue = AppConfigs.LoadSetting("DataTypeChar.js").GetValue(dataType);
+            string sValue = AppConfigs.LoadSetting("DataTypeChar.json").GetValue(dataType);
             if (sValue==""){
                 return "undefine";
             }else{
