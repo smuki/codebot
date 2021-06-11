@@ -358,7 +358,7 @@ namespace Volte.Bot.Term
                 col.SetValue("nScale"         , colname.GetInteger("nColumnScale"));
                 col.SetValue("nLength"        , colname.GetInteger("nColumnLength"));
                 col.SetValue("bNullable"      , colname.GetBoolean("bColumnNullable"));
-                col.SetValue("bAutoIncrement" , colname.GetBoolean("bAutoIncrement"));
+                col.SetValue("bAutoIdentity" , colname.GetBoolean("bAutoIdentity"));
                 col.SetValue("bPrimaryKey"    , colname.GetBoolean("bPrimaryKey"));
                 col.SetValue("sDefault"       , sDefault);
                 col.SetValue("sBefName"       , sBefName);
@@ -481,13 +481,13 @@ namespace Volte.Bot.Term
                     string sAutoIncrement = _Fields.GetValue("sAutoIncrement");
 
                     if (sAutoIncrement.IndexOf("auto_increment")>=0){
-                        _Column.SetValue("bAutoIncrement" , true);
+                        _Column.SetValue("bAutoIdentity" , true);
                     }else if (sAutoIncrement=="Y"){
-                        _Column.SetValue("bAutoIncrement" , true);
+                        _Column.SetValue("bAutoIdentity" , true);
                     }else if (sAutoIncrement=="N"){
-                        _Column.SetValue("bAutoIncrement" , false);
+                        _Column.SetValue("bAutoIdentity" , false);
                     }else{
-                        _Column.SetValue("bAutoIncrement" , false);
+                        _Column.SetValue("bAutoIdentity" , false);
                     }
                     _Column.SetValue("sDefault"          , _Fields.GetValue("sDefault"));
                     _Column.SetValue("nNumericPrecision" , _Fields.GetValue("nNumericPrecision"));
@@ -535,7 +535,7 @@ namespace Volte.Bot.Term
 
             sb.Append(GetFieldConstraints(field, onlyDefine));
 
-            if (field.GetBoolean("bAutoIncrement")){
+            if (field.GetBoolean("bAutoIdentity")){
                 sb.Append(" AUTO_INCREMENT ");
             }
             return sb.ToString();
@@ -596,7 +596,7 @@ namespace Volte.Bot.Term
         public string AddNewColumnSQL(string sTableName , JSONObject field , string sAfter) {
 
             string sql = "Alter Table "+FormatName(sTableName)+" Add Column "+FieldClause(field , true);
-            if (field.GetBoolean("bAutoIncrement")){
+            if (field.GetBoolean("bAutoIdentity")){
                 sql = sql +" AUTO_INCREMENT ";
             }
             if (string.IsNullOrEmpty(sAfter)){
@@ -610,7 +610,7 @@ namespace Volte.Bot.Term
         public string ChangeColumnSQL(string sTableName , JSONObject field , string sAfter){
 
             string sql = "Alter Table "+FormatName(sTableName)+" Modify Column "+FieldClause(field , false);
-            if (field.GetBoolean("bAutoIncrement")){
+            if (field.GetBoolean("bAutoIdentity")){
                 sql = sql +" AUTO_INCREMENT ";
             }
             if (string.IsNullOrEmpty(sAfter)){
@@ -654,7 +654,7 @@ namespace Volte.Bot.Term
                     col.SetValue("nScale"         , colname.GetInteger("nColumnScale"));
                     col.SetValue("nLength"        , colname.GetInteger("nColumnLength"));
                     col.SetValue("bNullable"      , colname.GetBoolean("bColumnNullable"));
-                    col.SetValue("bAutoIncrement" , colname.GetBoolean("bAutoIncrement"));
+                    col.SetValue("bAutoIdentity" , colname.GetBoolean("bAutoIdentity"));
                     col.SetValue("bPrimaryKey"    , colname.GetBoolean("bPrimaryKey"));
                     col.SetValue("sDefault"       , sDefault);
                     col.SetValue("sBefName"       , sBefName);
@@ -699,8 +699,8 @@ namespace Volte.Bot.Term
                             s.AppendLine(" Type          "+TargetCol.GetValue("sDataType") +"->"+ field.GetValue("sDataType"));
                             change=true;
                         }
-                        if (TargetCol.GetBoolean("bAutoIncrement")!=field.GetBoolean("bAutoIncrement")){
-                            s.AppendLine(" bAutoIncrement "+TargetCol.GetBoolean("bAutoIncrement") +"->"+ field.GetBoolean("bAutoIncrement"));
+                        if (TargetCol.GetBoolean("bAutoIdentity")!=field.GetBoolean("bAutoIdentity")){
+                            s.AppendLine(" bAutoIdentity "+TargetCol.GetBoolean("bAutoIdentity") +"->"+ field.GetBoolean("bAutoIdentity"));
                             change=true;
                         }
                         if ("order"==sMode.ToLower()){
