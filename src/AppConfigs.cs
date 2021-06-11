@@ -153,6 +153,14 @@ namespace Volte.Bot.Term
             } 
          }
 
+        public string AppSetting
+        {
+            get
+            {
+                return this.DevelopPath+@"\appsettings\";
+            }
+        }
+
         public string AddonLocation
         {
             get
@@ -183,7 +191,9 @@ namespace Volte.Bot.Term
                 return _JSONObject.Names; 
             } 
          }
-
+        public JSONObject LoadSetting(string fileName){
+            return AppConfigs.LoadJSONObject(this.AppSetting+fileName);
+        }
         public JSONObject LoadJSONObject(string fileName){
             string s = Util.Separator(fileName);
             if (_JSONObjects.ContainsKey(s)) {
