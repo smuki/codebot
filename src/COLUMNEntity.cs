@@ -8,7 +8,7 @@ namespace Volte.Bot.Term
     {
         public string EnableMode { get; set; }
         public bool ColumnNullable { get; set; }
-        public bool AutoIdentity { get; set; }
+        public bool bAutoIdentity { get; set; }
         public string TableName { get; set; }
         public string ColumnName { get; set; }
         public int Length { get; set; }
