@@ -1,12 +1,5 @@
 using System;
 using System.Text;
-using System.Collections;
-using System.Collections.Generic;
-using System.Xml;
-using System.IO;
-using System.Threading;
-
-using Volte.Data.Dapper;
 using Volte.Data.Json;
 
 namespace Volte.Bot.Term
