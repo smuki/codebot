@@ -1,7 +1,5 @@
-using System;
 using System.Collections.Specialized;
 using System.Text.RegularExpressions;
-using System.Diagnostics;
 
 namespace Volte.Bot.Term
 {
