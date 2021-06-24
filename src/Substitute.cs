@@ -129,7 +129,10 @@ namespace Volte.Bot.Term
                 StreamWriter sw = new StreamWriter(dest, false);
 
                 Dictionary<string, string> _Using = new Dictionary<string, string>();
+                
+                System.Console.WriteLine("");
 
+                bool bNamespace=true;
                 while (content != null)
                 {
                     content = sr.ReadLine();
@@ -137,8 +140,12 @@ namespace Volte.Bot.Term
                     {
                         string c = content.Trim();
 
-                        if (_Using.ContainsKey(c) && c.IndexOf("using ")==0){
-                            System.Console.WriteLine("IndexOf --> "+c);
+                        if (c.IndexOf("namespace")>=0){
+                           bNamespace=false; 
+                        }
+
+                        if (bNamespace && _Using.ContainsKey(c) && c.IndexOf("using ")==0){
+                            System.Console.WriteLine("Ignore --> "+c);
                         }else{
                             sw.WriteLine(CodeReplace(content));
                         }
