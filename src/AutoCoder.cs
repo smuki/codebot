@@ -18,9 +18,8 @@ using Volte.Utils;
 
 namespace Volte.Bot.Term
 {
-
-    public class AutoCoder {
-        const string ZFILE_NAME = "AutoCoder";
+    public class AutoCoder
+    {
 
         private string _fileName = "";
 
@@ -114,7 +113,7 @@ namespace Volte.Bot.Term
             _AutoTemplate.OutputFile = UtilSeparator.Separator(AppConfigs.AppPath + "\\temp\\Build_Result.html");
             _AutoTemplate.Process();
             _AutoTemplate.Close();
-            if (_FAILURE.Count>0)
+            if (_FAILURE.Count > 0)
             {
                 this.WriteLine("\n*** _FAILURE List *** ");
                 foreach (var c in _FAILURE)
@@ -451,24 +450,26 @@ namespace Volte.Bot.Term
 
             JSONObject _JSONObject = AppConfigs.LoadSetting("ColumnScale.json");
 
-            foreach (string sName in _JSONObject.Names) {
-                if (_JSONObject.ContainsKey(sName)){
-                    _AutoTemplate.SetValue(sName + "_Scale" , _JSONObject.GetInteger(sName));
+            foreach (string sName in _JSONObject.Names)
+            {
+                if (_JSONObject.ContainsKey(sName))
+                {
+                    _AutoTemplate.SetValue(sName + "_Scale", _JSONObject.GetInteger(sName));
                 }
             }
 
-            _AutoTemplate.SetValue("Entitys"       , Entitys);
-            _AutoTemplate.SetValue("COLUMNS_NAME"  , _COLUMNS_NAME);
-            _AutoTemplate.SetValue("COLUMNS_NAMED" , _COLUMNS_NAMEDateTime);
+            _AutoTemplate.SetValue("Entitys", Entitys);
+            _AutoTemplate.SetValue("COLUMNS_NAME", _COLUMNS_NAME);
+            _AutoTemplate.SetValue("COLUMNS_NAMED", _COLUMNS_NAMEDateTime);
 
             string newhash   = "";
             string _App_Path = UtilSeparator.Separator(AppConfigs.DevelopPath + "\\");
-            string _Path     = UtilSeparator.Separator(AppConfigs.ProjectPath + "\\src\\");
+            string _Path = UtilSeparator.Separator(AppConfigs.ProjectPath + "\\src\\");
 
             if (File.Exists(_App_Path + UID_TP_CODE + ".tpl"))
             {
 
-                using(StreamReader sr = new StreamReader(_App_Path + UID_TP_CODE + ".tpl"))
+                using (StreamReader sr = new StreamReader(_App_Path + UID_TP_CODE + ".tpl"))
                 {
                     string s;
                     StringBuilder XCodeObject = new StringBuilder();
@@ -493,14 +494,17 @@ namespace Volte.Bot.Term
                             cValue = cValue.Replace("{DevelopPath}", AppConfigs.DevelopPath);
                             cValue = cValue.Replace("{UID_TP_CODE}", UID_TP_CODE);
 
-                            if (cName == "Path") {
+                            if (cName == "Path")
+                            {
                                 _Path = UtilSeparator.Separator(cValue);
-                            } else {
+                            }
+                            else
+                            {
 
                                 CoreUtil.CreateDir(UtilSeparator.Separator(_Path + sUID));
 
-                                _AutoTemplate.Template   =  UtilSeparator.Separator(cName);
-                                _AutoTemplate.OutputFile =  UtilSeparator.Separator(_Path + sUID+@"\" + cValue);
+                                _AutoTemplate.Template = UtilSeparator.Separator(cName);
+                                _AutoTemplate.OutputFile = UtilSeparator.Separator(_Path + sUID + @"\" + cValue);
                                 _AutoTemplate.Process();
 
                             }
@@ -1421,7 +1425,6 @@ namespace Volte.Bot.Term
                 _Trans.Execute("UPDATE sysdata SET bGroupBy=0 WHERE bGroupBy IS NULL");
 
             } catch (Exception e) {
-                ZZLogger.Debug(ZFILE_NAME, e);
                 this.WriteLine("Exception=" + e.ToString());
                 string cMessage = "<HR>Message=[" + e.Message + "]" + "<HR>Source=[" + e.Source + "]<HR>StackTrace=[" + e.StackTrace + "]<HR>TargetSite=[" + e.TargetSite + "]";
                 this.WriteLine("Exception=" + cMessage);
@@ -1545,12 +1548,10 @@ namespace Volte.Bot.Term
             }
             catch (Exception e)
             {
-                ZZLogger.Debug(ZFILE_NAME, e);
                 this.WriteLine("Exception=" + e.ToString());
                 string cMessage = "<HR>Message=[" + e.Message + "]" + "<HR>Source=[" + e.Source + "]<HR>StackTrace=[" + e.StackTrace + "]<HR>TargetSite=[" + e.TargetSite + "]";
                 this.WriteLine("Exception=" + cMessage);
             }
-
         }
 
         public void Templates()
