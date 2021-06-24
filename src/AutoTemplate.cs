@@ -1141,8 +1141,8 @@ namespace Volte.Bot.Term
             _Templates.DebugMode = this.DebugMode;
             _Templates.AppPath   = AppConfigs.GetValue("AppPath");
 
-            string fileName  = Volte.Bot.Term.Util.Separator(AppConfigs.GetValue("AppPath") + @"\template\" + _Template);
-            string fileName2 = Volte.Bot.Term.Util.Separator(AppConfigs.GetValue("TemplatePath") + @"\" + _Template);
+            string fileName  = UtilSeparator.Separator(AppConfigs.GetValue("AppPath") + @"\template\" + _Template);
+            string fileName2 = UtilSeparator.Separator(AppConfigs.GetValue("TemplatePath") + @"\" + _Template);
             string code      = "";
 
             if (File.Exists(fileName)) {
@@ -1171,9 +1171,9 @@ namespace Volte.Bot.Term
                 return;
             }
 
-            CoreUtil.CreateDir(Volte.Bot.Term.Util.Separator(AppConfigs.GetValue("AppPath") + @"\temp"));
+            CoreUtil.CreateDir(UtilSeparator.Separator(AppConfigs.GetValue("AppPath") + @"\temp"));
 
-            string _t_template = Volte.Bot.Term.Util.Separator(AppConfigs.GetValue("AppPath") + @"\temp\" + this.sUID + "_" + Path.GetFileName(_Template) + ".tpl");
+            string _t_template = UtilSeparator.Separator(AppConfigs.GetValue("AppPath") + @"\temp\" + this.sUID + "_" + Path.GetFileName(_Template) + ".tpl");
 
             UTF8Encoding _UTF8Encoding = new UTF8Encoding(false, true);
 
