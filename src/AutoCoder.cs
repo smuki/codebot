@@ -30,8 +30,8 @@ namespace Volte.Bot.Term
 
         public List<CommandEntity> sCommandEntity = new List<CommandEntity>();
 
-        public  StringBuilder Message  = new StringBuilder();
-        public  AppConfigs   AppConfigs;
+        public StringBuilder Message = new StringBuilder();
+        public AppConfigs AppConfigs;
 
         public DirectoryInfo BaseDirectory;
 
