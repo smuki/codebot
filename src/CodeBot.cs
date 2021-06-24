@@ -23,7 +23,8 @@ using Volte.Data.Json;
 namespace Volte.Bot.Term
 {
 
-    public class MainCG {
+    public class MainCG
+    {
 
         static byte[] getData(string name)
         {
@@ -41,10 +42,13 @@ namespace Volte.Bot.Term
 
             AssemblyName name = new AssemblyName(args.Name);
 
-            try {
+            try
+            {
                 return AppDomain.CurrentDomain.Load(getData(name.Name + ".dll"));
 
-            } catch (Exception ex) {
+            }
+            catch (Exception ex)
+            {
             }
 
             return null;
@@ -53,8 +57,8 @@ namespace Volte.Bot.Term
         public static void Main(string[] args)
         {
             Console.WriteLine(DateTime.Now.ToOADate());
-            Console.WriteLine("Date ="+DateTime.Now.AddDays(400).ToString("yyyy-MM-dd"));
-            Console.WriteLine("Value="+DateTime.Now.AddDays(400).ToOADate());
+            Console.WriteLine("Date =" + DateTime.Now.AddDays(400).ToString("yyyy-MM-dd"));
+            Console.WriteLine("Value=" + DateTime.Now.AddDays(400).ToOADate());
 
             AppDomain.CurrentDomain.AssemblyResolve += new ResolveEventHandler(CurrentDomain_AssemblyResolve);
             CG _CG = new CG();
@@ -77,7 +81,7 @@ namespace Volte.Bot.Term
 
         public void PrintHelp()
         {
-            string fileName = System.IO.Path.GetFileNameWithoutExtension(System.Diagnostics.Process.GetCurrentProcess().MainModule.FileName);
+            string fileName = Path.GetFileNameWithoutExtension(System.Diagnostics.Process.GetCurrentProcess().MainModule.FileName);
             Console.WriteLine("");
             Console.WriteLine("Usage");
             Console.WriteLine("");
@@ -106,31 +110,35 @@ namespace Volte.Bot.Term
 
         }
 
-        public void PrintConfig(JSONObject obj , int level)
+        public void PrintConfig(JSONObject obj, int level)
         {
-            string tKey    = "                     ";
-            string iKey    = "                     ";
-            string sIndent = iKey.Substring(0 , level*3);
+            string tKey = "                     ";
+            string iKey = "                     ";
+            string sIndent = iKey.Substring(0, level * 3);
 
-            Console.WriteLine(sIndent+"{");
+            Console.WriteLine(sIndent + "{");
             foreach (string sKey in obj.Names)
             {
-                if (obj.IsJSONObject(sKey)){
-                    tKey = sIndent+sKey+"                     ";
-                    Console.WriteLine(sIndent+"   "+tKey.Substring(0,13) + " = ");
-                    PrintConfig(obj.GetJSONObject(sKey) , level+1);
-                }else{
-                    tKey = sIndent+sKey+"                     ";
-                    Console.WriteLine(sIndent+"   "+tKey.Substring(0,13) + " = " + obj.GetValue(sKey));
+                if (obj.IsJSONObject(sKey))
+                {
+                    tKey = sIndent + sKey + "                     ";
+                    Console.WriteLine(sIndent + "   " + tKey.Substring(0, 13) + " = ");
+                    PrintConfig(obj.GetJSONObject(sKey), level + 1);
+                }
+                else
+                {
+                    tKey = sIndent + sKey + "                     ";
+                    Console.WriteLine(sIndent + "   " + tKey.Substring(0, 13) + " = " + obj.GetValue(sKey));
                 }
             }
             tKey = "                     ";
-            Console.WriteLine(sIndent+"}");
+            Console.WriteLine(sIndent + "}");
         }
 
         public void Process(string[] args)
         {
-            try {
+            try
+            {
 
                 Arguments _Arguments = new Arguments(args);
 
@@ -144,11 +152,13 @@ namespace Volte.Bot.Term
                 string _IPAddress  = "";
                 string Port        = "";
 
-                if (_Arguments["C"] != null) {
+                if (_Arguments["C"] != null)
+                {
                     sCommand = _Arguments["C"].ToUpper();
                 }
 
-                if (_Arguments["Build"] != null) {
+                if (_Arguments["Build"] != null)
+                {
                     sCommand = "B";
                 }
                 if (_Arguments["Generator"] != null) {
@@ -182,25 +192,30 @@ namespace Volte.Bot.Term
                     sUID = _Arguments["U"].ToUpper();
                     sUID = sUID.Replace(".CS", "");
 
-                    if (sUID == "TRUE") {
+                    if (sUID == "TRUE")
+                    {
                         sUID = "A";
                     }
                 }
 
-                if (_Arguments["F"] != null) {
+                if (_Arguments["F"] != null)
+                {
                     _FileName = _Arguments["F"];
                 }
 
-                if (_Arguments["File"] != null) {
+                if (_Arguments["File"] != null)
+                {
                     _FileName = _Arguments["File"];
                 }
 
-                if (_Arguments["M"] != null) {
+                if (_Arguments["M"] != null)
+                {
 
                     sMode = _Arguments["M"].ToUpper();
                 }
 
-                if (_Arguments["MODE"] != null) {
+                if (_Arguments["MODE"] != null)
+                {
 
                     sMode = _Arguments["MODE"].ToUpper();
                 }
@@ -216,26 +231,30 @@ namespace Volte.Bot.Term
                     } else {
                         _debugMode = "Y";
                     }
-                } else {
+                }
+                else
+                {
                     _debugMode = "N";
                 }
 
-                string fileName = System.IO.Path.GetFileNameWithoutExtension(System.Diagnostics.Process.GetCurrentProcess().MainModule.FileName) + ".ini";
+                string fileName = Path.GetFileNameWithoutExtension(System.Diagnostics.Process.GetCurrentProcess().MainModule.FileName) + ".ini";
 
-                if (_Arguments["S"] != null) {
+                if (_Arguments["S"] != null)
+                {
+                    fileName = _Arguments["S"];
+                }
+                if (!File.Exists(fileName))
+                {
+                    Console.WriteLine("[" + fileName + "] Not Found");
+                }
+                if (!File.Exists(fileName.Replace(".ini", ".json")))
+                {
+                    Console.WriteLine("[" + fileName.Replace(".ini", ".json") + "] Not Found");
+                }
+                AppConfigs AppConfigs = new AppConfigs(fileName.Replace(".ini", ".json"));
 
-                    fileName= _Arguments["S"];
-                }
-                if (!File.Exists(fileName)) {
-                    Console.WriteLine("["+fileName+"] Not Found");
-                }
-                if (!File.Exists(fileName.Replace(".ini",".json"))) {
-                    Console.WriteLine("["+fileName.Replace(".ini",".json")+"] Not Found");
-                }
-                AppConfigs AppConfigs  = new AppConfigs(fileName.Replace(".ini",".json"));
-
-                Console.WriteLine("AppSetting : ["+fileName+"]");
-                PrintConfig(AppConfigs.JSONObjects , 0);
+                Console.WriteLine("AppSetting : [" + fileName + "]");
+                PrintConfig(AppConfigs.JSONObjects, 0);
 
                 switch (sCommand) {
                     case "B": {
@@ -296,14 +315,16 @@ namespace Volte.Bot.Term
                                 break;
                             }
 
-
-                    default: {
-                                 PrintHelp();
-                                 break;
-                             }
+                    default:
+                        {
+                            PrintHelp();
+                            break;
+                        }
                 }
 
-            } catch (Exception e) {
+            }
+            catch (Exception e)
+            {
                 Console.WriteLine("Exception=" + e.ToString());
             }
 
