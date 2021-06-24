@@ -12,11 +12,11 @@ using Volte.Utils;
 
 namespace Volte.Bot.Term
 {
-    public class AppConfigs {
+    public class AppConfigs
+    {
         const string ZFILE_NAME       = "AppConfig";
         private string _AppPath       = "";
         private string _AppSecret     = "";
-        private string _sAppPath      = "";
         private string _sDbName       = "";
         private string _sToken        = "";
         private string _FileName      = "";
@@ -46,23 +46,28 @@ namespace Volte.Bot.Term
         public AppConfigs(string fileName)
         {
 
-            _AppPath   = AppDomain.CurrentDomain.BaseDirectory;
+            _AppPath = AppDomain.CurrentDomain.BaseDirectory;
             _Separator = Path.DirectorySeparatorChar.ToString();
-            _AppPath   = _AppPath.Replace("/", _Separator);
-            _AppPath   = _AppPath.Replace("\\", _Separator);
-            _AppPath   = _AppPath.TrimEnd(_Separator.ToCharArray())+_Separator;
-          
-            if (fileName==""){
+            _AppPath = _AppPath.Replace("/", _Separator);
+            _AppPath = _AppPath.Replace("\\", _Separator);
+            _AppPath = _AppPath.TrimEnd(_Separator.ToCharArray()) + _Separator;
+
+            if (fileName == "")
+            {
 
                 _FileName = "term.config";
-            }else{
+            }
+            else
+            {
                 _FileName = fileName;
             }
 
-            if (!File.Exists(_FileName)) {
-                if (File.Exists(_AppPath + _FileName)) {
+            if (!File.Exists(_FileName))
+            {
+                if (File.Exists(_AppPath + _FileName))
+                {
                     _FileName = _AppPath + _FileName;
-                    ZZLogger.Debug(ZFILE_NAME,_FileName);
+                    ZZLogger.Debug(ZFILE_NAME, _FileName);
                 }
             }
 
@@ -95,22 +100,19 @@ namespace Volte.Bot.Term
                 _AppPath = System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetEntryAssembly().Location);
             }
         }
-        
+
         public JSONObject JSONObject(string name)
         {
             string vValue = _JSONObject.GetJSONObject(name).ToString();
             List<string> list = Utils.Util.Parameters(vValue);
-            //Console.WriteLine("***********="+vValue);
 
-            foreach(string v in list)
+            foreach (string v in list)
             {
-                //Console.WriteLine("##########="+v);
-                if (_JSONObject.ContainsKey(v)){
-                    vValue = Utils.Util.ReplaceWith(vValue, "${"+v+"}", this.GetValue(v));
+                if (_JSONObject.ContainsKey(v))
+                {
+                    vValue = Utils.Util.ReplaceWith(vValue, "${" + v + "}", this.GetValue(v));
                 }
             }
-            //Console.WriteLine("***********="+vValue);
-
             return new JSONObject(vValue);
         }
 
@@ -123,26 +125,21 @@ namespace Volte.Bot.Term
         {
             string vValue = _JSONObject.GetValue(name);
             List<string> list = Utils.Util.Parameters(vValue);
-            
-         //   Console.WriteLine("");
-         //   Console.WriteLine("");
-         //   Console.WriteLine("");
-         //   Console.WriteLine("");
-         //   Console.WriteLine("name   = "+name);
-         //   Console.WriteLine("vValue = "+vValue);
-            foreach(string v in list)
+
+            foreach (string v in list)
             {
-                //Console.WriteLine("     "+v+"=>"+_JSONObject.GetValue(v));
-                if (_JSONObject.ContainsKey(v)){
-                    if (v==name){
-                        vValue = Utils.Util.ReplaceWith(vValue, "${"+v+"}", _JSONObject.GetValue(v));
-                    }else{
-                        vValue = Utils.Util.ReplaceWith(vValue, "${"+v+"}", this.GetValue(v));
+                if (_JSONObject.ContainsKey(v))
+                {
+                    if (v == name)
+                    {
+                        vValue = Utils.Util.ReplaceWith(vValue, "${" + v + "}", _JSONObject.GetValue(v));
+                    }
+                    else
+                    {
+                        vValue = Utils.Util.ReplaceWith(vValue, "${" + v + "}", this.GetValue(v));
                     }
                 }
             }
-                //Console.WriteLine("vValue ="+vValue);
-
             return vValue;
         }
 
@@ -160,15 +157,14 @@ namespace Volte.Bot.Term
                 return this.DevelopPath+@"\appsettings\";
             }
         }
-
         public string AddonLocation
         {
             get
             {
-                return this.DevelopPath+@"\definition\functions\";
-            } 
+                return this.DevelopPath + @"\definition\functions\";
+            }
         }
-        
+
         public string DevelopPath
         {
             get
@@ -184,13 +180,22 @@ namespace Volte.Bot.Term
                 return this.GetValue("ProjectPath");
             }
         }
+
+        public string AppPath
+        {
+            get
+            {
+                return this.GetValue("AppPath");
+            }
+        }
         
         public List<string> Names
         {
-            get { 
-                return _JSONObject.Names; 
-            } 
-         }
+            get
+            {
+                return _JSONObject.Names;
+            }
+        }
         public JSONObject LoadSetting(string fileName){
             return this.LoadJSONObject(this.AppSetting+fileName);
         }
@@ -202,17 +207,21 @@ namespace Volte.Bot.Term
 
             JSONObject _Json = new JSONObject();
 
-            if (File.Exists(s)) {
+            if (File.Exists(s))
+            {
 
                 UTF8Encoding _UTF8Encoding = new UTF8Encoding(false, true);
-                string _s="";
-                using(StreamReader sr = new StreamReader(s, _UTF8Encoding)) {
+                string _s = "";
+                using (StreamReader sr = new StreamReader(s, _UTF8Encoding))
+                {
                     _s = sr.ReadToEnd();
                 }
 
                 _Json = new JSONObject(_s);
-            }else{
-                Console.WriteLine(s+" Not Found!");
+            }
+            else
+            {
+                Console.WriteLine(s + " Not Found!");
             }
             _JSONObjects[s] = _Json;
 
@@ -224,9 +233,7 @@ namespace Volte.Bot.Term
 
         public string sToken   { get { return _sToken;   } set { _sToken   = value; }  }
         public string sDbName  { get { return _sDbName;  } set { _sDbName  = value; }  }
-        public string sAppPath { get { return _sAppPath; } set { _sAppPath = value; }  }
 
-        public string AppPath        { get { return _AppPath;        }  }
         public string AppSecret      { get { return _AppSecret;      }  }
         public string DebugMode      { get { return _DebugMode;      }  }
         public string TemplatePath   { get { return _TemplatePath;    }  }
