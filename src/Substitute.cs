@@ -131,8 +131,6 @@ namespace Volte.Bot.Term
         }
         public void CopyFile(string src, string dest)
         {
-            UTF8Encoding _UTF8Encoding = new UTF8Encoding(false, true);
-
             using (StreamReader sr = new StreamReader(src))
             {
                 string content = "";
@@ -141,13 +139,22 @@ namespace Volte.Bot.Term
                     Directory.CreateDirectory(Path.GetDirectoryName(dest));
                 }
                 StreamWriter sw = new StreamWriter(dest, false);
+
+                Dictionary<string, string> _Using = new Dictionary<string, string>();
+
                 while (content != null)
                 {
                     content = sr.ReadLine();
                     if (content != null)
                     {
+                        string c = content.Trim();
 
-                        sw.WriteLine(CodeReplace(content));
+                        if (_Using.ContainsKey(c) && c.IndexOf("using ")==0){
+                            Console.WriteLine("IndexOf --> "+c);
+                        }else{
+                            sw.WriteLine(CodeReplace(content));
+                        }
+                        _Using[c]=c;
                     }
                 }
                 sw.Close();
