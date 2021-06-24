@@ -53,7 +53,7 @@
                 <include name = "TableUtil.cs" />
                 <include name = "SysFields.cs" />
                 <include name = "FileNameValue.cs" />
-                <include name = "Util.cs" />
+                <include name = "UtilSeparator.cs" />
                 <include name = "Substitute.cs" />
             </sources>
             <references>
