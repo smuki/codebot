@@ -200,7 +200,7 @@ namespace Volte.Bot.Term
             return this.LoadJSONObject(this.AppSetting+fileName);
         }
         public JSONObject LoadJSONObject(string fileName){
-            string s = Util.Separator(fileName);
+            string s = UtilSeparator.Separator(fileName);
             if (_JSONObjects.ContainsKey(s)) {
                 return _JSONObjects[s];
             }
