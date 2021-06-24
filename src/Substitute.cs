@@ -1,24 +1,10 @@
-using System;
-using System.Text;
-using System.Collections;
 using System.Collections.Generic;
-using System.Xml;
 using System.IO;
-using System.Data;
-using System.Data.OleDb;
-using System.Data.SqlClient;
-using System.Threading;
-using System.Runtime.InteropServices;
-using System.Reflection;
-using System.Security.Principal;
-
-using Volte.Data.Dapper;
+using System.Text;
 using Volte.Data.Json;
 
 namespace Volte.Bot.Term
 {
-
-
     public class Substitute
     {
         private Dictionary<string, string> _fileNames = new Dictionary<string, string>();
@@ -97,7 +83,7 @@ namespace Volte.Bot.Term
             }
 
             string s = src.Trim();
-            string sData = "";
+            string sData;
             if (File.Exists(fullName))
             {
                 StreamReader sr = new StreamReader(fullName);
@@ -119,8 +105,10 @@ namespace Volte.Bot.Term
                 return src;
             }
             string s = src.Trim();
+
             foreach (string f in _Codes.Keys)
             {
+
                 s = ReplaceWith(s, f, _Codes[f]);
             }
             foreach (JSONObject v in _Values.JSONObjects)
@@ -150,7 +138,7 @@ namespace Volte.Bot.Term
                         string c = content.Trim();
 
                         if (_Using.ContainsKey(c) && c.IndexOf("using ")==0){
-                            Console.WriteLine("IndexOf --> "+c);
+                            System.Console.WriteLine("IndexOf --> "+c);
                         }else{
                             sw.WriteLine(CodeReplace(content));
                         }
