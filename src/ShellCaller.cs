@@ -18,9 +18,7 @@ namespace Volte.Bot.Term
         public string sDirectory = "";
         public string Message    = "";
         public bool   SUCCESS    = false;
-
     }
-
     public class ShellRunner {
 
         const string ZFILE_NAME  = "ShellRunner";
@@ -86,7 +84,6 @@ namespace Volte.Bot.Term
                 }
 
                 s.AppendLine("");
-
 
             } catch (Exception e) {
                 s.AppendLine(entity.sCommand);
