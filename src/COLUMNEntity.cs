@@ -14,8 +14,7 @@ namespace Volte.Bot.Term
         public int Length { get; set; }
         public int MaxLength { get; set; }
         public int ColumnScale { get; set; }
-        public string DataTypeCode { get; set; }
-        public string DataTypeChar { get; set; }
+        public string DataType { get; set; }
         public string CaptionCode { get; set; }
         public string LNK_ColumnName { get; set; }
         public string Options { get; set; }
