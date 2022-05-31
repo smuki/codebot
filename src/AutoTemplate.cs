@@ -42,6 +42,8 @@ namespace Volte.Bot.Term
         private VoltEngine _Tmpl     = VoltEngine.Parser("");
         private Substitute _Substitute=new Substitute();
 
+        public string Replication  { get ; set ;  }
+
         public AppConfigs AppConfigs;
 
         public string DebugMode  { get { return _debugMode;  } set { _debugMode  = value; }  }
@@ -1192,6 +1194,12 @@ namespace Volte.Bot.Term
                         Console.WriteLine("OutputFile  = " + OutputFile);
                     }
                     _Substitute.CopyFile(tOutputFile,OutputFile);
+
+                    string[] aReplication = Replication.Split(';');
+
+                    foreach (string _Replication in aReplication) {
+                        _Substitute.CopyFile(tOutputFile,_Replication);
+                    }
                     if (File.Exists(tOutputFile))
                     {
                         File.Delete(tOutputFile);
