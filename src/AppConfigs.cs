@@ -181,6 +181,14 @@ namespace Volte.Bot.Term
             }
         }
 
+        public string Replications
+        {
+            get
+            {
+                return this.GetValue("Replications");
+            }
+        }
+
         public string AppPath
         {
             get
