@@ -464,7 +464,7 @@ namespace Volte.Bot.Term
             string newhash   = "";
             string _App_Path = UtilSeparator.Separator(AppConfigs.DevelopPath + "\\");
             string _Path        = UtilSeparator.Separator(AppConfigs.ProjectPath + "\\src\\");
-            string _Replications = UtilSeparator.Separator(AppConfigs.Replications+"\\");
+            string _Replications = UtilSeparator.Separator(AppConfigs.Replications);
             string[] aReplication = _Replications.Split(';');
 
             if (File.Exists(_App_Path + UID_TP_CODE + ".tpl"))
@@ -505,16 +505,19 @@ namespace Volte.Bot.Term
                                 CoreUtil.CreateDir(UtilSeparator.Separator(_Path + sUID));
 
                                 _AutoTemplate.Template = UtilSeparator.Separator(cName);
-                                string tReplication="";
-                                foreach (string _Replication in aReplication) {
-                                    if (tReplication!=""){
-                                        tReplication=tReplication+";";
+                                if (!string.IsNullOrEmpty(_Replications)){
+                                    string tReplication="";
+                                    foreach (string _Replication in aReplication) {
+                                        if (tReplication!=""){
+                                            tReplication=tReplication+";";
+                                        }
+                                        string tRep=UtilSeparator.Separator(_Replication + @"\");;
+                                        tReplication = tReplication+UtilSeparator.Separator(tRep + sUID + @"\" + cValue);
                                     }
-                                    tReplication = tReplication+UtilSeparator.Separator(_Replication + sUID + @"\" + cValue);
-
+                                    _AutoTemplate.Replication = tReplication;
+                                }else{
+                                    Console.WriteLine("Replication=none");
                                 }
-
-                                _AutoTemplate.Replication = tReplication;
                                 _AutoTemplate.OutputFile = UtilSeparator.Separator(_Path + sUID + @"\" + cValue);
                                 _AutoTemplate.Process();
 
