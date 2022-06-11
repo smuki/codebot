@@ -1194,11 +1194,14 @@ namespace Volte.Bot.Term
                         Console.WriteLine("OutputFile  = " + OutputFile);
                     }
                     _Substitute.CopyFile(tOutputFile,OutputFile);
+                    if (!string.IsNullOrEmpty(Replication)){
+                        string[] aReplication = Replication.Split(';');
 
-                    string[] aReplication = Replication.Split(';');
+                        foreach (string _Replication in aReplication) {
 
-                    foreach (string _Replication in aReplication) {
-                        _Substitute.CopyFile(tOutputFile,_Replication);
+                            Console.WriteLine(tOutputFile+" = > " + _Replication);
+                            _Substitute.CopyFile(tOutputFile,_Replication);
+                        }
                     }
                     if (File.Exists(tOutputFile))
                     {
