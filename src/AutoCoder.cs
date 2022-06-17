@@ -32,8 +32,6 @@ namespace Volte.Bot.Term
         public StringBuilder Message = new StringBuilder();
         public AppConfigs AppConfigs;
 
-        public DirectoryInfo BaseDirectory;
-
         public  string  Mode         = "";
         public  string  UID_TP_CODE  = "N";
         public  string  DebugMode    = "N";
