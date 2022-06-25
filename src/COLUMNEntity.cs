@@ -7,10 +7,10 @@ namespace Volte.Bot.Term
     public class COLUMNEntity
     {
         public string EnableMode { get; set; }
-        public bool ColumnNullable { get; set; }
-        public bool bAutoIdentity { get; set; }
-        public string TableName { get; set; }
-        public string ColumnName { get; set; }
+        public bool   bNullable { get; set; }
+        public bool   bAutoIdentity { get; set; }
+        public string sTableName { get; set; }
+        public string sColumnName { get; set; }
         public int    Length { get; set; }
         public int    MaxLength { get; set; }
         public int    nScale { get; set; }
@@ -30,7 +30,7 @@ namespace Volte.Bot.Term
         public bool Release { get; set; }
         public string ZZVIEW { get; set; }
 
-        public string TableColumnName { get { return this.TableName + "_" + this.ColumnName; } }
+        public string TableColumnName { get { return this.sTableName + "_" + this.sColumnName; } }
 
     }
 }
