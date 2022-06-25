@@ -1475,7 +1475,7 @@ namespace Volte.Bot.Term
                                 _SysFieldsEntity.bColumnNullable = _Fields.GetBoolean("bColumnNullable");
                                 _SysFieldsEntity.bPrimaryKey     = _Fields.GetBoolean("bPrimaryKey");
                                 _SysFieldsEntity.nColumnLength   = _Fields.GetInteger("nColumnLength");
-                                _SysFieldsEntity.nColumnScale    = _Fields.GetInteger("nColumnScale");
+                                _SysFieldsEntity.nScale    = _Fields.GetInteger("nScale");
                                 _SysFieldsEntity.sCaptionCode    = _CaptionCode;
                                 _SysFieldsEntity.sColumnName     = _COLUMN_NAME;
                                 _SysFieldsEntity.sDataType       = _Fields.GetValue("sDataType");
