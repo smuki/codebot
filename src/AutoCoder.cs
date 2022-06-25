@@ -642,7 +642,6 @@ namespace Volte.Bot.Term
                 _COLUMNEntity.ColumnNullable = RsZUPRGDTM.GetBoolean("bColumnNullable");
                 _COLUMNEntity.sDataType      = _DataType;
                 _COLUMNEntity.EnableMode     = RsZUPRGDTM.GetValue("sEnableMode");
-                _COLUMNEntity.Index          = RsZUPRGDTM.GetInteger("nIndex");
                 _COLUMNEntity.Length         = RsZUPRGDTM.GetInteger("nWidth");
                 _COLUMNEntity.MaxLength      = RsZUPRGDTM.GetInteger("nWidth");
                 _COLUMNEntity.Options        = RsZUPRGDTM.GetValue("sOption");
