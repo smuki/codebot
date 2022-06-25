@@ -30,7 +30,7 @@ namespace Volte.Bot.Term
 
             private int _nColumnLength=0;
 
-            private int _nColumnScale=0;
+            private int _nScale=0;
 
             private int _nSequency=0;
 
@@ -229,23 +229,23 @@ namespace Volte.Bot.Term
                 }
 
             //<Summary>
-            //SysFields,nColumnScale
+            //SysFields,nScale
             //</Summary>
             [AttributeMapping(Type=DbType.Int32)]
-                public int nColumnScale
+                public int nScale
                 {
-                    get { return _nColumnScale; }
+                    get { return _nScale; }
                     set
                     {
                         if (this.Verified)
                         {
-                            if (value!=_nColumnScale)
+                            if (value!=_nScale)
                             {
-                                _nColumnScale = value;
-                                this.PropertyChange("nColumnScale");
+                                _nScale = value;
+                                this.PropertyChange("nScale");
                             }
                         }else{
-                            _nColumnScale = value;
+                            _nScale = value;
                         }
                     }
                 }
