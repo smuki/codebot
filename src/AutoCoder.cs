@@ -814,27 +814,33 @@ namespace Volte.Bot.Term
 
                 _entity.SetValue("sTableName"    , _COLUMNEntity.sTableName);
                 _entity.SetValue("sColumnName"   , _COLUMNEntity.sColumnName);
-                _entity.SetValue("sDescriptionId"   , _COLUMNEntity.sDescriptionId);
                 _entity.SetBoolean("bNullable"   , _COLUMNEntity.bNullable);
                 _entity.SetBoolean("Writeable"   , _COLUMNEntity.bWriteable);
                 _entity.SetBoolean("bPrimaryKey" , _COLUMNEntity.bPrimaryKey);
                 _entity.SetInteger("Length"      , _COLUMNEntity.Length);
                 _entity.SetInteger("MaxLength"   , _COLUMNEntity.MaxLength);
-                _entity.SetInteger("nScale"      , _COLUMNEntity.nScale);
                 _entity.SetValue("sDataType"     , _COLUMNEntity.sDataType);
-                if (string.IsNullOrEmpty(_COLUMNEntity.Options)){
+
+                if (_COLUMNEntity.nScale>0){
+                    _entity.SetInteger("nScale"      , _COLUMNEntity.nScale);
+                }
+
+                if (!string.IsNullOrEmpty(_COLUMNEntity.sDescriptionId)){
+                    _entity.SetValue("sDescriptionId"   , _COLUMNEntity.sDescriptionId);
+                }
+                if (!string.IsNullOrEmpty(_COLUMNEntity.Options)){
                     _entity.SetValue("Options"       , _COLUMNEntity.Options);
                 }
-                if (string.IsNullOrEmpty(_COLUMNEntity.sEnableMode)){
+                if (!string.IsNullOrEmpty(_COLUMNEntity.sEnableMode)){
                     _entity.SetValue("sEnableMode" , _COLUMNEntity.sEnableMode);
                 }
-                if (string.IsNullOrEmpty(_COLUMNEntity.sRefCheck)){
+                if (!string.IsNullOrEmpty(_COLUMNEntity.sRefCheck)){
                     _entity.SetValue("sRefCheck"   , _COLUMNEntity.sRefCheck);
                 }
-                if (string.IsNullOrEmpty(_COLUMNEntity.sRefBrowse)){
+                if (!string.IsNullOrEmpty(_COLUMNEntity.sRefBrowse)){
                     _entity.SetValue("sRefBrowse" , _COLUMNEntity.sRefBrowse);
                 }
-                if (string.IsNullOrEmpty(_COLUMNEntity.sRefViewer)){
+                if (!string.IsNullOrEmpty(_COLUMNEntity.sRefViewer)){
                     _entity.SetValue("sRefViewer" , _COLUMNEntity.sRefViewer);
                 }
 
