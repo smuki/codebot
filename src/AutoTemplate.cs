@@ -555,7 +555,7 @@ namespace Volte.Bot.Term
             }
 
             int    nColumnLength      = 10;
-            int    nColumnScale       = 2;
+            int    nScale       = 2;
             string _NonPrintable      = "false";
             string sAlignColumnName = "";
             string sEnableMode      = "";
@@ -658,14 +658,14 @@ namespace Volte.Bot.Term
                 if (!RsZUCOLUTM.EOF) {
                     type                = RsZUCOLUTM.GetValue("sDataType");
                     nColumnLength       = RsZUCOLUTM.GetInteger("nColumnLength");
-                    nColumnScale        = RsZUCOLUTM.GetInteger("nColumnScale");
+                    nScale        = RsZUCOLUTM.GetInteger("nScale");
                     string sColumnClass = RsZUCOLUTM.GetValue("sColumnClass");
 
-                    if (nColumnScale < 0) {
+                    if (nScale < 0) {
                         JSONObject _JSONObject2= AppConfigs.LoadSetting("ColumnScale.json");
 
                         if (_JSONObject2.ContainsKey(sColumnClass)){
-                            nColumnScale =_JSONObject2.GetInteger(sColumnClass);
+                            nScale =_JSONObject2.GetInteger(sColumnClass);
                         }
                     }
                 } else {
@@ -697,7 +697,7 @@ namespace Volte.Bot.Term
                     nColumnLength=8;
                 }
                 if (scale >= 0 && type == "decimal") {
-                    nColumnScale = scale;
+                    nScale = scale;
                 }
 
                 int _fontPixe = 12;
@@ -716,7 +716,7 @@ namespace Volte.Bot.Term
                     XObject.AppendLine(_name + ".EnableMode   = \"" + sEnableMode + "\";");
                 }
                 XObject.AppendLine(_name + "[\"sDataBand\"] = \"" + sDataBand + "\";");
-                XObject.AppendLine(_name + ".Scale          = " + nColumnScale + ";");
+                XObject.AppendLine(_name + ".Scale          = " + nScale + ";");
                 XObject.AppendLine(_name + ".NonPrintable   = " + _NonPrintable + ";");
                 XObject.AppendLine(_name + ".TypeChar       = \"" + _DataTypeChar.GetValue(type) + "\";");
 
@@ -736,7 +736,7 @@ namespace Volte.Bot.Term
                     string sSQLString = "";
 
                     if (_SysDataDtl.EOF) {
-                        sSQLString = "INSERT INTO sysdatadtl ([sSqlCode] , [sKey] , [sTableName] , [sColumnName] , [bActive] , [nSequency] , [sDataType] , [nColumnLength] , [nColumnScale] , [sCaptionCode],sChgFlag)";
+                        sSQLString = "INSERT INTO sysdatadtl ([sSqlCode] , [sKey] , [sTableName] , [sColumnName] , [bActive] , [nSequency] , [sDataType] , [nColumnLength] , [nScale] , [sCaptionCode],sChgFlag)";
 
                         sSQLString = sSQLString + "VALUES (N'" + sSqlCode + "' , N'" + IdGenerator.NewBase36("_") + "' , N'" + tableName + "' , N'" + columnName + "' , '1' , '99999' , N'' , NULL , '0' , N'','A');";
 
