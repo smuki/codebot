@@ -397,7 +397,7 @@ namespace Volte.Bot.Term
 
                 _TableName = _NameValue.GetValue("sTableName");
                 _ColumnName = _NameValue.GetValue("sColumnName");
-                _DataType = _NameValue.GetValue("DataType");
+                _DataType = _NameValue.GetValue("sDataType");
 
                 COLUMNEntity _COLUMNEntity = new COLUMNEntity();
                 _COLUMNEntity.TableName = _TableName;
@@ -405,7 +405,6 @@ namespace Volte.Bot.Term
                 _COLUMNEntity.CaptionCode = _NameValue.GetValue("CaptionCode");
                 _COLUMNEntity.ColumnNullable = _NameValue.GetBoolean("ColumnNullable");
                 _COLUMNEntity.EnableMode     = _NameValue.GetValue("EnableMode");
-                _COLUMNEntity.bHasCaption    = _NameValue.GetBoolean("bHasCaption");
                 _COLUMNEntity.Index          = _NameValue.GetInteger("Index");
                 _COLUMNEntity.Length         = _NameValue.GetInteger("Length");
                 _COLUMNEntity.MaxLength      = _NameValue.GetInteger("MaxLength");
@@ -415,8 +414,8 @@ namespace Volte.Bot.Term
                 _COLUMNEntity.sRefBrowse     = _NameValue.GetValue("sRefBrowse");
                 _COLUMNEntity.sRefCheck      = _NameValue.GetValue("sRefCheck");
                 _COLUMNEntity.sRefViewer     = _NameValue.GetValue("sRefViewer");
-                _COLUMNEntity.DataType       = _NameValue.GetValue("DataType");
-                _COLUMNEntity.ColumnScale    = _NameValue.GetInteger("ColumnScale");
+                _COLUMNEntity.sDataType      = _NameValue.GetValue("sDataType");
+                _COLUMNEntity.nScale    = _NameValue.GetInteger("nScale");
                 _COLUMNEntity.EnableMode     = _NameValue.GetValue("EnableMode");
                 _COLUMNEntity.Release        = _NameValue.GetBoolean("Release");
                 _COLUMNEntity.sRefCheck      = _NameValue.GetValue("sCheckId");
@@ -445,7 +444,7 @@ namespace Volte.Bot.Term
 
             }
 
-            JSONObject _JSONObject = AppConfigs.LoadSetting("ColumnScale.json");
+            JSONObject _JSONObject = AppConfigs.LoadSetting("nScale.json");
 
             foreach (string sName in _JSONObject.Names)
             {
@@ -643,9 +642,8 @@ namespace Volte.Bot.Term
                 _COLUMNEntity.CaptionCode    = RsZUPRGDTM.GetValue("sCaptionCode");
                 _COLUMNEntity.ColumnName     = _ColumnName;
                 _COLUMNEntity.ColumnNullable = RsZUPRGDTM.GetBoolean("bColumnNullable");
-                _COLUMNEntity.DataType       = _DataType;
+                _COLUMNEntity.sDataType      = _DataType;
                 _COLUMNEntity.EnableMode     = RsZUPRGDTM.GetValue("sEnableMode");
-                _COLUMNEntity.bHasCaption    = RsZUPRGDTM.GetBoolean("bHasCaption");
                 _COLUMNEntity.Index          = RsZUPRGDTM.GetInteger("nIndex");
                 _COLUMNEntity.Length         = RsZUPRGDTM.GetInteger("nWidth");
                 _COLUMNEntity.MaxLength      = RsZUPRGDTM.GetInteger("nWidth");
@@ -711,17 +709,16 @@ namespace Volte.Bot.Term
                     }
 
                     _COLUMNEntity.Length      = RsSysFields.GetInteger("nColumnLength");
-                    _COLUMNEntity.ColumnScale = RsSysFields.GetInteger("nColumnScale");
                     _COLUMNEntity.bPrimaryKey = RsSysFields.GetBoolean("bPrimaryKey");
 
                     string sColumnClass = RsSysFields.GetValue("sColumnClass");
 
-                    if (_COLUMNEntity.ColumnScale < 0) {
+                    if (_COLUMNEntity.nScale < 0) {
 
-                        JSONObject _JSONObject2= AppConfigs.LoadSetting("ColumnScale.json");
+                        JSONObject _JSONObject2= AppConfigs.LoadSetting("nScale.json");
 
                         if (_JSONObject2.ContainsKey(sColumnClass)){
-                            _COLUMNEntity.ColumnScale =_JSONObject2.GetInteger(sColumnClass);
+                            _COLUMNEntity.nScale =_JSONObject2.GetInteger(sColumnClass);
                         }
                     }
 
@@ -762,7 +759,7 @@ namespace Volte.Bot.Term
                     Keys++;
                 }
 
-                _COLUMNEntity.DataType = _DataType;
+                _COLUMNEntity.sDataType = _DataType;
 
                 if (_TableName.ToLower() != "variable" && (_DataType == "nvarchar" || _DataType == "ntext")) {
                     if (_ColumnName != "sOriginal") {
@@ -777,46 +774,46 @@ namespace Volte.Bot.Term
                 if (_TableName.ToLower() == "variable" && (_DataType == "decimal" || _DataType == "picture"))
                 {
                     if (_sColumnClass == "N00") {
-                        _COLUMNEntity.ColumnScale = 0;
+                        _COLUMNEntity.nScale = 0;
                     } else if (_sColumnClass == "N01") {
-                        _COLUMNEntity.ColumnScale = 1;
+                        _COLUMNEntity.nScale = 1;
                     } else if (_sColumnClass == "N02") {
-                        _COLUMNEntity.ColumnScale = 2;
+                        _COLUMNEntity.nScale = 2;
                     } else if (_sColumnClass == "N03") {
-                        _COLUMNEntity.ColumnScale = 3;
+                        _COLUMNEntity.nScale = 3;
                     } else if (_sColumnClass == "N04") {
-                        _COLUMNEntity.ColumnScale = 4;
+                        _COLUMNEntity.nScale = 4;
                     } else if (_sColumnClass == "N05") {
-                        _COLUMNEntity.ColumnScale = 5;
+                        _COLUMNEntity.nScale = 5;
                     } else if (_sColumnClass == "N06") {
-                        _COLUMNEntity.ColumnScale = 6;
+                        _COLUMNEntity.nScale = 6;
                     } else if (_sColumnClass == "N07") {
-                        _COLUMNEntity.ColumnScale = 7;
+                        _COLUMNEntity.nScale = 7;
                     } else if (_sColumnClass == "N08") {
-                        _COLUMNEntity.ColumnScale = 8;
+                        _COLUMNEntity.nScale = 8;
                     } else if (_sColumnClass == "ND00") {
-                        _COLUMNEntity.ColumnScale = 0;
+                        _COLUMNEntity.nScale = 0;
                     } else if (_sColumnClass == "ND01") {
-                        _COLUMNEntity.ColumnScale = 1;
+                        _COLUMNEntity.nScale = 1;
                     } else if (_sColumnClass == "ND02") {
-                        _COLUMNEntity.ColumnScale = 2;
+                        _COLUMNEntity.nScale = 2;
                     } else if (_sColumnClass == "ND03") {
-                        _COLUMNEntity.ColumnScale = 3;
+                        _COLUMNEntity.nScale = 3;
                     } else if (_sColumnClass == "ND04") {
-                        _COLUMNEntity.ColumnScale = 4;
+                        _COLUMNEntity.nScale = 4;
                     } else if (_sColumnClass == "ND05") {
-                        _COLUMNEntity.ColumnScale = 5;
+                        _COLUMNEntity.nScale = 5;
                     } else if (_sColumnClass == "ND06") {
-                        _COLUMNEntity.ColumnScale = 6;
+                        _COLUMNEntity.nScale = 6;
                     } else if (_sColumnClass == "ND07") {
-                        _COLUMNEntity.ColumnScale = 7;
+                        _COLUMNEntity.nScale = 7;
                     } else if (_sColumnClass == "ND08") {
-                        _COLUMNEntity.ColumnScale = 8;
+                        _COLUMNEntity.nScale = 8;
                     }else if (Utils.Util.IsNumeric(_sColumnClass)){
-                        _COLUMNEntity.ColumnScale = Utils.Util.ToInt(_sColumnClass);
+                        _COLUMNEntity.nScale = Utils.Util.ToInt(_sColumnClass);
                     }
                 } else if (_TableName.ToLower() == "variable" && _DataType == "") {
-                    _COLUMNEntity.DataType   = "nvarchar";
+                    _COLUMNEntity.sDataType   = "nvarchar";
                 }
 
                 _COLUMNEntity.EnableMode = _COLUMNEntity.EnableMode.Replace("ADDNEW" , "NEW");
@@ -828,7 +825,6 @@ namespace Volte.Bot.Term
                 _entity.SetValue("sColumnName"      , _COLUMNEntity.ColumnName);
                 _entity.SetValue("CaptionCode"      , _COLUMNEntity.CaptionCode);
                 _entity.SetBoolean("ColumnNullable" , _COLUMNEntity.ColumnNullable);
-                _entity.SetBoolean("bHasCaption"    , _COLUMNEntity.bHasCaption);
                 _entity.SetBoolean("Writeable"      , _COLUMNEntity.bWriteable);
                 _entity.SetBoolean("bPrimaryKey"    , _COLUMNEntity.bPrimaryKey);
                 _entity.SetBoolean("Release"        , _COLUMNEntity.Release);
@@ -836,10 +832,10 @@ namespace Volte.Bot.Term
                 _entity.SetInteger("Length"         , _COLUMNEntity.Length);
                 _entity.SetInteger("MaxLength"      , _COLUMNEntity.MaxLength);
                 _entity.SetInteger("Sequency"       , _COLUMNEntity.Sequency);
-                _entity.SetInteger("ColumnScale"    , _COLUMNEntity.ColumnScale);
+                _entity.SetInteger("nScale"    , _COLUMNEntity.nScale);
                 _entity.SetValue("EnableMode"       , _COLUMNEntity.EnableMode);
                 _entity.SetValue("Options"          , _COLUMNEntity.Options);
-                _entity.SetValue("DataType"   , _COLUMNEntity.DataType);
+                _entity.SetValue("sDataType"   , _COLUMNEntity.sDataType);
                 _entity.SetValue("EnableMode" , _COLUMNEntity.EnableMode);
                 _entity.SetValue("sCheckId"   , _COLUMNEntity.sRefCheck);
                 _entity.SetValue("sRefBrowse" , _COLUMNEntity.sRefBrowse);
@@ -1076,7 +1072,7 @@ namespace Volte.Bot.Term
                                     COLUMNEntity _COLUMNEntity = new COLUMNEntity();
                                     _COLUMNEntity.TableName    = sTableName;
                                     _COLUMNEntity.ColumnName   = _JSONObject.GetValue("sColumnName");
-                                    _COLUMNEntity.DataType = _JSONObject.GetValue("sDataType");
+                                    _COLUMNEntity.sDataType = _JSONObject.GetValue("sDataType");
                                     _COLUMNEntity.bPrimaryKey  = _JSONObject.GetBoolean("bPrimaryKey");
                                     _COLUMNEntity.bAutoIdentity = _JSONObject.GetBoolean("bAutoIdentity");
                                     _COLUMNEntity.Length       = _JSONObject.GetInteger("nLength");
@@ -1303,7 +1299,7 @@ namespace Volte.Bot.Term
                         JSONObject _VariableColumn = new JSONObject();
                         _VariableColumn.SetValue("sColumnName"       , sColumnName);
                         _VariableColumn.SetValue("sTableName"        , sTableName);
-                        _VariableColumn.SetValue("nColumnScale"      , 0);
+                        _VariableColumn.SetValue("nnScale"      , 0);
                         _VariableColumn.SetValue("sDataType"       , "nvarchar");
                         _VariableColumn.SetValue("nColumnLength"     , 10);
                         _VariableColumn.SetValue("bPrimaryKey"       , false);
@@ -1391,7 +1387,6 @@ namespace Volte.Bot.Term
                             _Trans.Execute("UPDATE sysfunctiondtl SET bActive = 0 WHERE sKey = '" + sUID_DT + "'");
                         }
                         _Trans.Execute("UPDATE sysfunctiondtl SET bWriteable = 1 WHERE sKey = '" + sUID_DT + "'");
-                        _Trans.Execute("UPDATE sysfunctiondtl SET bHasCaption = 1 WHERE sKey = '" + sUID_DT + "'");
                         _Trans.Execute("UPDATE sysfunctiondtl SET bNewCell   = 1 WHERE sKey = '" + sUID_DT + "'");
 
                         _Trans.Execute("UPDATE sysfunctiondtl SET nIndex=999999 WHERE sKey='" + sUID_DT + "'");
