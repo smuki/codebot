@@ -405,11 +405,9 @@ namespace Volte.Bot.Term
                 _COLUMNEntity.CaptionCode = _NameValue.GetValue("CaptionCode");
                 _COLUMNEntity.ColumnNullable = _NameValue.GetBoolean("ColumnNullable");
                 _COLUMNEntity.EnableMode     = _NameValue.GetValue("EnableMode");
-                _COLUMNEntity.Index          = _NameValue.GetInteger("Index");
                 _COLUMNEntity.Length         = _NameValue.GetInteger("Length");
                 _COLUMNEntity.MaxLength      = _NameValue.GetInteger("MaxLength");
                 _COLUMNEntity.Options        = _NameValue.GetValue("Options");
-                _COLUMNEntity.Sequency       = _NameValue.GetInteger("Sequency");
                 _COLUMNEntity.bWriteable     = _NameValue.GetBoolean("Writeable");
                 _COLUMNEntity.sRefBrowse     = _NameValue.GetValue("sRefBrowse");
                 _COLUMNEntity.sRefCheck      = _NameValue.GetValue("sRefCheck");
@@ -648,16 +646,11 @@ namespace Volte.Bot.Term
                 _COLUMNEntity.Length         = RsZUPRGDTM.GetInteger("nWidth");
                 _COLUMNEntity.MaxLength      = RsZUPRGDTM.GetInteger("nWidth");
                 _COLUMNEntity.Options        = RsZUPRGDTM.GetValue("sOption");
-                _COLUMNEntity.Sequency       = RsZUPRGDTM.GetInteger("nSequency");
                 _COLUMNEntity.TableName      = _TableName;
                 _COLUMNEntity.bWriteable     = RsZUPRGDTM.GetBoolean("bWriteable");
 
                 if (_TableName.ToLower() == "variable") {
                     _COLUMNEntity.bWriteable = false;
-                }
-
-                if (_COLUMNEntity.Sequency == 0) {
-                    _COLUMNEntity.Sequency = _COLUMNEntity.Index;
                 }
 
                 _COLUMNEntity.sRefBrowse = RsZUPRGDTM.GetValue("sRefBrowse");
@@ -828,10 +821,8 @@ namespace Volte.Bot.Term
                 _entity.SetBoolean("Writeable"      , _COLUMNEntity.bWriteable);
                 _entity.SetBoolean("bPrimaryKey"    , _COLUMNEntity.bPrimaryKey);
                 _entity.SetBoolean("Release"        , _COLUMNEntity.Release);
-                _entity.SetInteger("Index"          , _COLUMNEntity.Index);
                 _entity.SetInteger("Length"         , _COLUMNEntity.Length);
                 _entity.SetInteger("MaxLength"      , _COLUMNEntity.MaxLength);
-                _entity.SetInteger("Sequency"       , _COLUMNEntity.Sequency);
                 _entity.SetInteger("nScale"    , _COLUMNEntity.nScale);
                 _entity.SetValue("EnableMode"       , _COLUMNEntity.EnableMode);
                 _entity.SetValue("Options"          , _COLUMNEntity.Options);
