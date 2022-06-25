@@ -402,9 +402,9 @@ namespace Volte.Bot.Term
                 COLUMNEntity _COLUMNEntity = new COLUMNEntity();
                 _COLUMNEntity.sTableName = _TableName;
                 _COLUMNEntity.sColumnName = _ColumnName;
-                _COLUMNEntity.CaptionCode = _NameValue.GetValue("CaptionCode");
-                _COLUMNEntity.bNullable   = _NameValue.GetBoolean("bNullable");
-                _COLUMNEntity.EnableMode     = _NameValue.GetValue("EnableMode");
+                _COLUMNEntity.sDescriptionId = _NameValue.GetValue("sDescriptionId");
+                _COLUMNEntity.bNullable      = _NameValue.GetBoolean("bNullable");
+                _COLUMNEntity.sEnableMode    = _NameValue.GetValue("sEnableMode");
                 _COLUMNEntity.Length         = _NameValue.GetInteger("Length");
                 _COLUMNEntity.MaxLength      = _NameValue.GetInteger("MaxLength");
                 _COLUMNEntity.Options        = _NameValue.GetValue("Options");
@@ -413,10 +413,9 @@ namespace Volte.Bot.Term
                 _COLUMNEntity.sRefCheck      = _NameValue.GetValue("sRefCheck");
                 _COLUMNEntity.sRefViewer     = _NameValue.GetValue("sRefViewer");
                 _COLUMNEntity.sDataType      = _NameValue.GetValue("sDataType");
-                _COLUMNEntity.nScale    = _NameValue.GetInteger("nScale");
-                _COLUMNEntity.EnableMode     = _NameValue.GetValue("EnableMode");
-                _COLUMNEntity.Release        = _NameValue.GetBoolean("Release");
-                _COLUMNEntity.sRefCheck      = _NameValue.GetValue("sCheckId");
+                _COLUMNEntity.nScale         = _NameValue.GetInteger("nScale");
+                _COLUMNEntity.sEnableMode    = _NameValue.GetValue("sEnableMode");
+                _COLUMNEntity.sRefCheck      = _NameValue.GetValue("sRefCheck");
                 _COLUMNEntity.sRefBrowse     = _NameValue.GetValue("sRefBrowse");
                 _COLUMNEntity.sRefBrowseType = _NameValue.GetValue("sType");
                 _COLUMNEntity.sRefViewer     = _NameValue.GetValue("sRefViewer");
@@ -637,15 +636,15 @@ namespace Volte.Bot.Term
                 _sColumnClass = RsZUPRGDTM.GetValue("sColumnClass");
 
                 COLUMNEntity _COLUMNEntity   = new COLUMNEntity();
-                _COLUMNEntity.CaptionCode    = RsZUPRGDTM.GetValue("sCaptionCode");
+                _COLUMNEntity.sDescriptionId    = RsZUPRGDTM.GetValue("sCaptionCode");
                 _COLUMNEntity.sColumnName    = _ColumnName;
                 _COLUMNEntity.bNullable      = RsZUPRGDTM.GetBoolean("bColumnNullable");
                 _COLUMNEntity.sDataType      = _DataType;
-                _COLUMNEntity.EnableMode     = RsZUPRGDTM.GetValue("sEnableMode");
+                _COLUMNEntity.sEnableMode    = RsZUPRGDTM.GetValue("sEnableMode");
                 _COLUMNEntity.Length         = RsZUPRGDTM.GetInteger("nWidth");
                 _COLUMNEntity.MaxLength      = RsZUPRGDTM.GetInteger("nWidth");
                 _COLUMNEntity.Options        = RsZUPRGDTM.GetValue("sOption");
-                _COLUMNEntity.sTableName      = _TableName;
+                _COLUMNEntity.sTableName     = _TableName;
                 _COLUMNEntity.bWriteable     = RsZUPRGDTM.GetBoolean("bWriteable");
 
                 if (_TableName.ToLower() == "variable") {
@@ -690,7 +689,7 @@ namespace Volte.Bot.Term
                 }
 
                 if (!RsSysFields.EOF) {
-                    _COLUMNEntity.CaptionCode = RsSysFields.GetValue("sCaptionCode");
+                    _COLUMNEntity.sDescriptionId = RsSysFields.GetValue("sCaptionCode");
 
                     if (!RsSysFields.GetBoolean("bColumnUsage")) {
                         _DbContext.Execute("UPDATE sysfields Set bColumnUsage=1 WHERE sTableName = '" + _TableName + "' AND sColumnName='" + _ColumnName + "'");
@@ -808,28 +807,36 @@ namespace Volte.Bot.Term
                     _COLUMNEntity.sDataType   = "nvarchar";
                 }
 
-                _COLUMNEntity.EnableMode = _COLUMNEntity.EnableMode.Replace("ADDNEW" , "NEW");
-                _COLUMNEntity.EnableMode = _COLUMNEntity.EnableMode.Replace("UPDATE" , "EDIT");
+                _COLUMNEntity.sEnableMode = _COLUMNEntity.sEnableMode.Replace("ADDNEW" , "NEW");
+                _COLUMNEntity.sEnableMode = _COLUMNEntity.sEnableMode.Replace("UPDATE" , "EDIT");
 
                 JSONObject _entity = new JSONObject();
 
-                _entity.SetValue("sTableName"       , _COLUMNEntity.sTableName);
-                _entity.SetValue("sColumnName"      , _COLUMNEntity.sColumnName);
-                _entity.SetValue("CaptionCode"      , _COLUMNEntity.CaptionCode);
-                _entity.SetBoolean("bNullable"      , _COLUMNEntity.bNullable);
-                _entity.SetBoolean("Writeable"      , _COLUMNEntity.bWriteable);
-                _entity.SetBoolean("bPrimaryKey"    , _COLUMNEntity.bPrimaryKey);
-                _entity.SetBoolean("Release"        , _COLUMNEntity.Release);
-                _entity.SetInteger("Length"         , _COLUMNEntity.Length);
-                _entity.SetInteger("MaxLength"      , _COLUMNEntity.MaxLength);
-                _entity.SetInteger("nScale"    , _COLUMNEntity.nScale);
-                _entity.SetValue("EnableMode"       , _COLUMNEntity.EnableMode);
-                _entity.SetValue("Options"          , _COLUMNEntity.Options);
-                _entity.SetValue("sDataType"   , _COLUMNEntity.sDataType);
-                _entity.SetValue("EnableMode" , _COLUMNEntity.EnableMode);
-                _entity.SetValue("sCheckId"   , _COLUMNEntity.sRefCheck);
-                _entity.SetValue("sRefBrowse" , _COLUMNEntity.sRefBrowse);
-                _entity.SetValue("sRefViewer" , _COLUMNEntity.sRefViewer);
+                _entity.SetValue("sTableName"    , _COLUMNEntity.sTableName);
+                _entity.SetValue("sColumnName"   , _COLUMNEntity.sColumnName);
+                _entity.SetValue("sDescriptionId"   , _COLUMNEntity.sDescriptionId);
+                _entity.SetBoolean("bNullable"   , _COLUMNEntity.bNullable);
+                _entity.SetBoolean("Writeable"   , _COLUMNEntity.bWriteable);
+                _entity.SetBoolean("bPrimaryKey" , _COLUMNEntity.bPrimaryKey);
+                _entity.SetInteger("Length"      , _COLUMNEntity.Length);
+                _entity.SetInteger("MaxLength"   , _COLUMNEntity.MaxLength);
+                _entity.SetInteger("nScale"      , _COLUMNEntity.nScale);
+                _entity.SetValue("sDataType"     , _COLUMNEntity.sDataType);
+                if (string.IsNullOrEmpty(_COLUMNEntity.Options)){
+                    _entity.SetValue("Options"       , _COLUMNEntity.Options);
+                }
+                if (string.IsNullOrEmpty(_COLUMNEntity.sEnableMode)){
+                    _entity.SetValue("sEnableMode" , _COLUMNEntity.sEnableMode);
+                }
+                if (string.IsNullOrEmpty(_COLUMNEntity.sRefCheck)){
+                    _entity.SetValue("sRefCheck"   , _COLUMNEntity.sRefCheck);
+                }
+                if (string.IsNullOrEmpty(_COLUMNEntity.sRefBrowse)){
+                    _entity.SetValue("sRefBrowse" , _COLUMNEntity.sRefBrowse);
+                }
+                if (string.IsNullOrEmpty(_COLUMNEntity.sRefViewer)){
+                    _entity.SetValue("sRefViewer" , _COLUMNEntity.sRefViewer);
+                }
 
                 _entitys.Add(_entity);
 
