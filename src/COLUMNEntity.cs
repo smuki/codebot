@@ -19,8 +19,6 @@ namespace Volte.Bot.Term
         public string LNK_ColumnName { get; set; }
         public string Options { get; set; }
         public string OptionType { get; set; }
-        public int Sequency { get; set; }
-        public int Index { get; set; }
         public string sRefCheck { get; set; }
         public string sRefViewer { get; set; }
         public string sRefBrowse { get; set; }
