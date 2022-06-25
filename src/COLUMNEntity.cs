@@ -11,10 +11,10 @@ namespace Volte.Bot.Term
         public bool bAutoIdentity { get; set; }
         public string TableName { get; set; }
         public string ColumnName { get; set; }
-        public int Length { get; set; }
-        public int MaxLength { get; set; }
-        public int ColumnScale { get; set; }
-        public string DataType { get; set; }
+        public int    Length { get; set; }
+        public int    MaxLength { get; set; }
+        public int    nScale { get; set; }
+        public string sDataType { get; set; }
         public string CaptionCode { get; set; }
         public string LNK_ColumnName { get; set; }
         public string Options { get; set; }
@@ -27,7 +27,6 @@ namespace Volte.Bot.Term
         public string sRefBrowseType { get; set; }
         public string sColumnGroup { get; set; }
 
-        public bool bHasCaption { get; set; }
         public bool bWriteable { get; set; }
         public bool bPrimaryKey { get; set; }
         public bool Release { get; set; }
