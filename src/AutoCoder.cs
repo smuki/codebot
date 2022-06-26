@@ -733,10 +733,10 @@ namespace Volte.Bot.Term
 
                 _entity.SetValue("sTableName"    , _COLUMNEntity.sTableName);
                 _entity.SetValue("sColumnName"   , _COLUMNEntity.sColumnName);
+                _entity.SetValue("sDataType"     , _COLUMNEntity.sDataType);
                 _entity.SetBoolean("bNullable"   , _COLUMNEntity.bNullable);
                 _entity.SetBoolean("Writeable"   , _COLUMNEntity.bWriteable);
                 _entity.SetBoolean("bPrimaryKey" , _COLUMNEntity.bPrimaryKey);
-                _entity.SetValue("sDataType"     , _COLUMNEntity.sDataType);
 
                 if (!string.IsNullOrEmpty(_COLUMNEntity.sDescriptionId)){
                     _entity.SetValue("sDescriptionId"   , _COLUMNEntity.sDescriptionId);
