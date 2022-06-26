@@ -11,9 +11,6 @@ namespace Volte.Bot.Term
         public string sEnableMode { get; set; }
         public bool   bNullable { get; set; }
         public bool   bAutoIdentity { get; set; }
-        public int    nLength { get; set; }
-        public int    nMaxLength { get; set; }
-        public int    nScale { get; set; }
         public string sDataType { get; set; }
         public string sDescriptionId { get; set; }
         public string LNK_ColumnName { get; set; }
