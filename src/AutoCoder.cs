@@ -405,15 +405,12 @@ namespace Volte.Bot.Term
                 _COLUMNEntity.sDescriptionId = _NameValue.GetValue("sDescriptionId");
                 _COLUMNEntity.bNullable      = _NameValue.GetBoolean("bNullable");
                 _COLUMNEntity.sEnableMode    = _NameValue.GetValue("sEnableMode");
-                _COLUMNEntity.nLength        = _NameValue.GetInteger("nLength");
-                _COLUMNEntity.nMaxLength     = _NameValue.GetInteger("nMaxLength");
                 _COLUMNEntity.Options        = _NameValue.GetValue("Options");
                 _COLUMNEntity.bWriteable     = _NameValue.GetBoolean("Writeable");
                 _COLUMNEntity.sRefBrowse     = _NameValue.GetValue("sRefBrowse");
                 _COLUMNEntity.sRefCheck      = _NameValue.GetValue("sRefCheck");
                 _COLUMNEntity.sRefViewer     = _NameValue.GetValue("sRefViewer");
                 _COLUMNEntity.sDataType      = _NameValue.GetValue("sDataType");
-                _COLUMNEntity.nScale         = _NameValue.GetInteger("nScale");
                 _COLUMNEntity.sEnableMode    = _NameValue.GetValue("sEnableMode");
                 _COLUMNEntity.sRefCheck      = _NameValue.GetValue("sRefCheck");
                 _COLUMNEntity.sRefBrowse     = _NameValue.GetValue("sRefBrowse");
@@ -641,8 +638,6 @@ namespace Volte.Bot.Term
                 _COLUMNEntity.bNullable      = RsZUPRGDTM.GetBoolean("bColumnNullable");
                 _COLUMNEntity.sDataType      = _DataType;
                 _COLUMNEntity.sEnableMode    = RsZUPRGDTM.GetValue("sEnableMode");
-                _COLUMNEntity.nLength        = RsZUPRGDTM.GetInteger("nWidth");
-                _COLUMNEntity.nMaxLength     = RsZUPRGDTM.GetInteger("nWidth");
                 _COLUMNEntity.Options        = RsZUPRGDTM.GetValue("sOption");
                 _COLUMNEntity.sTableName     = _TableName;
                 _COLUMNEntity.bWriteable     = RsZUPRGDTM.GetBoolean("bWriteable");
@@ -699,52 +694,15 @@ namespace Volte.Bot.Term
                         _DataType = RsSysFields.GetValue("sDataType");
                     }
 
-                    _COLUMNEntity.nLength     = RsSysFields.GetInteger("nColumnLength");
                     _COLUMNEntity.bPrimaryKey = RsSysFields.GetBoolean("bPrimaryKey");
 
                     string sColumnClass = RsSysFields.GetValue("sColumnClass");
-
-                    if (_COLUMNEntity.nScale < 0) {
-
-                        JSONObject _JSONObject2= AppConfigs.LoadSetting("nScale.json");
-
-                        if (_JSONObject2.ContainsKey(sColumnClass)){
-                            _COLUMNEntity.nScale =_JSONObject2.GetInteger(sColumnClass);
-                        }
-                    }
 
                 }
 
                 RsSysFields.Close();
 
-                if (_COLUMNEntity.nLength > 60 && _DataType != "ntext") {
-                    _COLUMNEntity.nLength = 60;
-                }
-
                 JSONObject _JSONObject3= AppConfigs.LoadSetting("AdjustmentLength.json");
-                if (_DataType == "datetime") {
-                    _COLUMNEntity.nMaxLength = 10;
-                }
-
-                if (_DataType == "decimal") {
-                    _COLUMNEntity.nMaxLength = 12;
-                }
-
-                if (_DataType == "int") {
-                    _COLUMNEntity.nMaxLength = 9;
-                }
-
-                int nMax=_COLUMNEntity.nMaxLength;
-                if (nMax <=0) {
-                    nMax = 8;
-                }
-                if (nMax > 80) {
-                    nMax = 80;
-                }
-                if (_JSONObject3.ContainsKey(nMax.ToString())){
-
-                    _COLUMNEntity.nLength =_JSONObject3.GetInteger(nMax.ToString());
-                }
 
                 if (_COLUMNEntity.bPrimaryKey) {
                     Keys++;
@@ -764,45 +722,6 @@ namespace Volte.Bot.Term
 
                 if (_TableName.ToLower() == "variable" && (_DataType == "decimal" || _DataType == "picture"))
                 {
-                    if (_sColumnClass == "N00") {
-                        _COLUMNEntity.nScale = 0;
-                    } else if (_sColumnClass == "N01") {
-                        _COLUMNEntity.nScale = 1;
-                    } else if (_sColumnClass == "N02") {
-                        _COLUMNEntity.nScale = 2;
-                    } else if (_sColumnClass == "N03") {
-                        _COLUMNEntity.nScale = 3;
-                    } else if (_sColumnClass == "N04") {
-                        _COLUMNEntity.nScale = 4;
-                    } else if (_sColumnClass == "N05") {
-                        _COLUMNEntity.nScale = 5;
-                    } else if (_sColumnClass == "N06") {
-                        _COLUMNEntity.nScale = 6;
-                    } else if (_sColumnClass == "N07") {
-                        _COLUMNEntity.nScale = 7;
-                    } else if (_sColumnClass == "N08") {
-                        _COLUMNEntity.nScale = 8;
-                    } else if (_sColumnClass == "ND00") {
-                        _COLUMNEntity.nScale = 0;
-                    } else if (_sColumnClass == "ND01") {
-                        _COLUMNEntity.nScale = 1;
-                    } else if (_sColumnClass == "ND02") {
-                        _COLUMNEntity.nScale = 2;
-                    } else if (_sColumnClass == "ND03") {
-                        _COLUMNEntity.nScale = 3;
-                    } else if (_sColumnClass == "ND04") {
-                        _COLUMNEntity.nScale = 4;
-                    } else if (_sColumnClass == "ND05") {
-                        _COLUMNEntity.nScale = 5;
-                    } else if (_sColumnClass == "ND06") {
-                        _COLUMNEntity.nScale = 6;
-                    } else if (_sColumnClass == "ND07") {
-                        _COLUMNEntity.nScale = 7;
-                    } else if (_sColumnClass == "ND08") {
-                        _COLUMNEntity.nScale = 8;
-                    }else if (Utils.Util.IsNumeric(_sColumnClass)){
-                        _COLUMNEntity.nScale = Utils.Util.ToInt(_sColumnClass);
-                    }
                 } else if (_TableName.ToLower() == "variable" && _DataType == "") {
                     _COLUMNEntity.sDataType   = "nvarchar";
                 }
@@ -817,13 +736,7 @@ namespace Volte.Bot.Term
                 _entity.SetBoolean("bNullable"   , _COLUMNEntity.bNullable);
                 _entity.SetBoolean("Writeable"   , _COLUMNEntity.bWriteable);
                 _entity.SetBoolean("bPrimaryKey" , _COLUMNEntity.bPrimaryKey);
-                _entity.SetInteger("nLength"     , _COLUMNEntity.nLength);
-                _entity.SetInteger("nMaxLength"   , _COLUMNEntity.nMaxLength);
                 _entity.SetValue("sDataType"     , _COLUMNEntity.sDataType);
-
-                if (_COLUMNEntity.nScale>0){
-                    _entity.SetInteger("nScale"      , _COLUMNEntity.nScale);
-                }
 
                 if (!string.IsNullOrEmpty(_COLUMNEntity.sDescriptionId)){
                     _entity.SetValue("sDescriptionId"   , _COLUMNEntity.sDescriptionId);
@@ -987,15 +900,12 @@ namespace Volte.Bot.Term
                                 _ColumnEntity.SetValue("sDataType"   , sDataType);
                                 _ColumnEntity.SetValue("bPrimaryKey" , RsSysFields.GetBoolean("bPrimaryKey"));
                                 _ColumnEntity.SetValue("bAutoIdentity", RsSysFields.GetBoolean("bAutoIdentity"));
-                                _ColumnEntity.SetInteger("nLength"   , nColumnLength);
 
                                 if (sDataType == "nvarchar")
                                 {
                                     if (nColumnLength > 1000 || nColumnLength < 0) {
-                                        _ColumnEntity.SetInteger("nLength" , 60);
                                         sDataType = "ntext";
                                     }
-                                    _ColumnEntity.SetInteger("nLength" , nColumnLength/2 );
                                 }
 
                                 _ColumnEntity.SetValue("sDataType" , DataType(sDataType));
@@ -1078,7 +988,6 @@ namespace Volte.Bot.Term
                                     _COLUMNEntity.sDataType = _JSONObject.GetValue("sDataType");
                                     _COLUMNEntity.bPrimaryKey  = _JSONObject.GetBoolean("bPrimaryKey");
                                     _COLUMNEntity.bAutoIdentity = _JSONObject.GetBoolean("bAutoIdentity");
-                                    _COLUMNEntity.nLength       = _JSONObject.GetInteger("nLength");
                                     ColumnEntity.Add(_COLUMNEntity);
                                 }
                             }
@@ -1302,9 +1211,7 @@ namespace Volte.Bot.Term
                         JSONObject _VariableColumn = new JSONObject();
                         _VariableColumn.SetValue("sColumnName"       , sColumnName);
                         _VariableColumn.SetValue("sTableName"        , sTableName);
-                        _VariableColumn.SetValue("nnScale"      , 0);
                         _VariableColumn.SetValue("sDataType"       , "nvarchar");
-                        _VariableColumn.SetValue("nColumnLength"     , 10);
                         _VariableColumn.SetValue("bPrimaryKey"       , false);
                         _VariableColumn.SetValue("bColumnNullable"   , true);
                         _VariableColumn.SetValue("bAutoIdentity"     , false);
