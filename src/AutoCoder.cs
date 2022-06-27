@@ -411,7 +411,6 @@ namespace Volte.Bot.Term
                 _COLUMNEntity.sRefCheck      = _NameValue.GetValue("sRefCheck");
                 _COLUMNEntity.sRefViewer     = _NameValue.GetValue("sRefViewer");
                 _COLUMNEntity.sDataType      = _NameValue.GetValue("sDataType");
-                _COLUMNEntity.sEnableMode    = _NameValue.GetValue("sEnableMode");
                 _COLUMNEntity.sRefCheck      = _NameValue.GetValue("sRefCheck");
                 _COLUMNEntity.sRefBrowse     = _NameValue.GetValue("sRefBrowse");
                 _COLUMNEntity.sRefBrowseType = _NameValue.GetValue("sType");
@@ -734,9 +733,9 @@ namespace Volte.Bot.Term
                 _entity.SetValue("sTableName"    , _COLUMNEntity.sTableName);
                 _entity.SetValue("sColumnName"   , _COLUMNEntity.sColumnName);
                 _entity.SetValue("sDataType"     , _COLUMNEntity.sDataType);
+                _entity.SetBoolean("bPrimaryKey" , _COLUMNEntity.bPrimaryKey);
                 _entity.SetBoolean("bNullable"   , _COLUMNEntity.bNullable);
                 _entity.SetBoolean("Writeable"   , _COLUMNEntity.bWriteable);
-                _entity.SetBoolean("bPrimaryKey" , _COLUMNEntity.bPrimaryKey);
 
                 if (!string.IsNullOrEmpty(_COLUMNEntity.sDescriptionId)){
                     _entity.SetValue("sDescriptionId"   , _COLUMNEntity.sDescriptionId);
@@ -1009,11 +1008,11 @@ namespace Volte.Bot.Term
                 _AutoTemplate.SetValue("sTableNames" , sTableNames);
 
                 _AutoTemplate.Template   = "N_Entity_Build_Template.cs";
-                _AutoTemplate.OutputFile = UtilSeparator.Separator(AppConfigs.ProjectPath  + @"\src\entity\\entity.Build");
+                _AutoTemplate.OutputFile = UtilSeparator.Separator(AppConfigs.ProjectPath  + @"\src\entity\Zero.Addons.entity.Build");
                 _AutoTemplate.Process();
 
                 _AutoTemplate.Template = "N_Entity_Build_Template.csproj";
-                _AutoTemplate.OutputFile = UtilSeparator.Separator(AppConfigs.ProjectPath + @"\src\entity\\entity.csproj");
+                _AutoTemplate.OutputFile = UtilSeparator.Separator(AppConfigs.ProjectPath + @"\src\entity\Zero.Addons.entity.csproj");
                 _AutoTemplate.Process();
 
                 Prettify("entity");
