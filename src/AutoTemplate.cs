@@ -42,8 +42,6 @@ namespace Volte.Bot.Term
         private VoltEngine _Tmpl     = VoltEngine.Parser("");
         private Substitute _Substitute=new Substitute();
 
-        public string Replication  { get ; set ;  }
-
         public AppConfigs AppConfigs;
 
         public string DebugMode  { get { return _debugMode;  } set { _debugMode  = value; }  }
