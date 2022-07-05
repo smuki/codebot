@@ -36,6 +36,7 @@ namespace Volte.Bot.Term
         public  string  UID_TP_CODE  = "N";
         public  string  DebugMode    = "N";
         private TableUtil _TableUtil = new TableUtil();
+        private Substitute _Substitute=new Substitute();
 
         private List<string> _L_UID_CODE = new List<string>();
 
@@ -94,6 +95,7 @@ namespace Volte.Bot.Term
             foreach (string _UID_CODE in _L_UID_CODE)
             {
                 Prettify(_UID_CODE);
+                Replication(_UID_CODE);
                 Build(_UID_CODE);
             }
 
@@ -136,6 +138,53 @@ namespace Volte.Bot.Term
                 sCommand = _ShellRunner.Execute(sCommand);
 
                 WriteLine(sCommand.Message);
+            }
+        }
+
+        private void Replication(string sUID)
+        {
+            string _Replications = UtilSeparator.Separator(AppConfigs.Replications);
+            string[] aReplication = _Replications.Split(';');
+
+            string sDir=UtilSeparator.Separator(AppConfigs.ProjectPath + @"\src\" + sUID);
+            WriteLine("...............");
+            WriteLine("...............");
+            WriteLine("...............");
+            WriteLine(sDir);
+            WriteLine(_Replications);
+            WriteLine(AppConfigs.Replications);
+            if (!string.IsNullOrEmpty(_Replications)){
+
+                DirectoryInfo _DirInfo = new DirectoryInfo(sDir);
+
+                FileSystemInfo[] objFiles = _DirInfo.GetFileSystemInfos("*.*");
+
+
+                for (int i = 0; i < objFiles.Length; i++) {
+                    FileInfo _FileInfo = objFiles[i] as FileInfo;
+
+                    if (_FileInfo != null) {
+
+                        if (System.IO.Path.GetExtension(_FileInfo.FullName)==".cs" || System.IO.Path.GetExtension(_FileInfo.FullName)==".csproj" ){
+
+                            string tReplication="";
+                            foreach (string _Replication in aReplication) {
+                                if (tReplication!=""){
+                                    tReplication=tReplication+";";
+                                }
+                                string tRep=UtilSeparator.Separator(_Replication + @"\");;
+                                tReplication = tReplication+UtilSeparator.Separator(tRep + sUID + @"\"+System.IO.Path.GetFileName(_FileInfo.FullName));
+                                if (File.Exists(tReplication)){
+                                    Console.Write(_FileInfo.FullName+"--->");
+                                    Console.WriteLine(tReplication);
+                                    File.Copy(_FileInfo.FullName, tReplication, true);
+                                }
+                            }
+                        }
+                    }
+                }
+            }else{
+                Console.WriteLine("Replication=none");
             }
         }
 
@@ -339,6 +388,7 @@ namespace Volte.Bot.Term
             foreach (string _UID_CODE in _L_UID_CODE)
             {
                 Prettify(_UID_CODE);
+                Replication(_UID_CODE);
                 Build(_UID_CODE);
             }
 
@@ -495,19 +545,6 @@ namespace Volte.Bot.Term
                                 CoreUtil.CreateDir(UtilSeparator.Separator(_Path + sUID));
 
                                 _AutoTemplate.Template = UtilSeparator.Separator(cName);
-                                if (!string.IsNullOrEmpty(_Replications)){
-                                    string tReplication="";
-                                    foreach (string _Replication in aReplication) {
-                                        if (tReplication!=""){
-                                            tReplication=tReplication+";";
-                                        }
-                                        string tRep=UtilSeparator.Separator(_Replication + @"\");;
-                                        tReplication = tReplication+UtilSeparator.Separator(tRep + sUID + @"\" + cValue);
-                                    }
-                                    _AutoTemplate.Replication = tReplication;
-                                }else{
-                                    Console.WriteLine("Replication=none");
-                                }
                                 _AutoTemplate.OutputFile = UtilSeparator.Separator(_Path + sUID + @"\" + cValue);
                                 _AutoTemplate.Process();
 
