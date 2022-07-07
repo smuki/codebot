@@ -140,81 +140,33 @@ namespace Volte.Bot.Term
             return rtv;
         }
 
-        string TableColumnName(object[] args)
-        {
-            string sTableName  = args[0].ToString();
-            string nSequency   = args[1].ToString();
-            string sColumnName = "";
-
-            QueryRows RsSysTables = new QueryRows(this.Trans);
-
-            RsSysTables.CommandText = "SELECT * FROM systables WHERE bActive<>0 AND sTableName='" + sTableName + "'";
-
-            RsSysTables.Open();
-
-            if (!RsSysTables.EOF) {
-                if (nSequency == "1") {
-                    sColumnName = RsSysTables.GetValue("sColumnName01");
-                } else if (nSequency == "2") {
-                    sColumnName = RsSysTables.GetValue("sColumnName02");
-                } else if (nSequency == "3") {
-                    sColumnName = RsSysTables.GetValue("sColumnName03");
-                } else if (nSequency == "4") {
-                    sColumnName = RsSysTables.GetValue("sColumnName04");
-                } else if (nSequency == "5") {
-                    sColumnName = RsSysTables.GetValue("sColumnName05");
-                } else if (nSequency == "6") {
-                    sColumnName = RsSysTables.GetValue("sColumnName06");
-                } else if (nSequency == "7") {
-                    sColumnName = RsSysTables.GetValue("sColumnName07");
-                } else if (nSequency == "8") {
-                    sColumnName = RsSysTables.GetValue("sColumnName08");
-                } else if (nSequency == "9") {
-                    sColumnName = RsSysTables.GetValue("sColumnName09");
-                } else if (nSequency == "10") {
-                    sColumnName = RsSysTables.GetValue("sColumnName10");
-                } else if (nSequency == "11") {
-                    sColumnName = RsSysTables.GetValue("sColumnName11");
-                } else if (nSequency == "12") {
-                    sColumnName = RsSysTables.GetValue("sColumnName12");
-                }
-
-                QueryRows RsSysFields = new QueryRows(this.Trans);
-                RsSysFields.CommandText = "SELECT * FROM sysfields WHERE sTableName='" + sTableName + "' AND sColumnName='" + sColumnName + "'";
-                RsSysFields.Open();
-
-                if (RsSysFields.EOF) {
-                    sColumnName = "";
-                }
-
-                RsSysFields.Close();
-
-            }
-
-            return sColumnName;
-        }
 
         string HasColumn(object[] args)
         {
             string name = args[0].ToString();
             string sUID = args[1].ToString();
-
-            QueryRows RsZUCOLUTM = new QueryRows(this.Trans);
-
-            if (args.Length > 2) {
-                string sTableName = args[2].ToString();
-                RsZUCOLUTM.CommandText = "SELECT * FROM sysfunctiondtl WHERE bActive<>0 AND sUID='" + sUID + "' AND sTableName='" + sTableName + "' AND sColumnName='" + name + "'";
-            } else {
-                RsZUCOLUTM.CommandText = "SELECT * FROM sysfunctiondtl WHERE bActive<>0 AND sUID='" + sUID + "' AND sColumnName='" + name + "'";
+            string rtv = "False";
+            JSONObject _JSONFunction = AppConfigs.LoadJSONObject(AppConfigs.AddonLocation+ sUID + ".json");
+            JSONArray _entity = _JSONFunction.GetJSONArray("entitys");
+            foreach (JSONObject it in _entity.JSONObjects)
+            {
+                if (args.Length > 2)
+                {
+                    string sTableName = args[2].ToString();
+                    if (it.GetValue("sTableName")== sTableName && it.GetValue("sColumnName") == name)
+                    {
+                        return "True";
+                    }
+                }
+                else
+                {
+                    if (it.GetValue("sColumnName") == name)
+                    {
+                        return "True";
+                    }
+                }
             }
-
-            RsZUCOLUTM.Open();
-
-            if (!RsZUCOLUTM.EOF) {
-                return "True";
-            } else {
-                return "False";
-            }
+            return rtv;
         }
 
         object IgnoreCopyColumn(object[] args)
@@ -263,43 +215,7 @@ namespace Volte.Bot.Term
 
             return s1;
         }
-        object TableHasColumn(object[] args)
-        {
 
-            string sTableName = args[0].ToString();
-            string name       = args[1].ToString();
-            string key        = sTableName + "." + name;
-            bool   rtv        = false;
-
-            key = key.ToLower();
-
-            if (_TableHasColumn.ContainsKey(key)) {
-                rtv = _TableHasColumn[key];
-            } else {
-
-
-                TableUtil _TableUtil = new TableUtil();
-
-                List<JSONObject> aryColumns =  _TableUtil.DatabaseTableColumns(this.Trans , sTableName);
-
-                foreach (JSONObject colname in aryColumns) {
-
-                    string s = colname.GetValue("sTableName") + "." + colname.GetValue("sColumnName");
-                    s = s.ToLower();
-
-                    _TableHasColumn[s] = true;
-
-                }
-
-                if (_TableHasColumn.ContainsKey(key)) {
-                    rtv = true;
-                }else{
-                    _TableHasColumn[key] = false;
-                }
-            }
-
-            return rtv;
-        }
 
         public string TableColumnType(string sTableName, string sColumnName)
         {
@@ -372,15 +288,18 @@ namespace Volte.Bot.Term
         object HasLNKColumn(object[] args)
         {
 
-            string name      = args[0].ToString();
+            string name = args[0].ToString();
             string sUID = args[1].ToString();
-            string key       = sUID + "_" + name;
-            key              = key.ToLower();
-            bool rtv         = false;
+            string key = sUID + "_" + name;
+            key = key.ToLower();
+            bool rtv = false;
 
-            if (_HasBoolean.ContainsKey(key)) {
+            if (_HasBoolean.ContainsKey(key))
+            {
                 rtv = _HasBoolean[key];
-            } else {
+            }
+            else
+            {
 
                 object[] _args = new object[1];
 
@@ -388,25 +307,57 @@ namespace Volte.Bot.Term
 
                 string _LNKUID = TOP_UID_CODE(_args);
 
-                if (_LNKUID == sUID) {
+                if (_LNKUID == sUID)
+                {
                     return false;
                 }
 
-                QueryRows RsZUCOLUTM = new QueryRows(this.Trans);
-
-                RsZUCOLUTM.CommandText = "SELECT * FROM sysfunctiondtl WHERE bActive<>0 AND sUID='" + _LNKUID + "' AND sColumnName='" + name + "'";
-                RsZUCOLUTM.Open();
-
-                rtv = (!RsZUCOLUTM.EOF);
-
-                RsZUCOLUTM.Close();
-                _HasBoolean[key] = rtv;
-
+                JSONObject _JSONFunction = AppConfigs.LoadJSONObject(AppConfigs.AddonLocation + _LNKUID + ".json");
+                JSONArray _entity = _JSONFunction.GetJSONArray("entitys");
+                foreach (JSONObject it in _entity.JSONObjects)
+                {
+                    if (it.GetValue("sColumnName") == name)
+                    {
+                        return "True";
+                    }
+                }
             }
 
             return rtv;
         }
+        object TableHasColumn(object[] args)
+        {
 
+            string sTableName = args[0].ToString();
+            string name = args[1].ToString();
+            string key = sTableName + "." + name;
+            bool rtv = false;
+
+            key = key.ToLower();
+
+            if (_TableHasColumn.ContainsKey(key))
+            {
+                rtv = _TableHasColumn[key];
+            }
+            else
+            {
+                JSONObject _JSONFunction = AppConfigs.LoadJSONObject(AppConfigs.DevelopPath + @"\definition\entity\" + sTableName + ".json");
+                JSONArray _entity = _JSONFunction.GetJSONArray("entitys");
+                foreach (JSONObject it in _entity.JSONObjects)
+                {
+
+                    if (it.GetValue("sColumnName") == name)
+                    {
+                        string s = it.GetValue("sTableName") + "." + it.GetValue("sColumnName");
+                        s = s.ToLower();
+                        _TableHasColumn[s] = true;
+                        return "True";
+                    }
+                }
+            }
+
+            return rtv;
+        }        
         string FunctionActive(object[] args)
         {
 
@@ -597,15 +548,16 @@ namespace Volte.Bot.Term
                             int _s = 0;
 
                             if (_P > 0) {
-                                l  = DapperUtil.ToInt(cValue.Substring(0 , _P));
-                                scale = DapperUtil.ToInt(cValue.Substring(_P + 1, cValue.Length - _P - 1));
+                                
+                                l  = Utils.Util.ToInt(cValue.Substring(0 , _P));
+                                scale = Utils.Util.ToInt(cValue.Substring(_P + 1, cValue.Length - _P - 1));
 
                                 if (l > 1) {
                                     nColumnLength = l;
 
                                 }
                             } else {
-                                l = DapperUtil.ToInt(cValue);
+                                l = Utils.Util.ToInt(cValue);
 
                                 if (l > 1) {
                                     nColumnLength = l;
@@ -769,10 +721,10 @@ namespace Volte.Bot.Term
         {
             if (args.Length == 1)
             {
-                return Volte.Utils.Util.ToCamelCase(args[0].ToString(),0);
+                return Utils.Util.ToCamelCase(args[0].ToString(),0);
             }else
             {
-                return Volte.Utils.Util.ToCamelCase(args[0].ToString(), Convert.ToInt32(args[1].ToString()));
+                return Utils.Util.ToCamelCase(args[0].ToString(), Convert.ToInt32(args[1].ToString()));
             }
         }
 
@@ -808,7 +760,6 @@ namespace Volte.Bot.Term
             _Tmpl.RegisterFunction("DataTypeDefault"       , DataTypeDefault);
             _Tmpl.RegisterFunction("StringToDataType"      , StringToDataType );
             _Tmpl.RegisterFunction("HasColumn"             , HasColumn);
-            _Tmpl.RegisterFunction("TableColumnName"       , TableColumnName);
             _Tmpl.RegisterFunction("HasLNKColumn"          , HasLNKColumn);
             _Tmpl.RegisterFunction("TableHasColumn"        , TableHasColumn);
             _Tmpl.RegisterFunction("TOP_UID_CODE"          , TOP_UID_CODE);
@@ -849,7 +800,6 @@ namespace Volte.Bot.Term
             _Tmpl.RegisterFunction("DataTypeDefault"       , DataTypeDefault);
             _Tmpl.RegisterFunction("StringToDataType"      , StringToDataType);
             _Tmpl.RegisterFunction("HasColumn"             , HasColumn);
-            _Tmpl.RegisterFunction("TableColumnName"       , TableColumnName);
             _Tmpl.RegisterFunction("HasLNKColumn"          , HasLNKColumn);
             _Tmpl.RegisterFunction("TableHasColumn"        , TableHasColumn);
             _Tmpl.RegisterFunction("TOP_UID_CODE"          , TOP_UID_CODE);
@@ -908,7 +858,7 @@ namespace Volte.Bot.Term
                 return;
             }
 
-            CoreUtil.CreateDir(UtilSeparator.Separator(AppConfigs.GetValue("AppPath") + @"\temp"));
+            Utils.Util.CreateDir(Term.UtilSeparator.Separator(AppConfigs.GetValue("AppPath") + @"\temp"));
 
             string _t_template = UtilSeparator.Separator(AppConfigs.GetValue("AppPath") + @"\temp\" + this.sUID + "_" + Path.GetFileName(_Template) + ".tpl");
 
