@@ -716,39 +716,8 @@ namespace Volte.Bot.Term
                 XObject.AppendLine(_name + "[\"sDataBand\"] = \"" + sDataBand + "\";");
                 XObject.AppendLine(_name + ".Scale          = " + nScale + ";");
                 XObject.AppendLine(_name + ".NonPrintable   = " + _NonPrintable + ";");
-                XObject.AppendLine(_name + ".TypeChar       = \"" + _DataTypeChar.GetValue(type) + "\";");
 
                 XObject.AppendLine("_JSONTable.Declare(_SQLStatement.Process(" + _name + " , \"" + sSqlCode + "\" , entity.DataOption));");
-
-
-                if (!(tableName.ToLower() == "zzfields" && columnName.ToLower() == "cont_data")) {
-
-                    if (!_HasProcess.ContainsKey("SQL_" + sSqlCode)) {
-                        _HasProcess["SQL_" + sSqlCode] = true;
-                        this.Trans.Execute("Delete From sysdatadtl Where sSqlCode='" + sSqlCode + "' AND sChgFlag='A'");
-                    }
-
-                    QueryRows _SysDataDtl  = new QueryRows(this.Trans);
-                    _SysDataDtl.CommandText = "SELECT * From sysdatadtl Where sSqlCode='" + sSqlCode + "' AND sTableName='" + tableName + "' AND sColumnName='" + columnName + "'";
-                    _SysDataDtl.Open();
-                    string sSQLString = "";
-
-                    if (_SysDataDtl.EOF) {
-                        sSQLString = "INSERT INTO sysdatadtl ([sSqlCode] , [sKey] , [sTableName] , [sColumnName] , [bActive] , [nSequency] , [sDataType] , [nColumnLength] , [nScale] , [sCaptionCode],sChgFlag)";
-
-                        sSQLString = sSQLString + "VALUES (N'" + sSqlCode + "' , N'" + IdGenerator.NewBase36("_") + "' , N'" + tableName + "' , N'" + columnName + "' , '1' , '99999' , N'' , NULL , '0' , N'','A');";
-
-                        this.Trans.Execute(sSQLString);
-
-                    }
-
-                    sSQLString = "UPDATE sysdatadtl Set sDataBand='" + sDataBand + "' Where sSqlCode='" + sSqlCode + "' AND sTableName='" + tableName + "' AND sColumnName='" + columnName + "'";
-                    this.Trans.Execute(sSQLString);
-
-                    sSQLString = "UPDATE sysdatadtl Set sAlignColumnName='" + sAlignColumnName + "' Where sSqlCode='" + sSqlCode + "' AND sTableName='" + tableName + "' AND sColumnName='" + columnName + "'";
-                    this.Trans.Execute(sSQLString);
-                }
-
 
                 _Context[key] = XObject.ToString();
                 rtv = XObject.ToString();
@@ -762,236 +731,6 @@ namespace Volte.Bot.Term
             string sUID = args[0].ToString();
             string sName     = args[1].ToString();
             return _Templates.HasRegion(sUID , sName);
-        }
-
-        public string Snapshot(object[] args)
-        {
-            string sUID   = args[0].ToString();
-            string sParentUID  = "";
-            string sParentName = sUID;
-
-            if (args.Length > 1) {
-                sParentUID  = args[1].ToString();
-                sParentName = args[1].ToString();
-            } else {
-                sParentName = "";
-                sParentUID  = "";
-                _HasProcess = new Dictionary<string, bool>();
-            }
-
-            QueryRows _SysFunction = new QueryRows(this.Trans);
-            List<string> aUID_CODE = new List<string>();
-
-            ZZLogger.Debug(ZFILE_NAME , sUID);
-
-            object[] _args = new object[2];
-
-            _args[0] = sUID;
-            _args[1] = sParentUID;
-
-            string _LNK_UID_CODE = TOP_UID_CODE(_args);
-
-            StringBuilder XObject = new StringBuilder();
-
-            _SysFunction.CommandText = "SELECT * FROM sysfunction WHERE bActive<>0 AND sUID='" + sUID + "' ORDER By sUID , sTableName";
-            _SysFunction.Open();
-
-            if (!_SysFunction.EOF) {
-
-                string sTableName  = _SysFunction.GetValue("sTableName");
-                string sColumnName = _SysFunction.GetValue("sColumnName");
-                string _UID_CODE   = _SysFunction.GetValue("sUID");
-                string Name        = _UID_CODE;
-
-                if (_HasProcess.ContainsKey(_UID_CODE)) {
-
-                } else {
-
-                    _HasProcess[_UID_CODE] = true;
-
-                    _args[0] = sUID;
-                    _args[1] = sParentName;
-
-                    string SQLString = SnapshotSQLString(_UID_CODE , sParentName);
-
-                    if (SQLString != "") {
-
-                        XObject.AppendLine("");
-                        XObject.AppendLine("JSONArray _" + Name + "Entitys = new JSONArray();");
-                        XObject.AppendLine("QueryRows Rs" + Name + "= new QueryRows(Trans);");
-                        XObject.AppendLine("Rs" + Name + ".CommandText = \"" + SQLString + "\";");
-
-                        XObject.AppendLine("Rs" + Name + ".Open();");
-                        XObject.AppendLine("while (!Rs" + Name + ".EOF) {");
-                        XObject.AppendLine("    JSONObject _" + Name + "Entity = new JSONObject();");
-
-                        Dictionary<string, bool> _HasColumn = new Dictionary<string, bool>();
-
-                        _HasColumn[sColumnName.ToLower()] = true;
-
-                        XObject.AppendLine(SnapshotColumnName(Name , sTableName , sColumnName));
-
-                        QueryRows RsZUPRGDTM = new QueryRows(this.Trans);
-
-                        if (_LNK_UID_CODE==sUID){
-                            RsZUPRGDTM.CommandText = "SELECT * FROM sysfunctiondtl WHERE bActive<>0 AND sUID='" + sUID + "'";
-                        }else{
-                            RsZUPRGDTM.CommandText = "SELECT * FROM sysfunctiondtl WHERE bActive<>0 AND sUID='" + sUID + "' AND sTableName='" + sTableName + "'";
-                        }
-                        RsZUPRGDTM.Open();
-
-                        while (!RsZUPRGDTM.EOF) {
-                            sColumnName        = RsZUPRGDTM.GetValue("sColumnName");
-                            string sTableName2 = RsZUPRGDTM.GetValue("sTableName");
-
-                            if (!_HasColumn.ContainsKey(sColumnName.ToLower())){
-                                XObject.AppendLine(SnapshotColumnName(Name , sTableName2 , sColumnName));
-                            }
-
-                            _HasColumn[sColumnName.ToLower()] = true;
-
-                            RsZUPRGDTM.MoveNext();
-                        }
-
-                        RsZUPRGDTM.Close();
-
-                        QueryRows _SysFunction2 = new QueryRows(this.Trans);
-
-                        _SysFunction2.CommandText = "SELECT * FROM sysfunction WHERE bActive<>0 AND sLNKUID='" + sUID + "' ORDER By sUID , sTableName";
-                        _SysFunction2.Open();
-
-                        while (!_SysFunction2.EOF) {
-
-                            object[] _args2 = new object[2];
-
-                            _args2[0] = _SysFunction2.GetValue("sUID");
-                            _args2[1] = _SysFunction2.GetValue("sLNKUID");
-
-                            //XObject.AppendLine(SnapshotUID_CODE(_args2).ToString());
-                            _SysFunction2.MoveNext();
-                        }
-
-                        _SysFunction2.Close();
-
-                        XObject.AppendLine("   _" + Name + "Entitys.Add(_" + Name + "Entity);");
-
-                        XObject.AppendLine("    Rs" + Name + ".MoveNext();");
-                        XObject.AppendLine("}");
-                        XObject.AppendLine("Rs" + Name + ".Close();");
-
-                        if (sParentName != "") {
-                            XObject.AppendLine("_" + sParentName + "Entity.SetValue(\"" + sUID + "\",_" + Name + "Entitys);");
-                        } else {
-                            XObject.AppendLine("_Journal.SetValue(\"" + sUID + "\",_" + Name + "Entitys);");
-                        }
-
-                        XObject.AppendLine("");
-                    }
-                }
-
-            }
-            _SysFunction.Close();
-
-            return XObject.ToString();
-
-        }
-
-        string SnapshotColumnName(string Name , string sTableName , string sColumnName)
-        {
-
-            StringBuilder _Code = new StringBuilder();
-
-            if (sColumnName.ToLower()=="schgflag") {
-                return _Code.ToString();
-            }
-
-            QueryRows RsSysFields = new QueryRows(this.Trans);
-            RsSysFields.CommandText = "SELECT * FROM sysfields WHERE bColumnUsage<>0 AND sTableName='" + sTableName + "' AND sColumnName='" + sColumnName + "'";
-            RsSysFields.Open();
-
-            if (RsSysFields.EOF) {
-
-                _Code.AppendLine("          _" + Name + "Entity[\"" + sColumnName + "\"] = entity." + sColumnName + ";");
-
-            }else{
-
-                string _ColumnType = RsSysFields.GetValue("sDataType");
-                string sName       = RsSysFields.GetValue("sTableName")+"_"+RsSysFields.GetValue("sColumnName");
-
-                if (_ColumnType == "datetime") {
-
-                    _Code.AppendLine(" _" + Name + "Entity.SetValue(\"" + sName + "\" , Rs" + Name + ".GetValue(\"" + sColumnName + "\"));");
-
-                } else if (_ColumnType == "decimal") {
-
-                    _Code.AppendLine(" _" + Name + "Entity.SetDecimal(\"" + sName + "\" , Rs" + Name + ".GetDecimal(\"" + sColumnName + "\"));");
-
-                } else if (_ColumnType == "int") {
-
-                    _Code.AppendLine(" _" + Name + "Entity.SetInteger(\"" + sName +  "\" , Rs" + Name + ".GetInteger(\"" + sColumnName + "\"));");
-
-                } else if (_ColumnType == "ntext" || _ColumnType == "nvarchar") {
-
-                    _Code.AppendLine(" _" + Name + "Entity.SetValue(\"" + sName + "\" , Rs" + Name + ".GetValue(\"" + sColumnName + "\"));");
-
-                } else {
-
-                    _Code.AppendLine(" _" + Name + "Entity[\"" + sName + "\"] = Rs" + Name + "[\"" + sColumnName + "\"];");
-
-                }
-
-            }
-
-            return _Code.ToString();
-        }
-
-        string SnapshotSQLString(string sUID , string sParentName)
-        {
-
-            string sTableName      = "";
-            string sColumnName     = "";
-            string LNK_COLUMN_NAME = "";
-            string SQLString       = "";
-
-            QueryRows _SysFunction = new QueryRows(this.Trans);
-
-            _SysFunction.CommandText = "SELECT * FROM sysfunction WHERE sUID='" + sUID + "'";
-            _SysFunction.Open();
-
-            if (!_SysFunction.EOF) {
-                sTableName  = _SysFunction.GetValue("sTableName");
-                sColumnName = _SysFunction.GetValue("sColumnName");
-            }
-            _SysFunction.Close();
-
-            QueryRows RsZUPRGDTM = new QueryRows(this.Trans);
-            RsZUPRGDTM.CommandText = "SELECT * FROM sysfunctiondtl WHERE bActive<>0 AND sUID='" + sUID + "' AND sTableName='" + sTableName + "' AND LNK_COLUMN_NAME<>''";
-            RsZUPRGDTM.Open();
-
-            if (!RsZUPRGDTM.EOF) {
-                LNK_COLUMN_NAME = RsZUPRGDTM.GetValue("LNK_COLUMN_NAME");
-                //sColumnName     = RsZUPRGDTM.GetValue("sColumnName");
-            }
-
-            RsZUPRGDTM.Close();
-
-            if (sTableName != "" && sColumnName != "") {
-                // if (LNK_COLUMN_NAME != "") {
-                //     if (sParentName != "") {
-                //         SQLString = "SELECT * FROM " + sTableName.ToLower() + " Where " + sColumnName + "='\"+Rs" + sParentName + ".GetValue(\"" + LNK_COLUMN_NAME + "\")+\"'";
-                //     } else {
-                //         SQLString = "SELECT * FROM " + sTableName.ToLower() + " Where " + sColumnName + "='\"+entity." + LNK_COLUMN_NAME + "+\"'";
-                //     }
-                // } else {
-                if (sParentName != "") {
-                    SQLString = "";
-                } else {
-                    SQLString = "SELECT * FROM " + sTableName.ToLower() + " Where " + sColumnName + "='\"+entity." + sColumnName + "+\"'";
-                }
-                // }
-            }
-
-            return SQLString;
         }
 
         public void Close()
@@ -1075,7 +814,6 @@ namespace Volte.Bot.Term
             _Tmpl.RegisterFunction("TOP_UID_CODE"          , TOP_UID_CODE);
             _Tmpl.RegisterFunction("FunctionActive"        , FunctionActive);
             _Tmpl.RegisterFunction("FunctionTableName"     , FunctionTableName);
-            _Tmpl.RegisterFunction("Snapshot"              , Snapshot);
             _Tmpl.RegisterFunction("getHash"               , getHash);
             _Tmpl.RegisterFunction("FunctionColumnName"    , FunctionColumnName);
             _Tmpl.RegisterFunction("IgnoreCopyColumn"      , IgnoreCopyColumn);
@@ -1118,7 +856,6 @@ namespace Volte.Bot.Term
             _Tmpl.RegisterFunction("FunctionActive"        , FunctionActive);
             _Tmpl.RegisterFunction("FunctionTableName"     , FunctionTableName);
             _Tmpl.RegisterFunction("FunctionColumnName"    , FunctionColumnName);
-            _Tmpl.RegisterFunction("Snapshot"              , Snapshot);
             _Tmpl.RegisterFunction("getHash"               , getHash);
             _Tmpl.RegisterFunction("IgnoreCopyColumn"      , IgnoreCopyColumn);
             _Tmpl.RegisterFunction("FiltersWith"           , FiltersWith);
