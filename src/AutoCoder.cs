@@ -104,13 +104,13 @@ namespace Volte.Bot.Term
             _AutoTemplate.AppConfigs = AppConfigs;
             _AutoTemplate.Initialize();
             _AutoTemplate.SetValue("ProjectName", AppConfigs.GetValue("ProjectName"));
-            _AutoTemplate.SetValue("AppPath", AppConfigs.AppPath);
+            _AutoTemplate.SetValue("AppPath", AppConfigs.GetValue("AppPath"));
             _AutoTemplate.SetValue("ProjectPath", AppConfigs.ProjectPath);
             _AutoTemplate.SetValue("DevelopPath", AppConfigs.DevelopPath);
             _AutoTemplate.SetValue("CommandEntity", sCommandEntity);
 
             _AutoTemplate.Template = "Build_Result.shtml";
-            _AutoTemplate.OutputFile = UtilSeparator.Separator(AppConfigs.AppPath + "\\temp\\Build_Result.html");
+            _AutoTemplate.OutputFile = UtilSeparator.Separator(AppConfigs.GetValue("AppPath") + "\\temp\\Build_Result.html");
             _AutoTemplate.Process();
             _AutoTemplate.Close();
             if (_FAILURE.Count > 0)
@@ -409,8 +409,11 @@ namespace Volte.Bot.Term
         private void GeneratorActivity(string sUID)
         {
 
-            CoreUtil.CreateDir(UtilSeparator.Separator(AppConfigs.ProjectPath + @"\apps\addons"));
-            CoreUtil.CreateDir(UtilSeparator.Separator(AppConfigs.ProjectPath + @"\src"));
+            this.WriteLine(UtilSeparator.Separator(AppConfigs.ProjectPath + @"\apps\addons"));
+
+            Utils.Util.CreateDir(UtilSeparator.Separator(AppConfigs.ProjectPath + @"\apps\addons"));
+
+            Utils.Util.CreateDir(UtilSeparator.Separator(AppConfigs.ProjectPath + @"\src"));
 
             string _TableName;
             string _ColumnName;
@@ -425,7 +428,7 @@ namespace Volte.Bot.Term
             _AutoTemplate.Initialize();
             _AutoTemplate.SetValue("sUID", sUID);
             _AutoTemplate.SetValue("DistPath", AppConfigs.GetValue("DistPath"));
-            _AutoTemplate.SetValue("AppPath", AppConfigs.AppPath);
+            _AutoTemplate.SetValue("AppPath", AppConfigs.GetValue("AppPath"));
             _AutoTemplate.SetValue("ProjectName", AppConfigs.GetValue("ProjectName"));
             _AutoTemplate.SetValue("ProjectPath", AppConfigs.ProjectPath);
             _AutoTemplate.SetValue("DevelopPath", AppConfigs.DevelopPath);
@@ -533,7 +536,7 @@ namespace Volte.Bot.Term
                             cName = cName.Replace("{sUID}", sUID);
                             cName = cName.Replace("{UID_TP_CODE}", UID_TP_CODE);
                             cValue = cValue.Replace("{sUID}", sUID);
-                            cValue = cValue.Replace("{AppPath}", AppConfigs.AppPath);
+                            cValue = cValue.Replace("{AppPath}", AppConfigs.GetValue("AppPath"));
                             cValue = cValue.Replace("{ProjectPath}", AppConfigs.ProjectPath);
                             cValue = cValue.Replace("{DevelopPath}", AppConfigs.DevelopPath);
                             cValue = cValue.Replace("{UID_TP_CODE}", UID_TP_CODE);
@@ -545,7 +548,7 @@ namespace Volte.Bot.Term
                             else
                             {
 
-                                CoreUtil.CreateDir(UtilSeparator.Separator(_Path + sUID));
+                                Utils.Util.CreateDir(UtilSeparator.Separator(_Path + sUID));
 
                                 _AutoTemplate.Template = UtilSeparator.Separator(cName);
                                 _AutoTemplate.OutputFile = UtilSeparator.Separator(_Path + sUID + @"\" + cValue);
@@ -972,10 +975,10 @@ namespace Volte.Bot.Term
         public void GeneratorEntity()
         {
 
-            CoreUtil.CreateDir(UtilSeparator.Separator(AppConfigs.DevelopPath + "\\definition"));
-            CoreUtil.CreateDir(UtilSeparator.Separator(AppConfigs.DevelopPath + "\\definition\\entity"));
-            CoreUtil.CreateDir(UtilSeparator.Separator(AppConfigs.ProjectPath + "\\src"));
-            CoreUtil.CreateDir(UtilSeparator.Separator(AppConfigs.ProjectPath + "\\src\\entity"));
+            Utils.Util.CreateDir(UtilSeparator.Separator(AppConfigs.DevelopPath + "\\definition"));
+            Utils.Util.CreateDir(UtilSeparator.Separator(AppConfigs.DevelopPath + "\\definition\\entity"));
+            Utils.Util.CreateDir(UtilSeparator.Separator(AppConfigs.ProjectPath + "\\src"));
+            Utils.Util.CreateDir(UtilSeparator.Separator(AppConfigs.ProjectPath + "\\src\\entity"));
 
             List<string> sTableNames = new List<string>();
 
@@ -1034,8 +1037,8 @@ namespace Volte.Bot.Term
                             _AutoTemplate.SetValue("Entitys"    , ColumnEntity);
                             _AutoTemplate.SetValue("sTableName" , sTableName);
 
-                            _AutoTemplate.Template   = "N_Entity_Template.cs";
-                            _AutoTemplate.OutputFile = UtilSeparator.Separator(AppConfigs.ProjectPath + "\\src\\entity\\" +Volte.Utils.Util.ToCamelCase(sTableName) + "Entity.cs");
+                            _AutoTemplate.Template = "N_Entity_Template.cs";
+                            _AutoTemplate.OutputFile = UtilSeparator.Separator(AppConfigs.ProjectPath + "\\src\\entity\\" + Utils.Util.ToCamelCase(sTableName) + "Entity.cs");
                             _AutoTemplate.Process();
 
                             sTableNames.Add(sTableName);
@@ -1066,8 +1069,7 @@ namespace Volte.Bot.Term
                 sCommand.sCommand      = AppConfigs.GetValue("Compiler");
                 sCommand.sArguments    = sArguments;
 
-                sCommand=_ShellRunner.Execute(sCommand);
-                //Console.WriteLine(sCommand.Message);
+                sCommand = _ShellRunner.Execute(sCommand);
                 sCommandEntity.Add(sCommand);
 
             }else{
@@ -1499,8 +1501,8 @@ namespace Volte.Bot.Term
         public void Templates()
         {
 
-            CoreUtil.CreateDir(UtilSeparator.Separator(AppConfigs.ProjectPath + "\\apps\\ddons"));
-            CoreUtil.CreateDir(UtilSeparator.Separator(AppConfigs.ProjectPath + "\\src"));
+            Utils.Util.CreateDir(UtilSeparator.Separator(AppConfigs.ProjectPath + "\\apps\\ddons"));
+            Utils.Util.CreateDir(UtilSeparator.Separator(AppConfigs.ProjectPath + "\\src"));
 
             AutoTemplate _AutoTemplate = new AutoTemplate();
             _AutoTemplate.DebugMode = this.DebugMode;
@@ -1508,12 +1510,12 @@ namespace Volte.Bot.Term
             _AutoTemplate.sUID = "";
             _AutoTemplate.SetValue("sUID", "");
             _AutoTemplate.SetValue("ProjectName", AppConfigs.GetValue("ProjectName"));
-            _AutoTemplate.SetValue("AppPath", AppConfigs.AppPath);
+            _AutoTemplate.SetValue("AppPath", AppConfigs.GetValue("AppPath"));
             _AutoTemplate.SetValue("ProjectPath", AppConfigs.ProjectPath);
             _AutoTemplate.SetValue("DevelopPath", AppConfigs.DevelopPath);
 
             string _App_Path = UtilSeparator.Separator(AppConfigs.DevelopPath + "\\");
-            string _Path     = UtilSeparator.Separator(AppConfigs.ProjectPath + "\\src\\");
+            string _Path = UtilSeparator.Separator(AppConfigs.ProjectPath + "\\src\\");
 
             string sFile = this.FileName;
             if (!File.Exists(sFile))
@@ -1544,7 +1546,7 @@ namespace Volte.Bot.Term
                             cValue = cValue.Trim();
                             cName = cName.Replace("{UID_TP_CODE}", UID_TP_CODE);
 
-                            cValue = cValue.Replace("{AppPath}", AppConfigs.AppPath);
+                            cValue = cValue.Replace("{AppPath}", AppConfigs.GetValue("AppPath"));
                             cValue = cValue.Replace("{ProjectPath}", AppConfigs.ProjectPath);
                             cValue = cValue.Replace("{UID_TP_CODE}", UID_TP_CODE);
 
