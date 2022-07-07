@@ -256,6 +256,7 @@ namespace Volte.Bot.Term
                 Console.WriteLine("AppSetting : [" + fileName + "]");
                 PrintConfig(AppConfigs.JSONObjects, 0);
 
+
                 switch (sCommand) {
                     case "B": {
                                   AutoCoder _AutoCoder  = new AutoCoder();
