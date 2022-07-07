@@ -24,8 +24,8 @@ namespace Volte.Bot.Term
         private string _fileName = "";
 
         private ShellRunner _ShellRunner   = new ShellRunner();
-        private List<string> _FAILURE             = new List<string>();
-        private List<FileNameValue> _Hashs        = new List<FileNameValue>();
+        private List<string> _FAILURE      = new List<string>();
+        private List<FileNameValue> _Hashs = new List<FileNameValue>();
 
         public List<CommandEntity> sCommandEntity = new List<CommandEntity>();
 
@@ -147,12 +147,6 @@ namespace Volte.Bot.Term
             string[] aReplication = _Replications.Split(';');
 
             string sDir=UtilSeparator.Separator(AppConfigs.ProjectPath + @"\src\" + sUID);
-            WriteLine("...............");
-            WriteLine("...............");
-            WriteLine("...............");
-            WriteLine(sDir);
-            WriteLine(_Replications);
-            WriteLine(AppConfigs.Replications);
             if (!string.IsNullOrEmpty(_Replications)){
 
                 DirectoryInfo _DirInfo = new DirectoryInfo(sDir);
@@ -160,29 +154,38 @@ namespace Volte.Bot.Term
                 FileSystemInfo[] objFiles = _DirInfo.GetFileSystemInfos("*.*");
 
 
-                for (int i = 0; i < objFiles.Length; i++) {
-                    FileInfo _FileInfo = objFiles[i] as FileInfo;
+                foreach (string _Replication in aReplication) {
 
-                    if (_FileInfo != null) {
+                    string tReplication=_Replication;
+                    string tRep=UtilSeparator.Separator(_Replication + @"\" + sUID );;
+                    Console.WriteLine("");
 
-                        if (System.IO.Path.GetExtension(_FileInfo.FullName)==".cs" || System.IO.Path.GetExtension(_FileInfo.FullName)==".csproj" ){
+                    if (Directory.Exists(tRep))
+                    {
 
-                            string tReplication="";
-                            foreach (string _Replication in aReplication) {
-                                if (tReplication!=""){
-                                    tReplication=tReplication+";";
-                                }
-                                string tRep=UtilSeparator.Separator(_Replication + @"\");;
-                                tReplication = tReplication+UtilSeparator.Separator(tRep + sUID + @"\"+System.IO.Path.GetFileName(_FileInfo.FullName));
-                                if (File.Exists(tReplication)){
-                                    Console.Write(_FileInfo.FullName+"--->");
-                                    Console.WriteLine(tReplication);
-                                    File.Copy(_FileInfo.FullName, tReplication, true);
+                        for (int i = 0; i < objFiles.Length; i++) {
+                            FileInfo _FileInfo = objFiles[i] as FileInfo;
+
+                            if (_FileInfo != null) {
+
+                                if (System.IO.Path.GetExtension(_FileInfo.FullName)==".cs" || System.IO.Path.GetExtension(_FileInfo.FullName)==".csproj" ){
+
+                                    tReplication = UtilSeparator.Separator(tRep+ @"\" +System.IO.Path.GetFileName(_FileInfo.FullName));
+                                    if (File.Exists(tReplication)){
+                                        Console.Write(_FileInfo.FullName+"--->");
+                                        Console.WriteLine(tRep);
+                                        File.Copy(_FileInfo.FullName, tReplication, true);
+                                    }else{
+                                        Console.WriteLine(_Replication+" Ignore");
+                                    }
                                 }
                             }
                         }
+                    }else{
+                        Console.WriteLine("Dir "+tRep+" Ignore");
                     }
                 }
+                
             }else{
                 Console.WriteLine("Replication=none");
             }
