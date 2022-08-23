@@ -18,5 +18,14 @@ namespace Volte.Bot.Term
 
             return value.Replace(SeparatorChar + SeparatorChar, SeparatorChar);
         }
+
+        public static string TrimStart(string str,string sStartValue)
+        {
+            if (str.StartsWith(sStartValue))
+            {
+                str = str.Remove(0, sStartValue.Length);
+            }
+            return str;
+        }        
     }
 }

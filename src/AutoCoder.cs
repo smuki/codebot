@@ -41,6 +41,8 @@ namespace Volte.Bot.Term
         private List<string> _L_UID_CODE = new List<string>();
 
         public string FileName { get { return _fileName; } set { _fileName = value; } }
+        public string gTableName { get ; set ; }
+        public string sTablePrefix { get ; set ; }
 
         public void Write(object message)
         {
@@ -95,7 +97,7 @@ namespace Volte.Bot.Term
             foreach (string _UID_CODE in _L_UID_CODE)
             {
                 Prettify(_UID_CODE);
-                Replication(_UID_CODE);
+                Replication(AppConfigs.ProjectPath + @"\src\",_UID_CODE);
                 Build(_UID_CODE);
             }
 
@@ -141,12 +143,13 @@ namespace Volte.Bot.Term
             }
         }
 
-        private void Replication(string sUID)
+        private void Replication(string source,string sUID)
         {
             string _Replications = UtilSeparator.Separator(AppConfigs.Replications);
             string[] aReplication = _Replications.Split(';');
 
-            string sDir=UtilSeparator.Separator(AppConfigs.ProjectPath + @"\src\" + sUID);
+            //string sDir=UtilSeparator.Separator(AppConfigs.ProjectPath + @"\src\" + sUID);
+            string sDir=UtilSeparator.Separator(source + sUID);
             if (!string.IsNullOrEmpty(_Replications)){
 
                 DirectoryInfo _DirInfo = new DirectoryInfo(sDir);
@@ -168,15 +171,13 @@ namespace Volte.Bot.Term
 
                             if (_FileInfo != null) {
 
-                                if (System.IO.Path.GetExtension(_FileInfo.FullName)==".cs" || System.IO.Path.GetExtension(_FileInfo.FullName)==".csproj" ){
+                                if (Path.GetExtension(_FileInfo.FullName)==".java" || Path.GetExtension(_FileInfo.FullName)==".cs" || Path.GetExtension(_FileInfo.FullName)==".csproj" ){
 
-                                    tReplication = UtilSeparator.Separator(tRep+ @"\" +System.IO.Path.GetFileName(_FileInfo.FullName));
+                                    tReplication = UtilSeparator.Separator(tRep+ @"\" +Path.GetFileName(_FileInfo.FullName));
                                     if (File.Exists(tReplication)){
                                         Console.Write(_FileInfo.FullName+"--->");
                                         Console.WriteLine(tRep);
                                         File.Copy(_FileInfo.FullName, tReplication, true);
-                                    }else{
-                                        Console.WriteLine(_Replication+" Ignore");
                                     }
                                 }
                             }
@@ -391,7 +392,7 @@ namespace Volte.Bot.Term
             foreach (string _UID_CODE in _L_UID_CODE)
             {
                 Prettify(_UID_CODE);
-                Replication(_UID_CODE);
+                Replication(AppConfigs.ProjectPath + @"\src\",_UID_CODE);
                 Build(_UID_CODE);
             }
 
@@ -889,7 +890,7 @@ namespace Volte.Bot.Term
             try {
 
 
-                List<JSONObject> _JSONObject = _TableUtil.DatabaseTable(_Trans , "");
+                List<JSONObject> _JSONObject = _TableUtil.DatabaseTable(_Trans , gTableName);
 
                 int i = 0;
                 int n = 0;
@@ -905,63 +906,65 @@ namespace Volte.Bot.Term
                 foreach (JSONObject _Table in _JSONObject)
                 {
                     string _sTableName = _Table.GetValue("sTableName");
+                    if (sTablePrefix=="" || _sTableName.StartsWith(sTablePrefix)){
+                        if (hIgnoreTables.Contains(_sTableName)) {
 
-                    if (hIgnoreTables.Contains(_sTableName)) {
+                        } else {
 
-                    } else {
+                            List<JSONObject> _JSONColumn = _TableUtil.DatabaseTableColumns(_Trans , _sTableName);
 
-                        List<JSONObject> _JSONColumn = _TableUtil.DatabaseTableColumns(_Trans , _sTableName);
-
-                        if (File.Exists(UtilSeparator.Separator(AppConfigs.DevelopPath + "\\definition\\entity\\"+_sTableName+".json"))) {
-                            File.Delete(UtilSeparator.Separator(AppConfigs.DevelopPath + "\\definition\\entity\\"+_sTableName+".json"));
-                        }
-
-                        JSONArray _Fields = new JSONArray();
-
-                        foreach (JSONObject RsSysFields in _JSONColumn) {
-
-                            bool bActive=true;
-                            if (hIgnoreTableColumns.Contains(RsSysFields.GetValue("sColumnName"))) {
-                                bActive=false;
-                            }
-                            if (hIgnoreTableColumns.Contains(_sTableName +"."+ RsSysFields.GetValue("sColumnName"))) {
-                                bActive=false;
+                            if (File.Exists(UtilSeparator.Separator(AppConfigs.DevelopPath + "\\definition\\entity\\"+_sTableName+".json"))) {
+                                File.Delete(UtilSeparator.Separator(AppConfigs.DevelopPath + "\\definition\\entity\\"+_sTableName+".json"));
                             }
 
-                            if (bActive)
-                            {
+                            JSONArray _Fields = new JSONArray();
 
-                                string sDataType   = RsSysFields.GetValue("sDataType");
-                                string sColumnName = RsSysFields.GetValue("sColumnName");
-                                string sTableName  = RsSysFields.GetValue("sTableName");
-                                int nColumnLength  = RsSysFields.GetInteger("nColumnLength");
+                            foreach (JSONObject RsSysFields in _JSONColumn) {
 
-                                JSONObject _ColumnEntity = new JSONObject();
-                                _ColumnEntity.SetValue("sTableName"  , sTableName.Trim());
-                                _ColumnEntity.SetValue("sColumnName" , sColumnName);
-                                _ColumnEntity.SetValue("sDataType"   , sDataType);
-                                _ColumnEntity.SetValue("bPrimaryKey" , RsSysFields.GetBoolean("bPrimaryKey"));
-                                _ColumnEntity.SetValue("bAutoIdentity", RsSysFields.GetBoolean("bAutoIdentity"));
-
-                                if (sDataType == "nvarchar")
-                                {
-                                    if (nColumnLength > 1000 || nColumnLength < 0) {
-                                        sDataType = "ntext";
-                                    }
+                                bool bActive=true;
+                                if (hIgnoreTableColumns.Contains(RsSysFields.GetValue("sColumnName"))) {
+                                    bActive=false;
+                                }
+                                if (hIgnoreTableColumns.Contains(_sTableName +"."+ RsSysFields.GetValue("sColumnName"))) {
+                                    bActive=false;
                                 }
 
-                                _ColumnEntity.SetValue("sDataType" , DataType(sDataType));
+                                if (bActive)
+                                {
 
-                                _Fields.Add(_ColumnEntity);
+                                    string sDataType   = RsSysFields.GetValue("sDataType");
+                                    string sColumnName = RsSysFields.GetValue("sColumnName");
+                                    string sTableName  = RsSysFields.GetValue("sTableName");
+                                    int nColumnLength  = RsSysFields.GetInteger("nColumnLength");
+
+                                    JSONObject _ColumnEntity = new JSONObject();
+                                    _ColumnEntity.SetValue("sTableName"   , sTableName.Trim());
+                                    _ColumnEntity.SetValue("sColumnName"  , sColumnName);
+                                    _ColumnEntity.SetValue("sDataType"    , sDataType);
+                                    _ColumnEntity.SetValue("sComment"     , RsSysFields.GetValue("sComment"));
+                                    _ColumnEntity.SetValue("bPrimaryKey"  , RsSysFields.GetBoolean("bPrimaryKey"));
+                                    _ColumnEntity.SetValue("bAutoIdentity", RsSysFields.GetBoolean("bAutoIdentity"));
+
+                                    if (sDataType == "nvarchar")
+                                    {
+                                        if (nColumnLength > 1000 || nColumnLength < 0) {
+                                            sDataType = "ntext";
+                                        }
+                                    }
+
+                                    _ColumnEntity.SetValue("sDataType" , DataType(sDataType));
+
+                                    _Fields.Add(_ColumnEntity);
+                                }
                             }
+
+                            JSONObject _JSONTableName = new JSONObject();
+
+                            _JSONTableName.SetValue(_sTableName , _Fields);
+
+                            Utils.Util.WriteContents(UtilSeparator.Separator(AppConfigs.DevelopPath + "\\definition\\entity\\"+_sTableName+".json") , JsonFormatter.PrettyPrint(_JSONTableName.ToString()));
+
                         }
-
-                        JSONObject _JSONTableName = new JSONObject();
-
-                        _JSONTableName.SetValue(_sTableName , _Fields);
-
-                        Utils.Util.WriteContents(UtilSeparator.Separator(AppConfigs.DevelopPath + "\\definition\\entity\\"+_sTableName+".json") , JsonFormatter.PrettyPrint(_JSONTableName.ToString()));
-
                     }
                 }
 
@@ -1014,36 +1017,100 @@ namespace Volte.Bot.Term
 
                             string sTableName =_s;
 
-                            ColumnEntity = new List<COLUMNEntity>();
-
-                            if (_JSONTableNames.GetType(_s) == "l")
+                            if ((sTablePrefix=="" || sTableName.StartsWith(sTablePrefix)) && (gTableName=="" || gTableName==sTableName))
                             {
 
-                                JSONArray _JSONObjects = _JSONTableNames.GetJSONArray(_s);
+                                ColumnEntity = new List<COLUMNEntity>();
 
-                                foreach (JSONObject _JSONObject in _JSONObjects.JSONObjects)
+                                if (_JSONTableNames.GetType(_s) == "l")
                                 {
 
-                                    COLUMNEntity _COLUMNEntity = new COLUMNEntity();
-                                    _COLUMNEntity.sTableName    = sTableName;
-                                    _COLUMNEntity.sColumnName   = _JSONObject.GetValue("sColumnName");
-                                    _COLUMNEntity.sDataType = _JSONObject.GetValue("sDataType");
-                                    _COLUMNEntity.bPrimaryKey  = _JSONObject.GetBoolean("bPrimaryKey");
-                                    _COLUMNEntity.bAutoIdentity = _JSONObject.GetBoolean("bAutoIdentity");
-                                    ColumnEntity.Add(_COLUMNEntity);
+                                    JSONArray _JSONObjects = _JSONTableNames.GetJSONArray(_s);
+
+                                    foreach (JSONObject _JSONObject in _JSONObjects.JSONObjects)
+                                    {
+
+                                        COLUMNEntity _COLUMNEntity = new COLUMNEntity();
+                                        _COLUMNEntity.sTableName    = sTableName;
+                                        _COLUMNEntity.sColumnName   = _JSONObject.GetValue("sColumnName");
+                                        _COLUMNEntity.sDataType = _JSONObject.GetValue("sDataType");
+                                        _COLUMNEntity.sComment = _JSONObject.GetValue("sComment");
+
+                                        _COLUMNEntity.bPrimaryKey  = _JSONObject.GetBoolean("bPrimaryKey");
+                                        _COLUMNEntity.bAutoIdentity = _JSONObject.GetBoolean("bAutoIdentity");
+                                        ColumnEntity.Add(_COLUMNEntity);
+                                    }
                                 }
+
+                                _AutoTemplate.SetValue("Entitys"    , ColumnEntity);
+                                _AutoTemplate.SetValue("sTableName" , sTableName);
+                                _AutoTemplate.SetValue("sTablePrefix" , sTablePrefix);
+
+                                string entityTpl=UtilSeparator.Separator(AppConfigs.DevelopPath + "/entity.tpl");
+                                if (File.Exists(entityTpl))
+                                {
+                                    string sUID  = "entity";
+                                    string _App_Path = UtilSeparator.Separator(AppConfigs.DevelopPath + "\\");
+                                    string _Path = UtilSeparator.Separator(AppConfigs.ProjectPath + "\\src\\");
+
+                                    using (StreamReader sr = new StreamReader(entityTpl))
+                                    {
+                                        string s;
+                                        StringBuilder XCodeObject = new StringBuilder();
+
+                                        while ((s = sr.ReadLine()) != null)
+                                        {
+                                            int _p = s.IndexOf("=");
+
+                                            if (_p > 0)
+                                            {
+                                                string cName = s.Substring(0, _p);
+                                                string cValue = s.Substring(_p + 1, s.Length - _p - 1);
+
+                                                cName = cName.Trim();
+                                                cValue = cValue.Trim();
+
+                                                cName = cName.Replace("{sUID}", "entity");
+                                                cValue = cValue.Replace("{sUID}", "entity");
+                                                cValue = cValue.Replace("{AppPath}", AppConfigs.GetValue("AppPath"));
+                                                cValue = cValue.Replace("{ProjectPath}", AppConfigs.ProjectPath);
+                                                cValue = cValue.Replace("{DevelopPath}", AppConfigs.DevelopPath);
+                                                cValue = cValue.Replace("{sTableName}", Utils.Util.ToCamelCase(UtilSeparator.TrimStart(sTableName,sTablePrefix)));
+                                            
+                                                Console.WriteLine("cValue===>>>"+cValue);
+
+                                                if (cName == "Path")
+                                                {
+                                                    _Path = UtilSeparator.Separator(cValue);
+                                                }
+                                                else
+                                                {
+
+                                                    _AutoTemplate.Template = UtilSeparator.Separator(cName);
+                                                    if (cValue.IndexOf("/")>=0){
+                                                        _AutoTemplate.OutputFile = UtilSeparator.Separator(cValue);
+                                                    }else{
+                                                        _AutoTemplate.OutputFile = UtilSeparator.Separator(_Path + sUID + @"\" + cValue);
+                                                    }
+                                                    Console.WriteLine("OutputFile===>>>"+_AutoTemplate.OutputFile);
+                                                    _AutoTemplate.Process();
+
+                                                }
+
+                                            }
+                                        }
+                                    }
+                                }else{
+                                    Console.WriteLine(entityTpl + "/entity.tpl Not Found!");
+
+                                }
+
+                                sTableNames.Add(sTableName);
+
+                                this.WriteLine("[" + sTableName + "]");
+                            }else{
+                                this.WriteLine("...[" + sTableName + "]");
                             }
-
-                            _AutoTemplate.SetValue("Entitys"    , ColumnEntity);
-                            _AutoTemplate.SetValue("sTableName" , sTableName);
-
-                            _AutoTemplate.Template = "N_Entity_Template.cs";
-                            _AutoTemplate.OutputFile = UtilSeparator.Separator(AppConfigs.ProjectPath + "\\src\\entity\\" + Utils.Util.ToCamelCase(sTableName) + "Entity.cs");
-                            _AutoTemplate.Process();
-
-                            sTableNames.Add(sTableName);
-
-                            this.WriteLine("[" + sTableName + "]");
                         }
                     }
                 }
@@ -1071,6 +1138,15 @@ namespace Volte.Bot.Term
 
                 sCommand = _ShellRunner.Execute(sCommand);
                 sCommandEntity.Add(sCommand);
+
+                Console.WriteLine("Replication.......");
+                Console.WriteLine("Replication.......");
+                Console.WriteLine("Replication.......");
+                Console.WriteLine("Replication.......");
+                Console.WriteLine("Replication.......");
+
+                Replication(AppConfigs.ProjectPath + @"\src\","entity");
+                Replication(@"\java\","entity");
 
             }else{
                 Console.WriteLine(localDirectory+" Not Found!");

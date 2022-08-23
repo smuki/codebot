@@ -13,6 +13,7 @@ namespace Volte.Bot.Term
         public bool   bAutoIdentity { get; set; }
         public string sDataType { get; set; }
         public string sDescriptionId { get; set; }
+        public string sComment { get; set; }
         public string LNK_ColumnName { get; set; }
         public string Options { get; set; }
         public string OptionType { get; set; }

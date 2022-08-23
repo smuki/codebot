@@ -151,6 +151,7 @@ namespace Volte.Bot.Term
                 string sTableName  = "";
                 string _IPAddress  = "";
                 string Port        = "";
+                string sTablePrefix="";
 
                 if (_Arguments["C"] != null)
                 {
@@ -186,6 +187,11 @@ namespace Volte.Bot.Term
                 if (_Arguments["T"] != null)
                 {
                     sTableName = _Arguments["T"];
+                }
+
+                if (_Arguments["Prefix"] != null)
+                {
+                    sTablePrefix = _Arguments["Prefix"];
                 }
 
                 if (_Arguments["U"] != null) {
@@ -284,10 +290,15 @@ namespace Volte.Bot.Term
                               }
 
                     case "T": {
+                                Console.WriteLine("sTablePrefix="+sTablePrefix);
+                                Console.WriteLine("sTableName="+sTableName);
+                                
                                   AutoCoder _AutoCoder  = new AutoCoder();
                                   _AutoCoder.AppConfigs = AppConfigs;
                                   _AutoCoder.FileName   = _FileName;
                                   _AutoCoder.DebugMode  = _debugMode;
+                                  _AutoCoder.gTableName = sTableName;
+                                  _AutoCoder.sTablePrefix = sTablePrefix;
                                   _AutoCoder.GeneratorEntityDefinition();
                                   _AutoCoder.GeneratorEntity();
                                   break ;

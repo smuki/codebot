@@ -57,6 +57,8 @@ namespace Volte.Bot.Term
             return File.Exists(fileName);
         }
 
+     
+
         public static string Separator(string value)
         {
             value = value.Replace("\\", Path.DirectorySeparatorChar.ToString());

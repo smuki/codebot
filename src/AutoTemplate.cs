@@ -413,12 +413,27 @@ namespace Volte.Bot.Term
             }
         }
 
+        string TrimStart(object[] args)
+        {
+            string str = args[0].ToString();
+            string sStartValue = args[1].ToString();
+            if (str.StartsWith(sStartValue))
+            {
+                str = str.Remove(0, sStartValue.Length);
+            }
+            return str;
+        }
+
         string SqlDataTypeToDataType(object[] args)
         {
 
             string dataType = args[0].ToString();
+            string sLang="";
+            if (args.Length > 1) {
+                sLang = args[1].ToString();
+            }
 
-            string sValue = AppConfigs.LoadSetting("SqlDataTypeToDataType.json").GetValue(dataType);
+            string sValue = AppConfigs.LoadSetting("SqlDataTypeToDataType"+sLang+".json").GetValue(dataType);
             if (sValue==""){
                 return "undefine-"+dataType;
             }else{
@@ -431,7 +446,12 @@ namespace Volte.Bot.Term
 
             string dataType = args[0].ToString();
 
-            string sValue = AppConfigs.LoadSetting("StringToDataType.json").GetValue(dataType);
+            string sLang="";
+            if (args.Length > 1) {
+                sLang = args[1].ToString();
+            }
+
+            string sValue = AppConfigs.LoadSetting("StringToDataType"+sLang+".json").GetValue(dataType);
             if (sValue==""){
                 return "undefine"+dataType;
             }else{
@@ -755,6 +775,7 @@ namespace Volte.Bot.Term
 
             _Tmpl.RegisterFunction("Process"               , this.Process);
             _Tmpl.RegisterFunction("SqlDataTypeToDataType" , SqlDataTypeToDataType);
+            _Tmpl.RegisterFunction("TrimStart"             , TrimStart);
             _Tmpl.RegisterFunction("DefineColumn"          , DefineColumn);
             _Tmpl.RegisterFunction("DbType"                , DbType);
             _Tmpl.RegisterFunction("DataTypeDefault"       , DataTypeDefault);
@@ -793,8 +814,10 @@ namespace Volte.Bot.Term
             _Tmpl.SetValue("AppPath"     , AppConfigs.GetValue("AppPath"));
             _Tmpl.SetValue("ProjectName" , AppConfigs.GetValue("ProjectName"));
 
+
             _Tmpl.RegisterFunction("Process"               , this.Process);
             _Tmpl.RegisterFunction("SqlDataTypeToDataType" , SqlDataTypeToDataType);
+            _Tmpl.RegisterFunction("TrimStart"             , TrimStart);
             _Tmpl.RegisterFunction("DefineColumn"          , DefineColumn);
             _Tmpl.RegisterFunction("DbType"                , DbType);
             _Tmpl.RegisterFunction("DataTypeDefault"       , DataTypeDefault);

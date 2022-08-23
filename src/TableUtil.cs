@@ -95,7 +95,9 @@ namespace Volte.Bot.Term
                     NUMERIC_SCALE AS sColumnScale,
                     IS_NULLABLE AS sColumnNullable,
                     COLUMN_deFAULT AS sDefault,
+                    COLUMNS.column_comment as sComment,
                     TABLES.UPDATE_TIME as dChgDate,
+                    COLUMNS.GENERATION_EXPRESSION as sExpression,
                     COLUMNS .*
                         FROM
                         information_schema.COLUMNS join information_schema.TABLES
@@ -130,7 +132,8 @@ namespace Volte.Bot.Term
                                WHERE sc.id = a.id AND sc.colid = a.colid) THEN 'Y' ELSE 'N' END AS COLUMN_PK_BIT,
                           b.name AS sDataType, COLUMNPROPERTY(a.id,a.name,'PRECISION') AS sColumnLength, a.prec AS nNumericPrecision, ISNULL(COLUMNPROPERTY(a.id, a.name, 'Scale'), 0) AS sColumnScale,
                           CASE WHEN a.isnullable = 1 THEN 'Y' ELSE 'N' END AS sColumnNullable, ISNULL(e.text, '')
-                              AS sDefault
+                              AS sDefault,
+	                          g.VALUE as sComment
                               FROM dbo.syscolumns a LEFT OUTER JOIN
                               dbo.systypes b ON a.xtype = b.xusertype INNER JOIN
                               dbo.sysobjects d ON a.id = d.id AND d.xtype = 'U' AND
@@ -448,6 +451,7 @@ namespace Volte.Bot.Term
                     string _sColumnName    = _Fields.GetValue("sColumnName");
                     string _TABLE_NAME     = _Fields.GetValue("sTableName");
                     string sDataType       = _Fields.GetValue("sDataType");
+            string sComment = _Fields.GetValue("sComment");
                     long sColumnLength     = _Fields.GetLong("sColumnLength");
                     long nNumericPrecision = _Fields.GetLong("nNumericPrecision");
                     sDataType              = sDataType+"(";
@@ -490,6 +494,7 @@ namespace Volte.Bot.Term
                         _Column.SetValue("bAutoIdentity" , false);
                     }
                     _Column.SetValue("sDefault"          , _Fields.GetValue("sDefault"));
+            _Column.SetValue("sComment", _Fields.GetValue("sComment"));
                     _Column.SetValue("nNumericPrecision" , _Fields.GetValue("nNumericPrecision"));
 
                     _NameValues.Add(_Column);
