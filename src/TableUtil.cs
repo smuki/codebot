@@ -227,7 +227,9 @@ namespace Volte.Bot.Term
             List<JSONObject> _NameValues = new List<JSONObject>();
 
             try {
-
+                if (string.IsNullOrEmpty(tableName)){
+                    tableName="";
+                }
                 tableName         = tableName.ToLower();
                 tableName         = tableName.Replace("$", "%");
                 tableName         = tableName.Replace("*", "%");
