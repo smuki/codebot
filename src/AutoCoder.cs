@@ -21,8 +21,6 @@ namespace Volte.Bot.Term
     public class AutoCoder
     {
 
-        private string _fileName = "";
-
         private ShellRunner _ShellRunner   = new ShellRunner();
         private List<string> _FAILURE      = new List<string>();
         private List<FileNameValue> _Hashs = new List<FileNameValue>();
@@ -33,17 +31,20 @@ namespace Volte.Bot.Term
         public AppConfigs AppConfigs;
 
         public  string  Mode         = "";
-        public  string  UID_TP_CODE  = "N";
         public  string  DebugMode    = "N";
         private TableUtil _TableUtil = new TableUtil();
         private Substitute _Substitute=new Substitute();
 
         private List<string> _L_UID_CODE = new List<string>();
 
-        public string FileName { get { return _fileName; } set { _fileName = value; } }
-        public string gTableName { get ; set ; }
+        public string FileName     { get ; set ; }
+        public string gTableName   { get ; set ; }
         public string sTablePrefix { get ; set ; }
-
+        public string sTemplate    { get ; set ; }
+        public AutoCoder()
+        {
+            sTemplate = "N";
+        }
         public void Write(object message)
         {
             Console.Write(message);
@@ -96,7 +97,7 @@ namespace Volte.Bot.Term
 
             foreach (string _UID_CODE in _L_UID_CODE)
             {
-                Prettify(_UID_CODE);
+                Prettify(AppConfigs.ProjectPath + @"\src\",_UID_CODE);
                 Replication(AppConfigs.ProjectPath + @"\src\",_UID_CODE);
                 Build(_UID_CODE);
             }
@@ -124,22 +125,27 @@ namespace Volte.Bot.Term
                 }
             }
         }
-        private void Prettify(string sUID)
+        private void Prettify(string sTarget, string sUID)
         {
             CommandEntity sCommand = new CommandEntity();
 
-            JSONObject Prettify = AppConfigs.JSONObject("Prettify");
-            if (!string.IsNullOrEmpty(Prettify.GetValue("sCommand")))
+            JSONArray aPrettify = AppConfigs.JSONArray("Prettify");
+            foreach (JSONObject Prettify in aPrettify.JSONObjects)
             {
-                string Argument = Utils.Util.ReplaceWith(Prettify.GetValue("Argument"), "{sUID}", sUID);
+                if (!string.IsNullOrEmpty(Prettify.GetValue("sCommand")))
+                {
+                    string Argument = Utils.Util.ReplaceWith(Prettify.GetValue("Argument"), "{sUID}", sUID);
+                    Argument = Utils.Util.ReplaceWith(Argument, "${sTarget}", UtilSeparator.Separator(sTarget));
 
-                sCommand.sDirectory = UtilSeparator.Separator(AppConfigs.ProjectPath + @"\src\" + sUID);
-                sCommand.sCommand = Prettify.GetValue("sCommand");
-                sCommand.sArguments = UtilSeparator.Separator(Argument);
+                    sCommand.sDirectory = UtilSeparator.Separator(UtilSeparator.Separator(sTarget) + sUID);
+                    sCommand.sCommand   = Prettify.GetValue("sCommand");
+                    sCommand.sArguments = UtilSeparator.Separator(Argument);
 
-                sCommand = _ShellRunner.Execute(sCommand);
+                    Console.WriteLine(UtilSeparator.Separator(Argument));
+                    sCommand = _ShellRunner.Execute(sCommand);
 
-                WriteLine(sCommand.Message);
+                    WriteLine(sCommand.Message);
+                }
             }
         }
 
@@ -148,7 +154,6 @@ namespace Volte.Bot.Term
             string _Replications = UtilSeparator.Separator(AppConfigs.Replications);
             string[] aReplication = _Replications.Split(';');
 
-            //string sDir=UtilSeparator.Separator(AppConfigs.ProjectPath + @"\src\" + sUID);
             string sDir=UtilSeparator.Separator(source + sUID);
             if (!string.IsNullOrEmpty(_Replications)){
 
@@ -196,12 +201,16 @@ namespace Volte.Bot.Term
         {
             CommandEntity sCommand = new CommandEntity();
 
+            if (AppConfigs.GetValue("Compiler").ToLower()=="ignore"){
+                return "";
+            }
+            
             string sArguments = AppConfigs.GetValue("Arguments");
 
             sArguments = Utils.Util.ReplaceWith(sArguments, "{sUID}", sUID);
 
             sCommand.sDirectory = UtilSeparator.Separator(AppConfigs.ProjectPath + @"\src\" + sUID);
-            sCommand.sCommand = AppConfigs.GetValue("Compiler");
+            sCommand.sCommand   = AppConfigs.GetValue("Compiler");
             sCommand.sArguments = sArguments;
 
             sCommand = _ShellRunner.Execute(sCommand);
@@ -391,7 +400,7 @@ namespace Volte.Bot.Term
             RsSysFunction.Close();
             foreach (string _UID_CODE in _L_UID_CODE)
             {
-                Prettify(_UID_CODE);
+                Prettify(AppConfigs.ProjectPath + @"\src\",_UID_CODE);
                 Replication(AppConfigs.ProjectPath + @"\src\",_UID_CODE);
                 Build(_UID_CODE);
             }
@@ -514,10 +523,10 @@ namespace Volte.Bot.Term
             string _Replications = UtilSeparator.Separator(AppConfigs.Replications);
             string[] aReplication = _Replications.Split(';');
 
-            if (File.Exists(_App_Path + UID_TP_CODE + ".tpl"))
+            if (File.Exists(_App_Path + sTemplate + ".tpl"))
             {
 
-                using (StreamReader sr = new StreamReader(_App_Path + UID_TP_CODE + ".tpl"))
+                using (StreamReader sr = new StreamReader(_App_Path + sTemplate + ".tpl"))
                 {
                     string s;
                     StringBuilder XCodeObject = new StringBuilder();
@@ -535,12 +544,12 @@ namespace Volte.Bot.Term
                             cValue = cValue.Trim();
 
                             cName = cName.Replace("{sUID}", sUID);
-                            cName = cName.Replace("{UID_TP_CODE}", UID_TP_CODE);
+                            cName = cName.Replace("{UID_TP_CODE}", sTemplate);
                             cValue = cValue.Replace("{sUID}", sUID);
                             cValue = cValue.Replace("{AppPath}", AppConfigs.GetValue("AppPath"));
                             cValue = cValue.Replace("{ProjectPath}", AppConfigs.ProjectPath);
                             cValue = cValue.Replace("{DevelopPath}", AppConfigs.DevelopPath);
-                            cValue = cValue.Replace("{UID_TP_CODE}", UID_TP_CODE);
+                            cValue = cValue.Replace("{UID_TP_CODE}", sTemplate);
 
                             if (cName == "Path")
                             {
@@ -1046,7 +1055,7 @@ namespace Volte.Bot.Term
                                 _AutoTemplate.SetValue("sTableName" , sTableName);
                                 _AutoTemplate.SetValue("sTablePrefix" , sTablePrefix);
 
-                                string entityTpl=UtilSeparator.Separator(AppConfigs.DevelopPath + "/entity.tpl");
+                                string entityTpl=UtilSeparator.Separator(AppConfigs.DevelopPath + "/"+sTemplate+".tpl");
                                 if (File.Exists(entityTpl))
                                 {
                                     string sUID  = "entity";
@@ -1125,7 +1134,8 @@ namespace Volte.Bot.Term
                 _AutoTemplate.OutputFile = UtilSeparator.Separator(AppConfigs.ProjectPath + @"\src\entity\Zero.Addons.entity.csproj");
                 _AutoTemplate.Process();
 
-                Prettify("entity");
+                Prettify(AppConfigs.ProjectPath + @"\src\","entity");
+                Prettify(@"\java\","entity");
 
                 string sArguments = AppConfigs.GetValue("Arguments");
 
@@ -1620,11 +1630,11 @@ namespace Volte.Bot.Term
 
                             cName = cName.Trim();
                             cValue = cValue.Trim();
-                            cName = cName.Replace("{UID_TP_CODE}", UID_TP_CODE);
+                            cName = cName.Replace("{UID_TP_CODE}", sTemplate);
 
                             cValue = cValue.Replace("{AppPath}", AppConfigs.GetValue("AppPath"));
                             cValue = cValue.Replace("{ProjectPath}", AppConfigs.ProjectPath);
-                            cValue = cValue.Replace("{UID_TP_CODE}", UID_TP_CODE);
+                            cValue = cValue.Replace("{UID_TP_CODE}", sTemplate);
 
 
                             if (cName == "Path")
