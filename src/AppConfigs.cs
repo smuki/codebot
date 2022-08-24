@@ -116,6 +116,21 @@ namespace Volte.Bot.Term
             return new JSONObject(vValue);
         }
 
+        public JSONArray JSONArray(string name)
+        {
+            string vValue = _JSONObject.GetJSONArray(name).ToString();
+            List<string> list = Utils.Util.Parameters(vValue);
+
+            foreach (string v in list)
+            {
+                if (_JSONObject.ContainsKey(v))
+                {
+                    vValue = Utils.Util.ReplaceWith(vValue, "${" + v + "}", this.GetValue(v));
+                }
+            }
+            return new JSONArray(vValue);
+        }
+
         public bool GetBoolean(string name)
         {
             return Utils.Util.ToBoolean(this.GetValue(name));
