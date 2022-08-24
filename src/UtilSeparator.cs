@@ -21,6 +21,10 @@ namespace Volte.Bot.Term
 
         public static string TrimStart(string str,string sStartValue)
         {
+            if (string.IsNullOrEmpty(sStartValue))
+            {
+                return str;
+            }
             if (str.StartsWith(sStartValue))
             {
                 str = str.Remove(0, sStartValue.Length);
