@@ -404,13 +404,26 @@ namespace Volte.Bot.Term
         string DbType(object[] args)
         {
             string dataType = args[0].ToString();
+            string sLang="";
+            if (args.Length > 1) {
+                sLang = args[1].ToString();
+            }
 
-            string sValue = AppConfigs.LoadSetting("DbType.json").GetValue(dataType);
+            string sValue = AppConfigs.LoadSetting("DbType"+sLang+".json").GetValue(dataType);
             if (sValue==""){
                 return "undefine"+dataType;
             }else{
                 return sValue;
             }
+        }
+
+        string LowerCase(object[] args)
+        {
+            string str = args[0].ToString();
+            if (str == null)
+                return null;
+         
+            return str.ToLower();
         }
 
         string TitleCase(object[] args)
@@ -428,6 +441,9 @@ namespace Volte.Bot.Term
         string TrimLowerStart(object[] args)
         {
             string str = args[0].ToString();
+            if (str == null){
+                return null;
+            }
             if (str.Length>2){
 
                 if (char.IsLower(str[0]))
@@ -441,7 +457,17 @@ namespace Volte.Bot.Term
         string TrimStart(object[] args)
         {
             string str = args[0].ToString();
-            string sStartValue = args[1].ToString();
+            string sStartValue = "";
+
+            if (args.Length > 1) {
+                if (args[1]!=null) {
+                    sStartValue=args[1].ToString();
+                }
+            }   
+
+            if (string.IsNullOrEmpty(sStartValue)) {
+                return str;
+            }
             if (str.StartsWith(sStartValue))
             {
                 str = str.Remove(0, sStartValue.Length);
@@ -803,6 +829,7 @@ namespace Volte.Bot.Term
             _Tmpl.RegisterFunction("TrimStart"             , TrimStart);
             _Tmpl.RegisterFunction("TrimLowerStart"        , TrimLowerStart);
             _Tmpl.RegisterFunction("TitleCase"        , TitleCase);
+            _Tmpl.RegisterFunction("LowerCase"        , LowerCase);
             _Tmpl.RegisterFunction("DefineColumn"          , DefineColumn);
             _Tmpl.RegisterFunction("DbType"                , DbType);
             _Tmpl.RegisterFunction("DataTypeDefault"       , DataTypeDefault);
@@ -847,6 +874,7 @@ namespace Volte.Bot.Term
             _Tmpl.RegisterFunction("TrimStart"             , TrimStart);
             _Tmpl.RegisterFunction("TrimLowerStart"        , TrimLowerStart);
             _Tmpl.RegisterFunction("TitleCase"        , TitleCase);
+            _Tmpl.RegisterFunction("LowerCase"        , LowerCase);
             _Tmpl.RegisterFunction("DefineColumn"          , DefineColumn);
             _Tmpl.RegisterFunction("DbType"                , DbType);
             _Tmpl.RegisterFunction("DataTypeDefault"       , DataTypeDefault);
@@ -917,9 +945,13 @@ namespace Volte.Bot.Term
             UTF8Encoding _UTF8Encoding = new UTF8Encoding(false, true);
 
             try {
-                if (Path.GetExtension(OutputFile)==".cs" || Path.GetExtension(OutputFile) == ".csproj"){
+                string sExtension=Path.GetExtension(OutputFile);
+                if (this.DebugMode == "Y") {
+                    Console.WriteLine("bSubstitute="+AppConfigs.GetBoolean("bSubstitute"));
+                }
+                if (AppConfigs.GetBoolean("bSubstitute") && (sExtension==".java" || sExtension==".cs" || sExtension == ".csproj")){
 
-                    string tOutputFile=OutputFile+".cs";
+                    string tOutputFile=OutputFile+".bak";
                     StreamWriter _File = new StreamWriter(tOutputFile, false, _UTF8Encoding);
 
                     _File.Write(Process(Path.GetFileName(_Template) , code));
@@ -935,6 +967,7 @@ namespace Volte.Bot.Term
                     {
                         File.Delete(tOutputFile);
                     }
+
                 }else{
                     StreamWriter _File = new StreamWriter(OutputFile, false, _UTF8Encoding);
 
