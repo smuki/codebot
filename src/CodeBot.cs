@@ -151,7 +151,8 @@ namespace Volte.Bot.Term
                 string sTableName  = "";
                 string _IPAddress  = "";
                 string Port        = "";
-                string sTablePrefix="";
+                string sTablePrefix= "";
+                string sTemplate   = "";
 
                 if (_Arguments["C"] != null)
                 {
@@ -207,6 +208,11 @@ namespace Volte.Bot.Term
                 if (_Arguments["F"] != null)
                 {
                     _FileName = _Arguments["F"];
+                }
+
+                if (_Arguments["Template"] != null)
+                {
+                    sTemplate = _Arguments["Template"];
                 }
 
                 if (_Arguments["File"] != null)
@@ -265,15 +271,19 @@ namespace Volte.Bot.Term
 
                 switch (sCommand) {
                     case "B": {
-                                  AutoCoder _AutoCoder  = new AutoCoder();
-                                  _AutoCoder.AppConfigs = AppConfigs;
-                                  _AutoCoder.FileName   = _FileName;
-                                  _AutoCoder.DebugMode  = _debugMode;
-                                  _AutoCoder.Mode       = sMode;
-                                  _AutoCoder.Process(sUID);
+                                if (string.IsNullOrEmpty(sTemplate)){
+                                    sTemplate = "N";
+                                }
+                                AutoCoder _AutoCoder  = new AutoCoder();
+                                _AutoCoder.AppConfigs = AppConfigs;
+                                _AutoCoder.FileName   = _FileName;
+                                _AutoCoder.DebugMode  = _debugMode;
+                                _AutoCoder.sTemplate  = sTemplate;
+                                _AutoCoder.Mode       = sMode;
+                                _AutoCoder.Process(sUID);
 
-                                  sUID = "";
-                                  break;
+                                sUID = "";
+                                break;
                               }
 
                     case "G": {
@@ -281,6 +291,7 @@ namespace Volte.Bot.Term
                                   _AutoCoder.AppConfigs = AppConfigs;
                                   _AutoCoder.FileName   = _FileName;
                                   _AutoCoder.DebugMode  = _debugMode;
+                                  _AutoCoder.sTemplate  = sTemplate;
                                   _AutoCoder.Mode       = sMode;
                                   _AutoCoder.GeneratorEntityDefinition();
                                   _AutoCoder.Generator(sUID);
@@ -290,18 +301,22 @@ namespace Volte.Bot.Term
                               }
 
                     case "T": {
-                                Console.WriteLine("sTablePrefix="+sTablePrefix);
-                                Console.WriteLine("sTableName="+sTableName);
-                                
-                                  AutoCoder _AutoCoder  = new AutoCoder();
-                                  _AutoCoder.AppConfigs = AppConfigs;
-                                  _AutoCoder.FileName   = _FileName;
-                                  _AutoCoder.DebugMode  = _debugMode;
-                                  _AutoCoder.gTableName = sTableName;
-                                  _AutoCoder.sTablePrefix = sTablePrefix;
-                                  _AutoCoder.GeneratorEntityDefinition();
-                                  _AutoCoder.GeneratorEntity();
-                                  break ;
+                                Console.WriteLine("sTablePrefix = "+sTablePrefix);
+                                Console.WriteLine("sTableName   = "+sTableName);
+                                if (string.IsNullOrEmpty(sTemplate)){
+                                    sTemplate = "entity";
+                                }
+
+                                AutoCoder _AutoCoder  = new AutoCoder();
+                                _AutoCoder.AppConfigs = AppConfigs;
+                                _AutoCoder.FileName   = _FileName;
+                                _AutoCoder.DebugMode  = _debugMode;
+                                _AutoCoder.gTableName = sTableName;
+                                _AutoCoder.sTemplate  = sTemplate;
+                                _AutoCoder.sTablePrefix = sTablePrefix;
+                                _AutoCoder.GeneratorEntityDefinition();
+                                _AutoCoder.GeneratorEntity();
+                                break ;
                               }
 
                     case "RUN": {
