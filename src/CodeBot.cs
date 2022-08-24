@@ -110,6 +110,24 @@ namespace Volte.Bot.Term
 
         }
 
+        public void PrintConfig(JSONArray obj, int level)
+        {
+            string tKey = "                     ";
+            string iKey = "                     ";
+            string sIndent = iKey.Substring(0, level * 3);
+
+            Console.WriteLine(sIndent + "[");
+            foreach (JSONObject its in obj.JSONObjects)
+            {
+                PrintConfig(its, level + 1);
+            }
+            foreach (string sValue in obj.Names)
+            {
+                Console.WriteLine(sIndent +"   "+ sValue);
+            }
+            tKey = "                     ";
+            Console.WriteLine(sIndent + "]");            
+        }
         public void PrintConfig(JSONObject obj, int level)
         {
             string tKey = "                     ";
@@ -124,6 +142,11 @@ namespace Volte.Bot.Term
                     tKey = sIndent + sKey + "                     ";
                     Console.WriteLine(sIndent + "   " + tKey.Substring(0, 13) + " = ");
                     PrintConfig(obj.GetJSONObject(sKey), level + 1);
+                }else if (obj.IsJSONArray(sKey))
+                {
+                    tKey = sIndent + sKey + "                     ";
+                    Console.WriteLine(sIndent + "   " + tKey.Substring(0, 13) + " = ");
+                    PrintConfig(obj.GetJSONArray(sKey), level + 1);
                 }
                 else
                 {
@@ -151,7 +174,6 @@ namespace Volte.Bot.Term
                 string sTableName  = "";
                 string _IPAddress  = "";
                 string Port        = "";
-                string sTablePrefix= "";
                 string sTemplate   = "";
 
                 if (_Arguments["C"] != null)
@@ -190,11 +212,6 @@ namespace Volte.Bot.Term
                     sTableName = _Arguments["T"];
                 }
 
-                if (_Arguments["Prefix"] != null)
-                {
-                    sTablePrefix = _Arguments["Prefix"];
-                }
-
                 if (_Arguments["U"] != null) {
                     sUID = _Arguments["U"].ToUpper();
                     sUID = sUID.Replace(".CS", "");
@@ -210,9 +227,9 @@ namespace Volte.Bot.Term
                     _FileName = _Arguments["F"];
                 }
 
-                if (_Arguments["Template"] != null)
+                if (_Arguments["tpl"] != null)
                 {
-                    sTemplate = _Arguments["Template"];
+                    sTemplate = _Arguments["tpl"];
                 }
 
                 if (_Arguments["File"] != null)
@@ -263,6 +280,10 @@ namespace Volte.Bot.Term
                 {
                     Console.WriteLine("[" + fileName.Replace(".ini", ".json") + "] Not Found");
                 }
+                if (File.Exists(fileName+".json"))
+                {
+                    fileName = fileName + ".json";
+                }
                 AppConfigs AppConfigs = new AppConfigs(fileName.Replace(".ini", ".json"));
 
                 Console.WriteLine("AppSetting : [" + fileName + "]");
@@ -301,7 +322,6 @@ namespace Volte.Bot.Term
                               }
 
                     case "T": {
-                                Console.WriteLine("sTablePrefix = "+sTablePrefix);
                                 Console.WriteLine("sTableName   = "+sTableName);
                                 if (string.IsNullOrEmpty(sTemplate)){
                                     sTemplate = "entity";
@@ -313,7 +333,6 @@ namespace Volte.Bot.Term
                                 _AutoCoder.DebugMode  = _debugMode;
                                 _AutoCoder.gTableName = sTableName;
                                 _AutoCoder.sTemplate  = sTemplate;
-                                _AutoCoder.sTablePrefix = sTablePrefix;
                                 _AutoCoder.GeneratorEntityDefinition();
                                 _AutoCoder.GeneratorEntity();
                                 break ;
