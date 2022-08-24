@@ -39,7 +39,6 @@ namespace Volte.Bot.Term
 
         public string FileName     { get ; set ; }
         public string gTableName   { get ; set ; }
-        public string sTablePrefix { get ; set ; }
         public string sTemplate    { get ; set ; }
         public AutoCoder()
         {
@@ -151,22 +150,30 @@ namespace Volte.Bot.Term
 
         private void Replication(string source,string sUID)
         {
-            string _Replications = UtilSeparator.Separator(AppConfigs.Replications);
-            string[] aReplication = _Replications.Split(';');
+
+            JSONArray aReplication = AppConfigs.JSONArray("Replications");
 
             string sDir=UtilSeparator.Separator(source + sUID);
-            if (!string.IsNullOrEmpty(_Replications)){
 
+            if (!Directory.Exists(sDir))
+            {
+                sDir=UtilSeparator.Separator(source);
+            }
+
+            if (aReplication.Count>0 && Directory.Exists(sDir))
+            {
                 DirectoryInfo _DirInfo = new DirectoryInfo(sDir);
 
                 FileSystemInfo[] objFiles = _DirInfo.GetFileSystemInfos("*.*");
 
-
-                foreach (string _Replication in aReplication) {
-
+                foreach (string _Replication in aReplication.Names)
+                {
                     string tReplication=_Replication;
                     string tRep=UtilSeparator.Separator(_Replication + @"\" + sUID );;
-                    Console.WriteLine("");
+                    if (!Directory.Exists(tRep))
+                    {
+                        tRep=UtilSeparator.Separator(_Replication);;
+                    }
 
                     if (Directory.Exists(tRep))
                     {
@@ -179,6 +186,7 @@ namespace Volte.Bot.Term
                                 if (Path.GetExtension(_FileInfo.FullName)==".java" || Path.GetExtension(_FileInfo.FullName)==".cs" || Path.GetExtension(_FileInfo.FullName)==".csproj" ){
 
                                     tReplication = UtilSeparator.Separator(tRep+ @"\" +Path.GetFileName(_FileInfo.FullName));
+
                                     if (File.Exists(tReplication)){
                                         Console.Write(_FileInfo.FullName+"--->");
                                         Console.WriteLine(tRep);
@@ -194,6 +202,7 @@ namespace Volte.Bot.Term
                 
             }else{
                 Console.WriteLine("Replication=none");
+                Console.WriteLine(sDir+"Exists="+Directory.Exists(sDir));
             }
         }
 
@@ -204,7 +213,7 @@ namespace Volte.Bot.Term
             if (AppConfigs.GetValue("Compiler").ToLower()=="ignore"){
                 return "";
             }
-            
+
             string sArguments = AppConfigs.GetValue("Arguments");
 
             sArguments = Utils.Util.ReplaceWith(sArguments, "{sUID}", sUID);
@@ -425,7 +434,7 @@ namespace Volte.Bot.Term
 
             Utils.Util.CreateDir(UtilSeparator.Separator(AppConfigs.ProjectPath + @"\src"));
 
-            string _TableName;
+            string _TableName="";
             string _ColumnName;
             string _DataType;
 
@@ -473,6 +482,7 @@ namespace Volte.Bot.Term
                 _COLUMNEntity.sEnableMode    = _NameValue.GetValue("sEnableMode");
                 _COLUMNEntity.Options        = _NameValue.GetValue("Options");
                 _COLUMNEntity.bWriteable     = _NameValue.GetBoolean("Writeable");
+                _COLUMNEntity.sComment       = _NameValue.GetValue("sComment");
                 _COLUMNEntity.sRefBrowse     = _NameValue.GetValue("sRefBrowse");
                 _COLUMNEntity.sRefCheck      = _NameValue.GetValue("sRefCheck");
                 _COLUMNEntity.sRefViewer     = _NameValue.GetValue("sRefViewer");
@@ -483,7 +493,9 @@ namespace Volte.Bot.Term
                 _COLUMNEntity.sRefViewer     = _NameValue.GetValue("sRefViewer");
                 _COLUMNEntity.bPrimaryKey    = _NameValue.GetBoolean("bPrimaryKey");
                 _COLUMNEntity.bAutoIdentity  = _NameValue.GetBoolean("bAutoIdentity");
-
+                if (string.IsNullOrEmpty(_COLUMNEntity.sComment)){
+                    _COLUMNEntity.sComment=_ColumnName;
+                }
                 if (_TableName.ToLower() != "variable" && (_DataType == "nvarchar" || _DataType == "ntext"))
                 {
                     if (_ColumnName != "sOriginal")
@@ -514,6 +526,7 @@ namespace Volte.Bot.Term
             }
 
             _AutoTemplate.SetValue("Entitys", Entitys);
+            _AutoTemplate.SetValue("sTablePrefix", AppConfigs.GetValue("sTablePrefix"));
             _AutoTemplate.SetValue("COLUMNS_NAME", _COLUMNS_NAME);
             _AutoTemplate.SetValue("COLUMNS_NAMED", _COLUMNS_NAMEDateTime);
 
@@ -522,11 +535,13 @@ namespace Volte.Bot.Term
             string _Path        = UtilSeparator.Separator(AppConfigs.ProjectPath + "\\src\\");
             string _Replications = UtilSeparator.Separator(AppConfigs.Replications);
             string[] aReplication = _Replications.Split(';');
-
-            if (File.Exists(_App_Path + sTemplate + ".tpl"))
+            if (string.IsNullOrEmpty(sTemplate)){
+                sTemplate="N";
+            }
+            string tTemplate=_App_Path + sTemplate + ".tpl";
+            if (File.Exists(tTemplate))
             {
-
-                using (StreamReader sr = new StreamReader(_App_Path + sTemplate + ".tpl"))
+                using (StreamReader sr = new StreamReader(tTemplate))
                 {
                     string s;
                     StringBuilder XCodeObject = new StringBuilder();
@@ -534,6 +549,7 @@ namespace Volte.Bot.Term
                     while ((s = sr.ReadLine()) != null)
                     {
                         int _p = s.IndexOf("=");
+                        Console.WriteLine(s);
 
                         if (_p > 0)
                         {
@@ -549,6 +565,7 @@ namespace Volte.Bot.Term
                             cValue = cValue.Replace("{AppPath}", AppConfigs.GetValue("AppPath"));
                             cValue = cValue.Replace("{ProjectPath}", AppConfigs.ProjectPath);
                             cValue = cValue.Replace("{DevelopPath}", AppConfigs.DevelopPath);
+                            cValue = cValue.Replace("{sTableName}", Utils.Util.ToCamelCase(UtilSeparator.TrimStart(_JSONFunction.GetValue("sTableName"), AppConfigs.GetValue("sTablePrefix"))));
                             cValue = cValue.Replace("{UID_TP_CODE}", sTemplate);
 
                             if (cName == "Path")
@@ -559,7 +576,7 @@ namespace Volte.Bot.Term
                             {
 
                                 Utils.Util.CreateDir(UtilSeparator.Separator(_Path + sUID));
-
+                                
                                 _AutoTemplate.Template = UtilSeparator.Separator(cName);
                                 _AutoTemplate.OutputFile = UtilSeparator.Separator(_Path + sUID + @"\" + cValue);
                                 _AutoTemplate.Process();
@@ -569,6 +586,8 @@ namespace Volte.Bot.Term
                         }
                     }
                 }
+            }else{
+                Console.WriteLine(tTemplate+" Not Found!");
             }
             _AutoTemplate.Close();
 
@@ -796,6 +815,9 @@ namespace Volte.Bot.Term
                 if (!string.IsNullOrEmpty(_COLUMNEntity.Options)){
                     _entity.SetValue("Options"       , _COLUMNEntity.Options);
                 }
+                if (!string.IsNullOrEmpty(_COLUMNEntity.sComment)){
+                    _entity.SetValue("sComment"      , _COLUMNEntity.sComment);
+                }
                 if (!string.IsNullOrEmpty(_COLUMNEntity.sEnableMode)){
                     _entity.SetValue("sEnableMode" , _COLUMNEntity.sEnableMode);
                 }
@@ -915,7 +937,7 @@ namespace Volte.Bot.Term
                 foreach (JSONObject _Table in _JSONObject)
                 {
                     string _sTableName = _Table.GetValue("sTableName");
-                    if (sTablePrefix=="" || _sTableName.StartsWith(sTablePrefix)){
+                    if (AppConfigs.GetValue("sTablePrefix")=="" || _sTableName.StartsWith(AppConfigs.GetValue("sTablePrefix"))){
                         if (hIgnoreTables.Contains(_sTableName)) {
 
                         } else {
@@ -1026,11 +1048,11 @@ namespace Volte.Bot.Term
 
                             string sTableName =_s;
 
-                            if ((sTablePrefix=="" || sTableName.StartsWith(sTablePrefix)) && (gTableName=="" || gTableName==sTableName))
+                            if ((AppConfigs.GetValue("sTablePrefix")=="" || sTableName.StartsWith(AppConfigs.GetValue("sTablePrefix"))) && (gTableName=="" || gTableName==sTableName))
                             {
 
                                 ColumnEntity = new List<COLUMNEntity>();
-
+                                string sPrimaryKey="";
                                 if (_JSONTableNames.GetType(_s) == "l")
                                 {
 
@@ -1048,12 +1070,16 @@ namespace Volte.Bot.Term
                                         _COLUMNEntity.bPrimaryKey  = _JSONObject.GetBoolean("bPrimaryKey");
                                         _COLUMNEntity.bAutoIdentity = _JSONObject.GetBoolean("bAutoIdentity");
                                         ColumnEntity.Add(_COLUMNEntity);
+                                        if (_COLUMNEntity.bPrimaryKey){
+                                            sPrimaryKey=_COLUMNEntity.sColumnName;
+                                        }
                                     }
                                 }
 
                                 _AutoTemplate.SetValue("Entitys"    , ColumnEntity);
                                 _AutoTemplate.SetValue("sTableName" , sTableName);
-                                _AutoTemplate.SetValue("sTablePrefix" , sTablePrefix);
+                                _AutoTemplate.SetValue("sPrimaryKey" , sPrimaryKey);
+                                _AutoTemplate.SetValue("sTablePrefix" , AppConfigs.GetValue("sTablePrefix"));
 
                                 string entityTpl=UtilSeparator.Separator(AppConfigs.DevelopPath + "/"+sTemplate+".tpl");
                                 if (File.Exists(entityTpl))
@@ -1084,10 +1110,8 @@ namespace Volte.Bot.Term
                                                 cValue = cValue.Replace("{AppPath}", AppConfigs.GetValue("AppPath"));
                                                 cValue = cValue.Replace("{ProjectPath}", AppConfigs.ProjectPath);
                                                 cValue = cValue.Replace("{DevelopPath}", AppConfigs.DevelopPath);
-                                                cValue = cValue.Replace("{sTableName}", Utils.Util.ToCamelCase(UtilSeparator.TrimStart(sTableName,sTablePrefix)));
+                                                cValue = cValue.Replace("{sTableName}", Utils.Util.ToCamelCase(UtilSeparator.TrimStart(sTableName,AppConfigs.GetValue("sTablePrefix"))));
                                             
-                                                Console.WriteLine("cValue===>>>"+cValue);
-
                                                 if (cName == "Path")
                                                 {
                                                     _Path = UtilSeparator.Separator(cValue);
@@ -1101,7 +1125,6 @@ namespace Volte.Bot.Term
                                                     }else{
                                                         _AutoTemplate.OutputFile = UtilSeparator.Separator(_Path + sUID + @"\" + cValue);
                                                     }
-                                                    Console.WriteLine("OutputFile===>>>"+_AutoTemplate.OutputFile);
                                                     _AutoTemplate.Process();
 
                                                 }
@@ -1148,12 +1171,6 @@ namespace Volte.Bot.Term
 
                 sCommand = _ShellRunner.Execute(sCommand);
                 sCommandEntity.Add(sCommand);
-
-                Console.WriteLine("Replication.......");
-                Console.WriteLine("Replication.......");
-                Console.WriteLine("Replication.......");
-                Console.WriteLine("Replication.......");
-                Console.WriteLine("Replication.......");
 
                 Replication(AppConfigs.ProjectPath + @"\src\","entity");
                 Replication(@"\java\","entity");
@@ -1645,8 +1662,6 @@ namespace Volte.Bot.Term
                             {
                                 _AutoTemplate.Template = cName;
                                 _AutoTemplate.OutputFile = _Path + cValue;
-                                Console.WriteLine("Template " + cName);
-                                Console.WriteLine("---->    " + _Path + cValue);
                                 _AutoTemplate.Process();
                             }
                         }
