@@ -413,6 +413,31 @@ namespace Volte.Bot.Term
             }
         }
 
+        string TitleCase(object[] args)
+        {
+            string str = args[0].ToString();
+            if (str == null)
+                return null;
+         
+            if (str.Length > 1)
+                return char.ToUpper(str[0]) + str.Substring(1);
+         
+            return str.ToUpper();
+        }
+
+        string TrimLowerStart(object[] args)
+        {
+            string str = args[0].ToString();
+            if (str.Length>2){
+
+                if (char.IsLower(str[0]))
+                {
+                    str = str.Remove(0, 1);
+                }
+            }
+            return str;
+        }
+
         string TrimStart(object[] args)
         {
             string str = args[0].ToString();
@@ -776,6 +801,8 @@ namespace Volte.Bot.Term
             _Tmpl.RegisterFunction("Process"               , this.Process);
             _Tmpl.RegisterFunction("SqlDataTypeToDataType" , SqlDataTypeToDataType);
             _Tmpl.RegisterFunction("TrimStart"             , TrimStart);
+            _Tmpl.RegisterFunction("TrimLowerStart"        , TrimLowerStart);
+            _Tmpl.RegisterFunction("TitleCase"        , TitleCase);
             _Tmpl.RegisterFunction("DefineColumn"          , DefineColumn);
             _Tmpl.RegisterFunction("DbType"                , DbType);
             _Tmpl.RegisterFunction("DataTypeDefault"       , DataTypeDefault);
@@ -818,6 +845,8 @@ namespace Volte.Bot.Term
             _Tmpl.RegisterFunction("Process"               , this.Process);
             _Tmpl.RegisterFunction("SqlDataTypeToDataType" , SqlDataTypeToDataType);
             _Tmpl.RegisterFunction("TrimStart"             , TrimStart);
+            _Tmpl.RegisterFunction("TrimLowerStart"        , TrimLowerStart);
+            _Tmpl.RegisterFunction("TitleCase"        , TitleCase);
             _Tmpl.RegisterFunction("DefineColumn"          , DefineColumn);
             _Tmpl.RegisterFunction("DbType"                , DbType);
             _Tmpl.RegisterFunction("DataTypeDefault"       , DataTypeDefault);
