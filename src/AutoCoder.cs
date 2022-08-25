@@ -454,6 +454,7 @@ namespace Volte.Bot.Term
             _AutoTemplate.SetValue("RefCode", "QD" + sUID.ToUpper());
             _AutoTemplate.SetValue("sSqlCode", "Q" + sUID.ToUpper());
             _AutoTemplate.SetValue("sTableName", _JSONFunction.GetValue("sTableName"));
+            _AutoTemplate.SetValue("sCode"     , _JSONFunction.GetValue("sCode"));
             _AutoTemplate.SetValue("PK_ColumnName", _JSONFunction.GetValue("PK_ColumnName"));
             _AutoTemplate.SetValue("LNK_TableName", _JSONFunction.GetValue("LNK_TableName"));
             _AutoTemplate.SetValue("sLNKUID", _JSONFunction.GetValue("sLNKUID"));
@@ -653,6 +654,7 @@ namespace Volte.Bot.Term
             string sTableName     = "";
             string sLNK_TableName = "";
             string sColumnName    = "";
+            string sCode          = "";
             string sType          = "";
             string sHash          = "";
             bool   bActive        = false;
@@ -662,6 +664,7 @@ namespace Volte.Bot.Term
             } else {
                 sTableName  = RsSysFunction.GetValue("sTableName");
                 sColumnName = RsSysFunction.GetValue("sColumnName");
+                sCode       = RsSysFunction.GetValue("sCode");
                 bActive     = RsSysFunction.GetBoolean("bActive");
                 if (AppConfigs.GetBoolean("LowerName")){
                     sTableName = sTableName.ToLower();
@@ -906,6 +909,7 @@ namespace Volte.Bot.Term
             _JSONFunction.SetValue("ROOT_LNKUID"     , sROOT_LNKUID);
             _JSONFunction.SetValue("ROOT_TableName"  , sRoot_TableName);
             _JSONFunction.SetValue("ROOT_ColumnName" , sRoot_ColumnName);
+            _JSONFunction.SetValue("sCode"           , sCode);
             _JSONFunction.SetBoolean("bActive"       , bActive);
             _JSONFunction.SetValue("sHash"           , sHash);
             _JSONFunction.SetValue("entitys"         , _entitys);
@@ -1048,7 +1052,7 @@ namespace Volte.Bot.Term
 
                             string sTableName =_s;
 
-                            if ((AppConfigs.GetValue("sTablePrefix")=="" || sTableName.StartsWith(AppConfigs.GetValue("sTablePrefix"))) && (gTableName=="" || gTableName==sTableName))
+                            if (AppConfigs.GetValue("sTablePrefix")=="" || sTableName.StartsWith(AppConfigs.GetValue("sTablePrefix")))
                             {
 
                                 ColumnEntity = new List<COLUMNEntity>();
@@ -1141,7 +1145,7 @@ namespace Volte.Bot.Term
 
                                 this.WriteLine("[" + sTableName + "]");
                             }else{
-                                this.WriteLine("...[" + sTableName + "]");
+                                this.WriteLine(AppConfigs.GetValue("sTablePrefix")+" Ignore [" + sTableName + "]");
                             }
                         }
                     }
