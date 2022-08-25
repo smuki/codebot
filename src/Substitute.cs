@@ -11,7 +11,7 @@ namespace Volte.Bot.Term
         private Dictionary<string, string> _Codes = new Dictionary<string, string>();
         private JSONArray _Values = new JSONArray();
         private bool init=false;
-        public void Initialize()
+        public void Initialize(string code)
         {
             if (init){
                 return;
@@ -36,9 +36,9 @@ namespace Volte.Bot.Term
                     }
                 }
             }
-            if (File.Exists("Codes.txt"))
+            if (File.Exists(code+".txt"))
             {
-                using (StreamReader sr = new StreamReader("Codes.txt"))
+                using (StreamReader sr = new StreamReader(code+".txt"))
                 {
                     string content = "";
                     while (content != null)
@@ -58,9 +58,9 @@ namespace Volte.Bot.Term
                     }
                 }
             }
-            if (File.Exists("Codes.json"))
+            if (File.Exists(code+".json"))
             {
-                using (StreamReader sr = new StreamReader("Codes.json"))
+                using (StreamReader sr = new StreamReader(code+".json"))
                 {
                     string content = sr.ReadToEnd();
                     _Values = new JSONArray(content);
@@ -94,7 +94,6 @@ namespace Volte.Bot.Term
             {
                 s = ReplaceWith(s, f, _fileNames[f]);
             }
-
 
             return s;
         }
