@@ -946,17 +946,25 @@ namespace Volte.Bot.Term
 
             try {
                 string sExtension=Path.GetExtension(OutputFile);
+
+                JSONObject Substitute = AppConfigs.JSONObject("Substitute");
+                string    sExtensions = Substitute.GetValue("sExtension");
+
                 if (this.DebugMode == "Y") {
-                    Console.WriteLine("bSubstitute="+AppConfigs.GetBoolean("bSubstitute"));
+                    Console.WriteLine("bSubstitute="+Substitute.GetBoolean("bActive"));
+                    Console.WriteLine("sExtensions="+sExtensions);
                 }
-                if (AppConfigs.GetBoolean("bSubstitute") && (sExtension==".java" || sExtension==".cs" || sExtension == ".csproj")){
+                if (Substitute.GetBoolean("bActive") && 
+                      (sExtensions.Contains(sExtension) || sExtension==".cs" || sExtension == ".csproj")
+                   )
+                {
 
                     string tOutputFile=OutputFile+".bak";
                     StreamWriter _File = new StreamWriter(tOutputFile, false, _UTF8Encoding);
 
                     _File.Write(Process(Path.GetFileName(_Template) , code));
                     _File.Close();
-                    _Substitute.Initialize();
+                    _Substitute.Initialize(Substitute.GetValue("sCode"));
                     if (this.DebugMode == "Y") {
 
                         Console.WriteLine("tOutputFile = " + tOutputFile);
