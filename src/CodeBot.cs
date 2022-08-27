@@ -110,16 +110,16 @@ namespace Volte.Bot.Term
 
         }
 
-        public void PrintConfig(JSONArray obj, int level)
+        public void PrintConfig(JSONArray obj, int nIndent)
         {
             string tKey = "                     ";
             string iKey = "                     ";
-            string sIndent = iKey.Substring(0, level * 3);
+            string sIndent = iKey.Substring(0, nIndent);
 
             Console.WriteLine(sIndent + "[");
             foreach (JSONObject its in obj.JSONObjects)
             {
-                PrintConfig(its, level + 1);
+                PrintConfig(its, nIndent + 3);
             }
             foreach (string sValue in obj.Names)
             {
@@ -128,29 +128,27 @@ namespace Volte.Bot.Term
             tKey = "                     ";
             Console.WriteLine(sIndent + "]");            
         }
-        public void PrintConfig(JSONObject obj, int level)
+        public void PrintConfig(JSONObject obj, int nIndent)
         {
             string tKey = "                     ";
             string iKey = "                     ";
-            string sIndent = iKey.Substring(0, level * 3);
+            string sIndent = iKey.Substring(0, nIndent);
 
             Console.WriteLine(sIndent + "{");
             foreach (string sKey in obj.Names)
             {
                 if (obj.IsJSONObject(sKey))
                 {
-                    tKey = sIndent + sKey + "                     ";
-                    Console.WriteLine(sIndent + "   " + tKey.Substring(0, 13) + " = ");
-                    PrintConfig(obj.GetJSONObject(sKey), level + 1);
+                    Console.WriteLine(sIndent + "   " + sKey);
+                    PrintConfig(obj.GetJSONObject(sKey), nIndent + 3);
                 }else if (obj.IsJSONArray(sKey))
                 {
-                    tKey = sIndent + sKey + "                     ";
-                    Console.WriteLine(sIndent + "   " + tKey.Substring(0, 13) + " = ");
-                    PrintConfig(obj.GetJSONArray(sKey), level + 1);
+                    Console.WriteLine(sIndent + "   " + sKey);
+                    PrintConfig(obj.GetJSONArray(sKey), nIndent + 3);
                 }
                 else
                 {
-                    tKey = sIndent + sKey + "                     ";
+                    tKey = sKey + "                     ";
                     Console.WriteLine(sIndent + "   " + tKey.Substring(0, 13) + " = " + obj.GetValue(sKey));
                 }
             }
@@ -293,6 +291,9 @@ namespace Volte.Bot.Term
                 switch (sCommand) {
                     case "B": {
                                 if (string.IsNullOrEmpty(sTemplate)){
+                                    sTemplate = AppConfigs.GetValue("sTemplate");
+                                }
+                                if (string.IsNullOrEmpty(sTemplate)){
                                     sTemplate = "N";
                                 }
                                 AutoCoder _AutoCoder  = new AutoCoder();
@@ -323,6 +324,9 @@ namespace Volte.Bot.Term
 
                     case "T": {
                                 Console.WriteLine("sTableName   = "+sTableName);
+                                if (string.IsNullOrEmpty(sTemplate)){
+                                    sTemplate = AppConfigs.GetValue("sTemplate");
+                                }
                                 if (string.IsNullOrEmpty(sTemplate)){
                                     sTemplate = "entity";
                                 }
