@@ -56,10 +56,6 @@ namespace Volte.Bot.Term
 
         public static void Main(string[] args)
         {
-            Console.WriteLine(DateTime.Now.ToOADate());
-            Console.WriteLine("Date =" + DateTime.Now.AddDays(400).ToString("yyyy-MM-dd"));
-            Console.WriteLine("Value=" + DateTime.Now.AddDays(400).ToOADate());
-
             AppDomain.CurrentDomain.AssemblyResolve += new ResolveEventHandler(CurrentDomain_AssemblyResolve);
             CG _CG = new CG();
             _CG.Process(args);
@@ -130,11 +126,16 @@ namespace Volte.Bot.Term
         }
         public void PrintConfig(JSONObject obj, int nIndent)
         {
-            string tKey = "                     ";
-            string iKey = "                     ";
+            string tKey = "                              ";
+            string iKey = "                              ";
             string sIndent = iKey.Substring(0, nIndent);
 
             Console.WriteLine(sIndent + "{");
+            int max=3;
+            foreach (string sKey in obj.Names)
+            {
+                max=Math.Max(max,sKey.Length);
+            }
             foreach (string sKey in obj.Names)
             {
                 if (obj.IsJSONObject(sKey))
@@ -149,7 +150,7 @@ namespace Volte.Bot.Term
                 else
                 {
                     tKey = sKey + "                     ";
-                    Console.WriteLine(sIndent + "   " + tKey.Substring(0, 13) + " = " + obj.GetValue(sKey));
+                    Console.WriteLine(sIndent + "   " + tKey.Substring(0, max) + " = " + obj.GetValue(sKey));
                 }
             }
             tKey = "                     ";
@@ -264,7 +265,7 @@ namespace Volte.Bot.Term
                     _debugMode = "N";
                 }
 
-                string fileName = Path.GetFileNameWithoutExtension(System.Diagnostics.Process.GetCurrentProcess().MainModule.FileName) + ".ini";
+                string fileName = Path.GetFileNameWithoutExtension(System.Diagnostics.Process.GetCurrentProcess().MainModule.FileName) + ".json";
 
                 if (_Arguments["S"] != null)
                 {
@@ -272,16 +273,9 @@ namespace Volte.Bot.Term
                 }
                 if (!File.Exists(fileName))
                 {
-                    Console.WriteLine("[" + fileName + "] Not Found");
+                    Console.WriteLine("[" + fileName + "] Not Found!");
                 }
-                if (!File.Exists(fileName.Replace(".ini", ".json")))
-                {
-                    Console.WriteLine("[" + fileName.Replace(".ini", ".json") + "] Not Found");
-                }
-                if (File.Exists(fileName+".json"))
-                {
-                    fileName = fileName + ".json";
-                }
+
                 AppConfigs AppConfigs = new AppConfigs(fileName.Replace(".ini", ".json"));
 
                 Console.WriteLine("AppSetting : [" + fileName + "]");
