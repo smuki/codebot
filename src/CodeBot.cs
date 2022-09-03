@@ -273,7 +273,12 @@ namespace Volte.Bot.Term
                 }
                 if (!File.Exists(fileName))
                 {
-                    Console.WriteLine("[" + fileName + "] Not Found!");
+                    if (File.Exists(fileName+".json"))
+                    {
+                        fileName = fileName+".json";
+                    }else{
+                        Console.WriteLine("[" + fileName + "] Not Found!");
+                    }
                 }
 
                 AppConfigs AppConfigs = new AppConfigs(fileName.Replace(".ini", ".json"));
