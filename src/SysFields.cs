@@ -52,6 +52,8 @@ namespace Volte.Bot.Term
 
             private string _sTableName="";
 
+            private string _sComment="";
+
             //<Summary>
             //SysFields,bAutoIdentity
             //</Summary>
@@ -448,6 +450,30 @@ namespace Volte.Bot.Term
                         }
                     }
                 }
+
+
+
+        //<Summary>
+        //SysFields,sComment
+        //</Summary>
+
+            public string sComment
+            {
+                get { return _sComment; }
+                set
+                {
+                    if (this.Verified)
+                    {
+                        if (value!=_sComment)
+                        {
+                            _sComment = value;
+                            this.PropertyChange("sComment");
+                        }
+                    }else{
+                        _sComment = value;
+                    }
+                }
+            }
 
             //<Summary>
             //SysFields,sTableName
