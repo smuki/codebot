@@ -311,6 +311,7 @@ namespace Volte.Bot.Term
                 {
                     string sColumnName = colname.GetValue("sColumnName");
                     string sDataType = colname.GetValue("sDataType");
+                    string sComment = colname.GetValue("sComment");
                     int nColumnLength = colname.GetInteger("nColumnLength");
                     bool bIsPKColumn = colname.GetBoolean("bPrimaryKey");
                     int IsPKColumn = 0;
@@ -321,8 +322,8 @@ namespace Volte.Bot.Term
                     sSQLString = "delete from SysFields where sTableName='" + sTableName + "' AND sColumnName='"+ sColumnName + "'";
                     _Trans.Execute(sSQLString);
 
-                    sSQLString = "INSERT INTO SysFields (sTableName, sColumnName, sDataType, nColumnLength, bPrimaryKey) ";
-                    sSQLString = sSQLString + " VALUES('" + sTableName + "', '" + sColumnName + "', '" + sDataType + "', " + nColumnLength + "," + IsPKColumn + ")";
+                    sSQLString = "INSERT INTO SysFields (sTableName, sColumnName, sDataType, nColumnLength, bPrimaryKey,sComment) ";
+                    sSQLString = sSQLString + " VALUES('" + sTableName + "', '" + sColumnName + "', '" + sDataType + "', " + nColumnLength + "," + IsPKColumn + ", '" + sComment + "')";
                     _Trans.Execute(sSQLString);
 
                     Console.Write(".");
@@ -921,6 +922,10 @@ namespace Volte.Bot.Term
 
         public void GeneratorEntityDefinition()
         {
+            Console.WriteLine(AppConfigs.GetValue("sDbName"));
+            Console.WriteLine(AppConfigs.GetValue("Provider"));
+            Console.WriteLine(AppConfigs.GetValue("dbAdapter"));
+
             DbContext  _Trans = new DbContext(AppConfigs.GetValue("sDbName") , AppConfigs.GetValue("Provider") , AppConfigs.GetValue("dbAdapter"));
             try {
 
@@ -1065,13 +1070,13 @@ namespace Volte.Bot.Term
                                     foreach (JSONObject _JSONObject in _JSONObjects.JSONObjects)
                                     {
 
-                                        COLUMNEntity _COLUMNEntity = new COLUMNEntity();
+                                        COLUMNEntity _COLUMNEntity  = new COLUMNEntity();
                                         _COLUMNEntity.sTableName    = sTableName;
                                         _COLUMNEntity.sColumnName   = _JSONObject.GetValue("sColumnName");
-                                        _COLUMNEntity.sDataType = _JSONObject.GetValue("sDataType");
-                                        _COLUMNEntity.sComment = _JSONObject.GetValue("sComment");
+                                        _COLUMNEntity.sDataType     = _JSONObject.GetValue("sDataType");
+                                        _COLUMNEntity.sComment      = _JSONObject.GetValue("sComment");
 
-                                        _COLUMNEntity.bPrimaryKey  = _JSONObject.GetBoolean("bPrimaryKey");
+                                        _COLUMNEntity.bPrimaryKey   = _JSONObject.GetBoolean("bPrimaryKey");
                                         _COLUMNEntity.bAutoIdentity = _JSONObject.GetBoolean("bAutoIdentity");
                                         ColumnEntity.Add(_COLUMNEntity);
                                         if (_COLUMNEntity.bPrimaryKey){
@@ -1517,6 +1522,8 @@ namespace Volte.Bot.Term
 
                         if (_Write)
                         {
+                                                            Console.WriteLine(_Fields.ToString());
+
                             string _CaptionCode = "lbl_" + _sTableName + "_" + _COLUMN_NAME;
 
                             var _criteria = QueryBuilder<SysFields>.Builder(_Trans);
@@ -1537,6 +1544,7 @@ namespace Volte.Bot.Term
                                 _SysFieldsEntity.sCaptionCode    = _CaptionCode;
                                 _SysFieldsEntity.sColumnName     = _COLUMN_NAME;
                                 _SysFieldsEntity.sDataType       = _Fields.GetValue("sDataType");
+                                _SysFieldsEntity.sComment        = _Fields.GetValue("sComment");
                                 _SysFieldsEntity.sTableName      = _sTableName;
 
                                 if (_SysFieldsEntity.sDataType == "nvarchar")
@@ -1559,6 +1567,8 @@ namespace Volte.Bot.Term
                             else
                             {
 
+                                Console.WriteLine(_Fields.ToString());
+
                                 _SysFieldsEntity.sCaptionCode = _CaptionCode;
 
                                 if (_SysFieldsEntity.sDataType == "picture" && _Fields.GetValue("sDataType") == "nvarchar")
@@ -1573,6 +1583,7 @@ namespace Volte.Bot.Term
                                 _SysFieldsEntity.bPrimaryKey     = _Fields.GetBoolean("bPrimaryKey");
                                 _SysFieldsEntity.bColumnNullable = _Fields.GetBoolean("bNullable");
                                 _SysFieldsEntity.bAutoIdentity   = _Fields.GetBoolean("bAutoIdentity");
+                                _SysFieldsEntity.sComment        = _Fields.GetValue("sComment");
 
                                 if (_SysFieldsEntity.sDataType == "nvarchar")
                                 {
