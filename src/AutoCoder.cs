@@ -922,9 +922,6 @@ namespace Volte.Bot.Term
 
         public void GeneratorEntityDefinition()
         {
-            Console.WriteLine(AppConfigs.GetValue("sDbName"));
-            Console.WriteLine(AppConfigs.GetValue("Provider"));
-            Console.WriteLine(AppConfigs.GetValue("dbAdapter"));
 
             DbContext  _Trans = new DbContext(AppConfigs.GetValue("sDbName") , AppConfigs.GetValue("Provider") , AppConfigs.GetValue("dbAdapter"));
             try {
