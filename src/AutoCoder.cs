@@ -669,23 +669,6 @@ namespace Volte.Bot.Term
             _AutoTemplate.Close();
         }
 
-        public string DataType(string sType)
-        {
-
-            if (sType == "float") {
-                sType= "decimal";
-            }
-            if (sType == "smalldatetime") {
-                sType= "datetime";
-            }
-
-            if (sType== "bit") {
-                sType= "boolean";
-            }
-            return sType;
-
-        }
-
         private string FunctionColumnName(DbContext _DbContext,string sUID)
         {
             QueryRows RsSysFunction = new QueryRows(_DbContext);
