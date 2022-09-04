@@ -57,7 +57,6 @@ namespace Volte.Bot.Term
             return File.Exists(fileName);
         }
 
-     
 
         public static string Separator(string value)
         {
