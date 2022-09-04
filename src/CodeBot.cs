@@ -308,13 +308,21 @@ namespace Volte.Bot.Term
                               }
 
                     case "G": {
+
+                                  AutoGenerator _AutoGenerator  = new AutoGenerator();
+                                  _AutoGenerator.AppConfigs = AppConfigs;
+                                  _AutoGenerator.FileName   = _FileName;
+                                  _AutoGenerator.DebugMode  = _debugMode;
+                                  _AutoGenerator.sTemplate  = sTemplate;
+                                  _AutoGenerator.Mode       = sMode;
+                                  _AutoGenerator.GeneratorEntityDefinition();
+
                                   AutoCoder _AutoCoder  = new AutoCoder();
                                   _AutoCoder.AppConfigs = AppConfigs;
                                   _AutoCoder.FileName   = _FileName;
                                   _AutoCoder.DebugMode  = _debugMode;
                                   _AutoCoder.sTemplate  = sTemplate;
                                   _AutoCoder.Mode       = sMode;
-                                  _AutoCoder.GeneratorEntityDefinition();
                                   _AutoCoder.Generator(sUID);
 
                                   sUID = "";
@@ -330,13 +338,20 @@ namespace Volte.Bot.Term
                                     sTemplate = "entity";
                                 }
 
+                                AutoCoder _AutoGenerator  = new AutoCoder();
+                                _AutoGenerator.AppConfigs = AppConfigs;
+                                _AutoGenerator.FileName   = _FileName;
+                                _AutoGenerator.DebugMode  = _debugMode;
+                                _AutoGenerator.gTableName = sTableName;
+                                _AutoGenerator.sTemplate  = sTemplate;
+                                _AutoGenerator.GeneratorEntityDefinition();
+
                                 AutoCoder _AutoCoder  = new AutoCoder();
                                 _AutoCoder.AppConfigs = AppConfigs;
                                 _AutoCoder.FileName   = _FileName;
                                 _AutoCoder.DebugMode  = _debugMode;
                                 _AutoCoder.gTableName = sTableName;
                                 _AutoCoder.sTemplate  = sTemplate;
-                                _AutoCoder.GeneratorEntityDefinition();
                                 _AutoCoder.GeneratorEntity();
                                 break ;
                               }
