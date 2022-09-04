@@ -143,7 +143,7 @@ namespace Volte.Bot.Term
                     sCommand.sCommand   = Prettify.GetValue("sCommand");
                     sCommand.sArguments = UtilSeparator.Separator(Argument);
 
-                    Console.WriteLine(UtilSeparator.Separator(Argument));
+                    this.WriteLine(UtilSeparator.Separator(Argument));
                     sCommand = _ShellRunner.Execute(sCommand);
 
                     WriteLine(sCommand.Message);
@@ -191,21 +191,21 @@ namespace Volte.Bot.Term
                                     tReplication = UtilSeparator.Separator(tRep+ @"\" +Path.GetFileName(_FileInfo.FullName));
 
                                     if (File.Exists(tReplication)){
-                                        Console.Write(_FileInfo.FullName+"--->");
-                                        Console.WriteLine(tRep);
+                                        this.Write(_FileInfo.FullName+"--->");
+                                        this.WriteLine(tRep);
                                         File.Copy(_FileInfo.FullName, tReplication, true);
                                     }
                                 }
                             }
                         }
                     }else{
-                        Console.WriteLine("Dir "+tRep+" Ignore");
+                        this.WriteLine("Dir "+tRep+" Ignore");
                     }
                 }
                 
             }else{
-                Console.WriteLine("Replication=none");
-                Console.WriteLine(sDir+"Exists="+Directory.Exists(sDir));
+                this.WriteLine("Replication=none");
+                this.WriteLine(sDir+"Exists="+Directory.Exists(sDir));
             }
         }
 
@@ -234,35 +234,35 @@ namespace Volte.Bot.Term
             {
                 if (Directory.Exists(sCommand.sDirectory))
                 {
-                    Console.WriteLine("Search In " + sCommand.sDirectory + @"\bin");
+                    this.WriteLine("Search In " + sCommand.sDirectory + @"\bin");
                     string fileNameDll = UtilSeparator.SearchFile(sCommand.sDirectory + @"\bin", sUID + ".dll");
                     if (string.IsNullOrEmpty(fileNameDll))
                     {
-                        Console.WriteLine("Search In " + sCommand.sDirectory + @"\obj");
+                        this.WriteLine("Search In " + sCommand.sDirectory + @"\obj");
                         fileNameDll = UtilSeparator.SearchFile(sCommand.sDirectory + @"\obj", sUID + ".dll");
                     }
                     if (string.IsNullOrEmpty(fileNameDll))
                     {
-                        Console.WriteLine("fileName " + sUID + ".dll Not Found!! ");
+                        this.WriteLine("fileName " + sUID + ".dll Not Found!! ");
                     }
                     else
                     {
-                        Console.WriteLine("fileName " + fileNameDll);
-                        Console.WriteLine("Copy file to");
+                        this.WriteLine("fileName " + fileNameDll);
+                        this.WriteLine("Copy file to");
                         string sPath = AppConfigs.ProjectPath + @"\apps\addons\";
 
-                        Console.WriteLine("   " + fileNameDll + " ==> " + sPath + sUID + ".dll");
+                        this.WriteLine("   " + fileNameDll + " ==> " + sPath + sUID + ".dll");
                         File.Copy(fileNameDll, sPath + sUID + ".dll", true);
 
                         string fileName = fileNameDll.Replace(".dll", ".pdb");
                         if (File.Exists(fileName))
                         {
-                            Console.WriteLine("   " + fileName + " ==> " + sPath + sUID + ".pdb");
+                            this.WriteLine("   " + fileName + " ==> " + sPath + sUID + ".pdb");
                             File.Copy(fileName, sPath + sUID + ".pdb", true);
                         }
                         else
                         {
-                            Console.WriteLine("   " + fileName + " Not Found!!");
+                            this.WriteLine("   " + fileName + " Not Found!!");
                         }
                         fileName = fileNameDll.Replace(".dll", ".deps.json");
                         if (File.Exists(fileName))
@@ -272,7 +272,7 @@ namespace Volte.Bot.Term
                         }
                         else
                         {
-                            Console.WriteLine("   " + fileName + " Not Found!!");
+                            this.WriteLine("   " + fileName + " Not Found!!");
                         }
                     }
                 }
@@ -294,7 +294,7 @@ namespace Volte.Bot.Term
 
             Utils.Util.CreateDir(UtilSeparator.Separator(AppConfigs.ProjectPath + @"\src"));
 
-            string _TableName="";
+            string _TableName = "";
             string _ColumnName;
             string _DataType;
 
@@ -331,9 +331,9 @@ namespace Volte.Bot.Term
             foreach (JSONObject _NameValue in _JSONFunction.GetJSONArray("entitys").JSONObjects)
             {
 
-                _TableName = _NameValue.GetValue("sTableName");
+                _TableName  = _NameValue.GetValue("sTableName");
                 _ColumnName = _NameValue.GetValue("sColumnName");
-                _DataType = _NameValue.GetValue("sDataType");
+                _DataType   = _NameValue.GetValue("sDataType");
 
                 COLUMNEntity _COLUMNEntity = new COLUMNEntity();
                 _COLUMNEntity.sTableName = _TableName;
@@ -410,7 +410,7 @@ namespace Volte.Bot.Term
                     while ((s = sr.ReadLine()) != null)
                     {
                         int _p = s.IndexOf("=");
-                        Console.WriteLine(s);
+                        this.WriteLine(s);
 
                         if (_p > 0)
                         {
@@ -448,7 +448,7 @@ namespace Volte.Bot.Term
                     }
                 }
             }else{
-                Console.WriteLine(tTemplate+" Not Found!");
+                this.WriteLine(tTemplate+" Not Found!");
             }
             _AutoTemplate.Close();
 
@@ -514,9 +514,9 @@ namespace Volte.Bot.Term
                                         _COLUMNEntity.sColumnName   = _JSONObject.GetValue("sColumnName");
                                         _COLUMNEntity.sDataType     = _JSONObject.GetValue("sDataType");
                                         _COLUMNEntity.sComment      = _JSONObject.GetValue("sComment");
-
                                         _COLUMNEntity.bPrimaryKey   = _JSONObject.GetBoolean("bPrimaryKey");
                                         _COLUMNEntity.bAutoIdentity = _JSONObject.GetBoolean("bAutoIdentity");
+
                                         ColumnEntity.Add(_COLUMNEntity);
                                         if (_COLUMNEntity.bPrimaryKey){
                                             sPrimaryKey=_COLUMNEntity.sColumnName;
@@ -524,17 +524,17 @@ namespace Volte.Bot.Term
                                     }
                                 }
 
-                                _AutoTemplate.SetValue("Entitys"    , ColumnEntity);
-                                _AutoTemplate.SetValue("sTableName" , sTableName);
-                                _AutoTemplate.SetValue("sPrimaryKey" , sPrimaryKey);
+                                _AutoTemplate.SetValue("Entitys"      , ColumnEntity);
+                                _AutoTemplate.SetValue("sTableName"   , sTableName);
+                                _AutoTemplate.SetValue("sPrimaryKey"  , sPrimaryKey);
                                 _AutoTemplate.SetValue("sTablePrefix" , AppConfigs.GetValue("sTablePrefix"));
 
                                 string entityTpl=UtilSeparator.Separator(AppConfigs.DevelopPath + "/"+sTemplate+".tpl");
                                 if (File.Exists(entityTpl))
                                 {
-                                    string sUID  = "entity";
+                                    string sUID      = "entity";
                                     string _App_Path = UtilSeparator.Separator(AppConfigs.DevelopPath + "\\");
-                                    string _Path = UtilSeparator.Separator(AppConfigs.ProjectPath + "\\src\\");
+                                    string _Path     = UtilSeparator.Separator(AppConfigs.ProjectPath + "\\src\\");
 
                                     using (StreamReader sr = new StreamReader(entityTpl))
                                     {
@@ -581,8 +581,7 @@ namespace Volte.Bot.Term
                                         }
                                     }
                                 }else{
-                                    Console.WriteLine(entityTpl + "/entity.tpl Not Found!");
-
+                                    this.WriteLine(entityTpl + "/entity.tpl Not Found!");
                                 }
 
                                 sTableNames.Add(sTableName);
@@ -624,7 +623,7 @@ namespace Volte.Bot.Term
                 Replication(@"\java\","entity");
 
             }else{
-                Console.WriteLine(localDirectory+" Not Found!");
+                this.WriteLine(localDirectory+" Not Found!");
             }
             _AutoTemplate.Close();
         }
