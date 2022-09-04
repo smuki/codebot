@@ -78,7 +78,7 @@ namespace Volte.Bot.Term
             {
 
                 string sTableName = kvp.GetValue("sTableName");
-                Console.Write("\n" + sTableName);
+                this.Write("\n" + sTableName);
 
                 List<JSONObject> _NameValues = _TableUtil.DatabaseTableColumns(_Trans, sTableName);
                 foreach (JSONObject colname in _NameValues)
@@ -100,7 +100,7 @@ namespace Volte.Bot.Term
                     sSQLString = sSQLString + " VALUES('" + sTableName + "', '" + sColumnName + "', '" + sDataType + "', " + nColumnLength + "," + IsPKColumn + ", '" + sComment + "')";
                     _Trans.Execute(sSQLString);
 
-                    Console.Write(".");
+                    this.Write(".");
                 }
             }
         }
@@ -256,7 +256,7 @@ namespace Volte.Bot.Term
                 _sColumnClass = RsZUPRGDTM.GetValue("sColumnClass");
 
                 COLUMNEntity _COLUMNEntity   = new COLUMNEntity();
-                _COLUMNEntity.sDescriptionId    = RsZUPRGDTM.GetValue("sCaptionCode");
+                _COLUMNEntity.sDescriptionId = RsZUPRGDTM.GetValue("sCaptionCode");
                 _COLUMNEntity.sColumnName    = _ColumnName;
                 _COLUMNEntity.bNullable      = RsZUPRGDTM.GetBoolean("bColumnNullable");
                 _COLUMNEntity.sDataType      = _DataType;
@@ -289,7 +289,6 @@ namespace Volte.Bot.Term
                 if (!_SysRef.EOF) {
                     _COLUMNEntity.sRefBrowseType = _SysRef.GetValue("sType");
                 }
-
                 _SysRef.Close();
 
                 RsSysFields.CommandText = "SELECT * FROM sysfields WHERE sTableName = '" + _TableName + "' AND sColumnName='" + _ColumnName + "'";
