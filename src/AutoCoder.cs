@@ -760,6 +760,7 @@ namespace Volte.Bot.Term
 
                 if (!RsSysFields.EOF) {
                     _COLUMNEntity.sDescriptionId = RsSysFields.GetValue("sCaptionCode");
+                    _COLUMNEntity.sComment       = RsSysFields.GetValue("sComment");
 
                     if (!RsSysFields.GetBoolean("bColumnUsage")) {
                         _DbContext.Execute("UPDATE sysfields Set bColumnUsage=1 WHERE sTableName = '" + _TableName + "' AND sColumnName='" + _ColumnName + "'");
