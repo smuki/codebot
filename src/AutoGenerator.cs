@@ -56,6 +56,7 @@ namespace Volte.Bot.Term
             this.Write("\n");
         }
 
+/*
         public void Process(string sUID)
         {
             Message = new StringBuilder();
@@ -95,7 +96,7 @@ namespace Volte.Bot.Term
             }
 
         }
-
+*/
 
         public void RefreshSysFields()
         {
@@ -126,6 +127,7 @@ namespace Volte.Bot.Term
                 {
                     string sColumnName = colname.GetValue("sColumnName");
                     string sDataType = colname.GetValue("sDataType");
+                    string sComment = colname.GetValue("sComment");
                     int nColumnLength = colname.GetInteger("nColumnLength");
                     bool bIsPKColumn = colname.GetBoolean("bPrimaryKey");
                     int IsPKColumn = 0;
@@ -136,8 +138,8 @@ namespace Volte.Bot.Term
                     sSQLString = "delete from SysFields where sTableName='" + sTableName + "' AND sColumnName='"+ sColumnName + "'";
                     _Trans.Execute(sSQLString);
 
-                    sSQLString = "INSERT INTO SysFields (sTableName, sColumnName, sDataType, nColumnLength, bPrimaryKey) ";
-                    sSQLString = sSQLString + " VALUES('" + sTableName + "', '" + sColumnName + "', '" + sDataType + "', " + nColumnLength + "," + IsPKColumn + ")";
+                    sSQLString = "INSERT INTO SysFields (sTableName, sColumnName, sDataType, nColumnLength, bPrimaryKey,sComment) ";
+                    sSQLString = sSQLString + " VALUES('" + sTableName + "', '" + sColumnName + "', '" + sDataType + "', " + nColumnLength + "," + IsPKColumn + ", '" + sComment + "')";
                     _Trans.Execute(sSQLString);
 
                     Console.Write(".");
@@ -177,26 +179,10 @@ namespace Volte.Bot.Term
                 Write(_UID_CODE);
                 _L_UID_CODE.Add(_UID_CODE);
                 GeneratorActivityDefinition(_DbContext, _UID_CODE);
-                GeneratorActivity(_UID_CODE);
                 RsSysFunction.MoveNext();
             }
             RsSysFunction.Close();
-            foreach (string _UID_CODE in _L_UID_CODE)
-            {
-                Prettify(AppConfigs.ProjectPath + @"\src\",_UID_CODE);
-                Replication(AppConfigs.ProjectPath + @"\src\",_UID_CODE);
-                Build(_UID_CODE);
-            }
 
-            if (_FAILURE.Count <= 0)
-            {
-                return;
-            }
-            WriteLine("\n*** _FAILURE List *** ");
-            foreach (string c in _FAILURE)
-            {
-                WriteLine(c);
-            }
         }
 
         private void GeneratorCaptionDefine(DbContext _DbContext , string sUID)
@@ -364,6 +350,7 @@ namespace Volte.Bot.Term
 
                 if (!RsSysFields.EOF) {
                     _COLUMNEntity.sDescriptionId = RsSysFields.GetValue("sCaptionCode");
+                    _COLUMNEntity.sComment       = RsSysFields.GetValue("sComment");
 
                     if (!RsSysFields.GetBoolean("bColumnUsage")) {
                         _DbContext.Execute("UPDATE sysfields Set bColumnUsage=1 WHERE sTableName = '" + _TableName + "' AND sColumnName='" + _ColumnName + "'");
@@ -526,6 +513,7 @@ namespace Volte.Bot.Term
 
         public void GeneratorEntityDefinition()
         {
+
             DbContext  _Trans = new DbContext(AppConfigs.GetValue("sDbName") , AppConfigs.GetValue("Provider") , AppConfigs.GetValue("dbAdapter"));
             try {
 
@@ -967,6 +955,7 @@ namespace Volte.Bot.Term
                                 _SysFieldsEntity.sCaptionCode    = _CaptionCode;
                                 _SysFieldsEntity.sColumnName     = _COLUMN_NAME;
                                 _SysFieldsEntity.sDataType       = _Fields.GetValue("sDataType");
+                                _SysFieldsEntity.sComment        = _Fields.GetValue("sComment");
                                 _SysFieldsEntity.sTableName      = _sTableName;
 
                                 if (_SysFieldsEntity.sDataType == "nvarchar")
@@ -1003,6 +992,7 @@ namespace Volte.Bot.Term
                                 _SysFieldsEntity.bPrimaryKey     = _Fields.GetBoolean("bPrimaryKey");
                                 _SysFieldsEntity.bColumnNullable = _Fields.GetBoolean("bNullable");
                                 _SysFieldsEntity.bAutoIdentity   = _Fields.GetBoolean("bAutoIdentity");
+                                _SysFieldsEntity.sComment        = _Fields.GetValue("sComment");
 
                                 if (_SysFieldsEntity.sDataType == "nvarchar")
                                 {
