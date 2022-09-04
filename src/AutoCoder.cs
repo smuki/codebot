@@ -668,54 +668,5 @@ namespace Volte.Bot.Term
             }
             _AutoTemplate.Close();
         }
-
-        private string FunctionColumnName(DbContext _DbContext,string sUID)
-        {
-            QueryRows RsSysFunction = new QueryRows(_DbContext);
-            string sValue="";
-
-            RsSysFunction.CommandText = "SELECT * FROM sysfunction WHERE sUID='" + sUID + "'";
-            RsSysFunction.Open();
-
-            if (!RsSysFunction.EOF) {
-                sValue=RsSysFunction.GetValue("sColumnName");
-            }
-            RsSysFunction.Close();
-            return sValue;
-        }
-
-        private string FunctionTableName(DbContext _DbContext , string sUID)
-        {
-
-            QueryRows RsSysFunction = new QueryRows(_DbContext);
-
-            string sValue="";
-
-            RsSysFunction.CommandText = "SELECT * FROM sysfunction WHERE sUID='" + sUID + "'";
-            RsSysFunction.Open();
-
-            if (!RsSysFunction.EOF) {
-                sValue = RsSysFunction.GetValue("sTableName");
-            }
-            RsSysFunction.Close();
-            return sValue;
-        }
-
-        private string Root_LNKUID(DbContext _DbContext , string sUID)
-        {
-
-            string sLNKUID = sUID;
-
-            QueryRows _SysFunction = new QueryRows(_DbContext);
-
-            _SysFunction.CommandText = "SELECT * FROM sysfunction WHERE sUID='" + sUID + "'";
-            _SysFunction.Open();
-
-            if (!_SysFunction.EOF) {
-                return sLNKUID;
-            }else{
-                return sLNKUID;
-            }
-        }
     }
 }
