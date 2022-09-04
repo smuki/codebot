@@ -107,11 +107,11 @@ namespace Volte.Bot.Term
             _AutoTemplate.DebugMode = this.DebugMode;
             _AutoTemplate.AppConfigs = AppConfigs;
             _AutoTemplate.Initialize();
-            _AutoTemplate.SetValue("ProjectName", AppConfigs.GetValue("ProjectName"));
-            _AutoTemplate.SetValue("AppPath", AppConfigs.GetValue("AppPath"));
-            _AutoTemplate.SetValue("ProjectPath", AppConfigs.ProjectPath);
-            _AutoTemplate.SetValue("DevelopPath", AppConfigs.DevelopPath);
-            _AutoTemplate.SetValue("CommandEntity", sCommandEntity);
+            _AutoTemplate.SetValue("ProjectName"   , AppConfigs.GetValue("ProjectName"));
+            _AutoTemplate.SetValue("AppPath"       , AppConfigs.GetValue("AppPath"));
+            _AutoTemplate.SetValue("ProjectPath"   , AppConfigs.ProjectPath);
+            _AutoTemplate.SetValue("DevelopPath"   , AppConfigs.DevelopPath);
+            _AutoTemplate.SetValue("CommandEntity" , sCommandEntity);
 
             _AutoTemplate.Template = "Build_Result.shtml";
             _AutoTemplate.OutputFile = UtilSeparator.Separator(AppConfigs.GetValue("AppPath") + "\\temp\\Build_Result.html");
@@ -301,27 +301,27 @@ namespace Volte.Bot.Term
             JSONObject _JSONFunction = AppConfigs.LoadJSONObject(AppConfigs.AddonLocation + sUID + ".json");
 
             AutoTemplate _AutoTemplate = new AutoTemplate();
-            _AutoTemplate.DebugMode = this.DebugMode;
-            _AutoTemplate.AppConfigs = AppConfigs;
-            _AutoTemplate.sUID = sUID;
+            _AutoTemplate.DebugMode    = this.DebugMode;
+            _AutoTemplate.AppConfigs   = AppConfigs;
+            _AutoTemplate.sUID         = sUID;
             _AutoTemplate.Initialize();
-            _AutoTemplate.SetValue("sUID", sUID);
-            _AutoTemplate.SetValue("DistPath", AppConfigs.GetValue("DistPath"));
-            _AutoTemplate.SetValue("AppPath", AppConfigs.GetValue("AppPath"));
-            _AutoTemplate.SetValue("ProjectName", AppConfigs.GetValue("ProjectName"));
-            _AutoTemplate.SetValue("ProjectPath", AppConfigs.ProjectPath);
-            _AutoTemplate.SetValue("DevelopPath", AppConfigs.DevelopPath);
-            _AutoTemplate.SetValue("RefCode", "QD" + sUID.ToUpper());
-            _AutoTemplate.SetValue("sSqlCode", "Q" + sUID.ToUpper());
-            _AutoTemplate.SetValue("sTableName", _JSONFunction.GetValue("sTableName"));
-            _AutoTemplate.SetValue("sCode"     , _JSONFunction.GetValue("sCode"));
-            _AutoTemplate.SetValue("PK_ColumnName", _JSONFunction.GetValue("PK_ColumnName"));
-            _AutoTemplate.SetValue("LNK_TableName", _JSONFunction.GetValue("LNK_TableName"));
-            _AutoTemplate.SetValue("sLNKUID", _JSONFunction.GetValue("sLNKUID"));
-            _AutoTemplate.SetValue("sType", _JSONFunction.GetValue("sType"));
-            _AutoTemplate.SetValue("ROOT_LNKUID", _JSONFunction.GetValue("ROOT_LNKUID"));
-            _AutoTemplate.SetValue("ROOT_TableName", _JSONFunction.GetValue("ROOT_TableName"));
-            _AutoTemplate.SetValue("ROOT_ColumnName", _JSONFunction.GetValue("ROOT_ColumnName"));
+            _AutoTemplate.SetValue("sUID"            , sUID);
+            _AutoTemplate.SetValue("DistPath"        , AppConfigs.GetValue("DistPath"));
+            _AutoTemplate.SetValue("AppPath"         , AppConfigs.GetValue("AppPath"));
+            _AutoTemplate.SetValue("ProjectName"     , AppConfigs.GetValue("ProjectName"));
+            _AutoTemplate.SetValue("ProjectPath"     , AppConfigs.ProjectPath);
+            _AutoTemplate.SetValue("DevelopPath"     , AppConfigs.DevelopPath);
+            _AutoTemplate.SetValue("RefCode"         , "QD" + sUID.ToUpper());
+            _AutoTemplate.SetValue("sSqlCode"        , "Q" + sUID.ToUpper());
+
+            foreach (string sName in _JSONFunction.Names)
+            {
+                if (!_JSONFunction.IsJSONArray(sName) && !_JSONFunction.IsJSONObject(sName) && _JSONFunction.ContainsKey(sName))
+                {
+                    _AutoTemplate.SetValue(sName , _JSONFunction.GetValue(sName));
+                }
+            }
+
 
             List<COLUMNEntity> Entitys = new List<COLUMNEntity>();
 
@@ -335,9 +335,9 @@ namespace Volte.Bot.Term
                 _ColumnName = _NameValue.GetValue("sColumnName");
                 _DataType   = _NameValue.GetValue("sDataType");
 
-                COLUMNEntity _COLUMNEntity = new COLUMNEntity();
-                _COLUMNEntity.sTableName = _TableName;
-                _COLUMNEntity.sColumnName = _ColumnName;
+                COLUMNEntity _COLUMNEntity   = new COLUMNEntity();
+                _COLUMNEntity.sTableName     = _TableName;
+                _COLUMNEntity.sColumnName    = _ColumnName;
                 _COLUMNEntity.sDescriptionId = _NameValue.GetValue("sDescriptionId");
                 _COLUMNEntity.bNullable      = _NameValue.GetBoolean("bNullable");
                 _COLUMNEntity.sEnableMode    = _NameValue.GetValue("sEnableMode");
@@ -355,7 +355,7 @@ namespace Volte.Bot.Term
                 _COLUMNEntity.bPrimaryKey    = _NameValue.GetBoolean("bPrimaryKey");
                 _COLUMNEntity.bAutoIdentity  = _NameValue.GetBoolean("bAutoIdentity");
                 if (string.IsNullOrEmpty(_COLUMNEntity.sComment)){
-                    _COLUMNEntity.sComment=_ColumnName;
+                    _COLUMNEntity.sComment = _ColumnName;
                 }
                 if (_TableName.ToLower() != "variable" && (_DataType == "nvarchar" || _DataType == "ntext"))
                 {
@@ -386,15 +386,15 @@ namespace Volte.Bot.Term
                 }
             }
 
-            _AutoTemplate.SetValue("Entitys", Entitys);
-            _AutoTemplate.SetValue("sTablePrefix", AppConfigs.GetValue("sTablePrefix"));
-            _AutoTemplate.SetValue("COLUMNS_NAME", _COLUMNS_NAME);
-            _AutoTemplate.SetValue("COLUMNS_NAMED", _COLUMNS_NAMEDateTime);
+            _AutoTemplate.SetValue("Entitys"       , Entitys);
+            _AutoTemplate.SetValue("sTablePrefix"  , AppConfigs.GetValue("sTablePrefix"));
+            _AutoTemplate.SetValue("COLUMNS_NAME"  , _COLUMNS_NAME);
+            _AutoTemplate.SetValue("COLUMNS_NAMED" , _COLUMNS_NAMEDateTime);
 
-            string newhash   = "";
-            string _App_Path = UtilSeparator.Separator(AppConfigs.DevelopPath + "\\");
-            string _Path        = UtilSeparator.Separator(AppConfigs.ProjectPath + "\\src\\");
-            string _Replications = UtilSeparator.Separator(AppConfigs.Replications);
+            string newhash        = "";
+            string _App_Path      = UtilSeparator.Separator(AppConfigs.DevelopPath + "\\");
+            string _Path          = UtilSeparator.Separator(AppConfigs.ProjectPath + "\\src\\");
+            string _Replications  = UtilSeparator.Separator(AppConfigs.Replications);
             string[] aReplication = _Replications.Split(';');
             if (string.IsNullOrEmpty(sTemplate)){
                 sTemplate="N";
@@ -420,14 +420,14 @@ namespace Volte.Bot.Term
                             cName = cName.Trim();
                             cValue = cValue.Trim();
 
-                            cName = cName.Replace("{sUID}", sUID);
-                            cName = cName.Replace("{UID_TP_CODE}", sTemplate);
-                            cValue = cValue.Replace("{sUID}", sUID);
-                            cValue = cValue.Replace("{AppPath}", AppConfigs.GetValue("AppPath"));
-                            cValue = cValue.Replace("{ProjectPath}", AppConfigs.ProjectPath);
-                            cValue = cValue.Replace("{DevelopPath}", AppConfigs.DevelopPath);
-                            cValue = cValue.Replace("{sTableName}", Utils.Util.ToCamelCase(UtilSeparator.TrimStart(_JSONFunction.GetValue("sTableName"), AppConfigs.GetValue("sTablePrefix"))));
-                            cValue = cValue.Replace("{UID_TP_CODE}", sTemplate);
+                            cName  = cName.Replace("{sUID}"         , sUID);
+                            cName  = cName.Replace("{UID_TP_CODE}"  , sTemplate);
+                            cValue = cValue.Replace("{sUID}"        , sUID);
+                            cValue = cValue.Replace("{AppPath}"     , AppConfigs.GetValue("AppPath"));
+                            cValue = cValue.Replace("{ProjectPath}" , AppConfigs.ProjectPath);
+                            cValue = cValue.Replace("{DevelopPath}" , AppConfigs.DevelopPath);
+                            cValue = cValue.Replace("{sTableName}"  , Utils.Util.ToCamelCase(UtilSeparator.TrimStart(_JSONFunction.GetValue("sTableName") , AppConfigs.GetValue("sTablePrefix"))));
+                            cValue = cValue.Replace("{UID_TP_CODE}" , sTemplate);
 
                             if (cName == "Path")
                             {
@@ -438,7 +438,7 @@ namespace Volte.Bot.Term
 
                                 Utils.Util.CreateDir(UtilSeparator.Separator(_Path + sUID));
                                 
-                                _AutoTemplate.Template = UtilSeparator.Separator(cName);
+                                _AutoTemplate.Template   = UtilSeparator.Separator(cName);
                                 _AutoTemplate.OutputFile = UtilSeparator.Separator(_Path + sUID + @"\" + cValue);
                                 _AutoTemplate.Process();
 
@@ -553,7 +553,7 @@ namespace Volte.Bot.Term
                                                 cName = cName.Trim();
                                                 cValue = cValue.Trim();
 
-                                                cName = cName.Replace("{sUID}", "entity");
+                                                cName  = cName.Replace("{sUID}", "entity");
                                                 cValue = cValue.Replace("{sUID}", "entity");
                                                 cValue = cValue.Replace("{AppPath}", AppConfigs.GetValue("AppPath"));
                                                 cValue = cValue.Replace("{ProjectPath}", AppConfigs.ProjectPath);
@@ -600,7 +600,7 @@ namespace Volte.Bot.Term
                 _AutoTemplate.OutputFile = UtilSeparator.Separator(AppConfigs.ProjectPath  + @"\src\entity\Zero.Addons.entity.Build");
                 _AutoTemplate.Process();
 
-                _AutoTemplate.Template = "N_Entity_Build_Template.csproj";
+                _AutoTemplate.Template   = "N_Entity_Build_Template.csproj";
                 _AutoTemplate.OutputFile = UtilSeparator.Separator(AppConfigs.ProjectPath + @"\src\entity\Zero.Addons.entity.csproj");
                 _AutoTemplate.Process();
 
