@@ -356,18 +356,6 @@ namespace Volte.Bot.Term
                                 break ;
                               }
 
-                    case "RUN": {
-
-                                    AutoCoder _AutoCoder  = new AutoCoder();
-                                    _AutoCoder.AppConfigs = AppConfigs;
-                                    _AutoCoder.DebugMode  = _debugMode;
-                                    _AutoCoder.FileName   = _FileName;
-                                    _AutoCoder.Templates();
-                                    Console.WriteLine(_FileName);
-                                    break;
-                                }
-
-
                     case "FIELDS": {
 
                                 AutoGenerator _AutoGenerator  = new AutoGenerator();
