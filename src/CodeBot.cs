@@ -323,7 +323,7 @@ namespace Volte.Bot.Term
                                   _AutoCoder.DebugMode  = _debugMode;
                                   _AutoCoder.sTemplate  = sTemplate;
                                   _AutoCoder.Mode       = sMode;
-                                  _AutoCoder.Generator(sUID);
+                                  _AutoCoder.Process(sUID);
 
                                   sUID = "";
                                   break;
@@ -338,7 +338,7 @@ namespace Volte.Bot.Term
                                     sTemplate = "entity";
                                 }
 
-                                AutoCoder _AutoGenerator  = new AutoCoder();
+                                AutoGenerator _AutoGenerator  = new AutoGenerator();
                                 _AutoGenerator.AppConfigs = AppConfigs;
                                 _AutoGenerator.FileName   = _FileName;
                                 _AutoGenerator.DebugMode  = _debugMode;
@@ -370,11 +370,11 @@ namespace Volte.Bot.Term
 
                     case "FIELDS": {
 
-                                AutoCoder _AutoCoder  = new AutoCoder();
-                                _AutoCoder.AppConfigs = AppConfigs;
-                                _AutoCoder.DebugMode  = _debugMode;
-                                _AutoCoder.FileName   = _FileName;
-                                _AutoCoder.RefreshSysFields();
+                                AutoGenerator _AutoGenerator  = new AutoGenerator();
+                                _AutoGenerator.AppConfigs = AppConfigs;
+                                _AutoGenerator.DebugMode  = _debugMode;
+                                _AutoGenerator.FileName   = _FileName;
+                                _AutoGenerator.RefreshSysFields();
                                 Console.WriteLine(_FileName);
                                 break;
                             }
