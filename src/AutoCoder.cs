@@ -235,11 +235,11 @@ namespace Volte.Bot.Term
                 if (Directory.Exists(sCommand.sDirectory))
                 {
                     Console.WriteLine("Search In " + sCommand.sDirectory + @"\bin");
-                    string fileNameDll = SearchFile(sCommand.sDirectory + @"\bin", sUID + ".dll");
+                    string fileNameDll = UtilSeparator.SearchFile(sCommand.sDirectory + @"\bin", sUID + ".dll");
                     if (string.IsNullOrEmpty(fileNameDll))
                     {
                         Console.WriteLine("Search In " + sCommand.sDirectory + @"\obj");
-                        fileNameDll = SearchFile(sCommand.sDirectory + @"\obj", sUID + ".dll");
+                        fileNameDll = UtilSeparator.SearchFile(sCommand.sDirectory + @"\obj", sUID + ".dll");
                     }
                     if (string.IsNullOrEmpty(fileNameDll))
                     {
@@ -282,46 +282,6 @@ namespace Volte.Bot.Term
                 _FAILURE.Add(sUID);
             }
 
-            return "";
-        }
-
-        public string SearchFile(string sPath,string fileName)
-        {
-            try
-            {
-                if (!Directory.Exists(sPath))
-                {
-                    return "";
-                }
-
-                DirectoryInfo dir = new DirectoryInfo(sPath);
-                FileSystemInfo[] fileinfo = dir.GetFileSystemInfos();  //获取目录下（不包含子目录）的文件和子目录
-                foreach (FileSystemInfo i in fileinfo)
-                {
-                    if (i is DirectoryInfo)     //判断是否文件夹
-                    {
-                        string t = SearchFile(i.FullName, fileName);    //递归调用复制子文件夹
-                        if (t != "")
-                        {
-                            return t;
-                        }
-                    }
-                    else
-                    {
-                        //Console.WriteLine(Path.GetFileName(i.FullName)+" == "+fileName);
-                        if (Path.GetFileName(i.FullName).ToLower() == fileName.ToLower())
-                        {
-                            return i.FullName;
-                        }
-                    }
-                }
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(sPath);
-                Console.WriteLine(e.ToString());
-                throw;
-            }
             return "";
         }
 
