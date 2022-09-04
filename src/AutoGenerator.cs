@@ -56,48 +56,6 @@ namespace Volte.Bot.Term
             this.Write("\n");
         }
 
-/*
-        public void Process(string sUID)
-        {
-            Message = new StringBuilder();
-            if (string.IsNullOrEmpty(sUID))
-            {
-                sUID = "";
-            }
-
-            this.WriteLine("");
-            this.Write(sUID);
-
-
-            _L_UID_CODE = new List<string>();
-
-            DirectoryInfo dir = new DirectoryInfo(AppConfigs.AddonLocation);
-
-            FileSystemInfo[] fileinfo = dir.GetFileSystemInfos();
-            foreach (FileSystemInfo i in fileinfo)
-            {
-                if (i is DirectoryInfo)//判断是否文件夹
-                {
-                }
-                else
-                {
-                    string fileName=Path.GetFileNameWithoutExtension(i.FullName);
-
-                    if (fileName.Contains(sUID))
-                    {
-                        this.WriteLine("");
-                        this.Write(fileName);
-
-                        _L_UID_CODE.Add(fileName);
-
-                        this.GeneratorActivity(fileName);
-                    }
-                }
-            }
-
-        }
-*/
-
         public void RefreshSysFields()
         {
             TableUtil _TableUtil = new TableUtil();
@@ -511,6 +469,34 @@ namespace Volte.Bot.Term
 
         }
 
+        private void GeneratorCaptionDefine(DbContext _DbContext , string sUID)
+        {
+
+            CoreUtil.CreateDir(UtilSeparator.Separator(AppConfigs.DevelopPath + @"\definition\functions"));
+
+            JSONObject _JSONObject = new JSONObject();
+            QueryRows RsSysCaption   = new QueryRows(_DbContext);
+            RsSysCaption.CommandText = "SELECT * FROM syscaption WHERE sCaptionLang = '" + sUID + "' ORDER BY sCaptionCode";
+            RsSysCaption.Open();
+
+            while (!RsSysCaption.EOF)
+            {
+
+                string sCaptionCode = RsSysCaption.GetValue("sCaptionCode").ToLower();
+                string sCaption     = RsSysCaption.GetValue("sCaption");
+
+                _JSONObject.SetValue(sCaptionCode , sCaption);
+
+                RsSysCaption.MoveNext();
+            }
+            RsSysCaption.Close();
+
+            if (File.Exists(UtilSeparator.Separator(AppConfigs.DevelopPath + @"\definition\"+sUID+".json"))) {
+                File.Delete(UtilSeparator.Separator(AppConfigs.DevelopPath + @"\definition\"+sUID+".json"));
+            }
+            Utils.Util.WriteContents(UtilSeparator.Separator(AppConfigs.DevelopPath + @"\definition\"+sUID+".json") , _JSONObject.ToString());
+        }
+        
         public void GeneratorEntityDefinition()
         {
 
