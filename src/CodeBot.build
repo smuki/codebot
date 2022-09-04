@@ -43,6 +43,7 @@
                 <include name = "Arguments.cs" />
                 <include name = "AssemblyInfo.cs" />
                 <include name = "AutoCoder.cs" />
+                <include name = "AutoGenerator.cs" />
                 <include name = "AutoTemplate.cs" />
                 <include name = "Base36Converter.cs" />
                 <include name = "COLUMNEntity.cs" />
