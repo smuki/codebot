@@ -284,6 +284,7 @@ namespace Volte.Bot.Term
                 AppConfigs AppConfigs = new AppConfigs(fileName.Replace(".ini", ".json"));
 
                 Console.WriteLine("AppSetting : [" + fileName + "]");
+                Console.WriteLine("sCommand : [" + sCommand + "]");
                 PrintConfig(AppConfigs.JSONObjects, 0);
 
 
@@ -305,6 +306,7 @@ namespace Volte.Bot.Term
 
                                 sUID = "";
                                 break;
+
                               }
 
                     case "G": {
@@ -315,7 +317,7 @@ namespace Volte.Bot.Term
                                   _AutoGenerator.DebugMode  = _debugMode;
                                   _AutoGenerator.sTemplate  = sTemplate;
                                   _AutoGenerator.Mode       = sMode;
-                                  _AutoGenerator.GeneratorEntityDefinition();
+                                  _AutoGenerator.GeneratorActivityDefinition(sUID);
 
                                   AutoCoder _AutoCoder  = new AutoCoder();
                                   _AutoCoder.AppConfigs = AppConfigs;
