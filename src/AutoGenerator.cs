@@ -124,7 +124,7 @@ namespace Volte.Bot.Term
             _L_UID_CODE = new List<string>();
             if (sUID.ToLower() == "en")
             {
-                GeneratorCaptionDefine(_DbContext, sUID.ToLower());
+                GeneratorCaptionDefine(sUID.ToLower());
             }
             WriteLine("EOF-->" + RsSysFunction.EOF);
             WriteLine("CommandText-->" + RsSysFunction.CommandText);
@@ -136,15 +136,17 @@ namespace Volte.Bot.Term
                 WriteLine("");
                 Write(_UID_CODE);
                 _L_UID_CODE.Add(_UID_CODE);
-                GeneratorActivityDefinition(_DbContext, _UID_CODE);
+                GeneratorActivityDefinition(_UID_CODE);
                 RsSysFunction.MoveNext();
             }
             RsSysFunction.Close();
 
         }
 
-        private void GeneratorCaptionDefine(DbContext _DbContext , string sUID)
+        private void GeneratorCaptionDefine(string sUID)
         {
+
+            DbContext  _DbContext = new DbContext(AppConfigs.GetValue("sDbName") , AppConfigs.GetValue("Provider") , AppConfigs.GetValue("dbAdapter"));
 
             CoreUtil.CreateDir(UtilSeparator.Separator(AppConfigs.DevelopPath + @"\definition\functions"));
 
@@ -171,8 +173,9 @@ namespace Volte.Bot.Term
             Utils.Util.WriteContents(UtilSeparator.Separator(AppConfigs.DevelopPath + @"\definition\"+sUID+".json") , _JSONObject.ToString());
         }
 
-        private void GeneratorActivityDefinition(DbContext _DbContext , string sUID)
+        public void GeneratorActivityDefinition(string sUID)
         {
+            DbContext  _DbContext = new DbContext(AppConfigs.GetValue("sDbName") , AppConfigs.GetValue("Provider") , AppConfigs.GetValue("dbAdapter"));
 
             CoreUtil.CreateDir(UtilSeparator.Separator(AppConfigs.DevelopPath + @"\definition\functions"));
 
@@ -184,8 +187,8 @@ namespace Volte.Bot.Term
             QueryRows RsZUPRGDTM = new QueryRows(_DbContext);
             RsZUPRGDTM.CommandText = "SELECT * FROM sysfunctiondtl WHERE bActive<>0 AND sUID='" + sUID + "' ORDER BY nIndex";
             RsZUPRGDTM.Open();
-
             if (RsZUPRGDTM.EOF) {
+                Console.WriteLine(RsZUPRGDTM.CommandText);
                 return;
             }
 
@@ -219,7 +222,6 @@ namespace Volte.Bot.Term
                     sTableName = sTableName.ToLower();
                 }
             }
-
             RsSysFunction.Close();
 
             string sROOT_LNKUID     = Root_LNKUID(_DbContext        , sUID);
@@ -322,19 +324,21 @@ namespace Volte.Bot.Term
                     string sColumnClass = RsSysFields.GetValue("sColumnClass");
 
                 }
-
                 RsSysFields.Close();
 
                 JSONObject _JSONObject3= AppConfigs.LoadSetting("AdjustmentLength.json");
 
-                if (_COLUMNEntity.bPrimaryKey) {
+                if (_COLUMNEntity.bPrimaryKey) 
+                {
                     Keys++;
                 }
 
                 _COLUMNEntity.sDataType = _DataType;
 
-                if (_TableName.ToLower() != "variable" && (_DataType == "nvarchar" || _DataType == "ntext")) {
-                    if (_ColumnName != "sOriginal") {
+                if (_TableName.ToLower() != "variable" && (_DataType == "nvarchar" || _DataType == "ntext")) 
+                {
+                    if (_ColumnName != "sOriginal") 
+                    {
                         _COLUMNS_NAME = _COLUMNS_NAME + ";" + _TableName + "." + _ColumnName;
                     }
                 }
