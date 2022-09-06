@@ -184,11 +184,12 @@ namespace Volte.Bot.Term
                 File.Delete(UtilSeparator.Separator(AppConfigs.DevelopPath + "\\definition\\functions\\"+sUID+".json"));
             }
 
+
             QueryRows RsZUPRGDTM = new QueryRows(_DbContext);
             RsZUPRGDTM.CommandText = "SELECT * FROM sysfunctiondtl WHERE bActive<>0 AND sUID='" + sUID + "' ORDER BY nIndex";
             RsZUPRGDTM.Open();
             if (RsZUPRGDTM.EOF) {
-                Console.WriteLine(RsZUPRGDTM.CommandText);
+                Console.WriteLine("EOF By "+RsZUPRGDTM.CommandText);
                 return;
             }
 
@@ -209,15 +210,17 @@ namespace Volte.Bot.Term
             string sCode          = "";
             string sType          = "";
             string sHash          = "";
+            string sDescription   = "";
             bool   bActive        = false;
 
             if (RsSysFunction.EOF) {
                 return;
             } else {
-                sTableName  = RsSysFunction.GetValue("sTableName");
-                sColumnName = RsSysFunction.GetValue("sColumnName");
-                sCode       = RsSysFunction.GetValue("sCode");
-                bActive     = RsSysFunction.GetBoolean("bActive");
+                sTableName   = RsSysFunction.GetValue("sTableName");
+                sColumnName  = RsSysFunction.GetValue("sColumnName");
+                sDescription = RsSysFunction.GetValue("sDescription01");
+                sCode        = RsSysFunction.GetValue("sCode");
+                bActive      = RsSysFunction.GetBoolean("bActive");
                 if (AppConfigs.GetBoolean("LowerName")){
                     sTableName = sTableName.ToLower();
                 }
@@ -458,6 +461,7 @@ namespace Volte.Bot.Term
             _JSONFunction.SetValue("sTableName"      , sTableName);
             _JSONFunction.SetValue("PK_ColumnName"   , sColumnName);
             _JSONFunction.SetValue("LNK_TableName"   , sLNK_TableName);
+            _JSONFunction.SetValue("sDescription"    , sDescription);
             _JSONFunction.SetValue("sLNKUID"         , sLNKUID);
             _JSONFunction.SetValue("ROOT_LNKUID"     , sROOT_LNKUID);
             _JSONFunction.SetValue("ROOT_TableName"  , sRoot_TableName);
@@ -467,6 +471,9 @@ namespace Volte.Bot.Term
             _JSONFunction.SetValue("sHash"           , sHash);
             _JSONFunction.SetValue("entitys"         , _entitys);
             _JSONFunction.SetValue("sysref"          , _JSONRefs);
+
+Console.WriteLine(".......");
+Console.WriteLine(UtilSeparator.Separator(AppConfigs.DevelopPath + "\\definition\\functions\\"+sUID+".json") );
 
             Utils.Util.WriteContents(UtilSeparator.Separator(AppConfigs.DevelopPath + "\\definition\\functions\\"+sUID+".json") , JsonFormatter.PrettyPrint(_JSONFunction.ToString()));
 
