@@ -317,7 +317,7 @@ namespace Volte.Bot.Term
                                   _AutoGenerator.DebugMode  = _debugMode;
                                   _AutoGenerator.sTemplate  = sTemplate;
                                   _AutoGenerator.Mode       = sMode;
-                                  _AutoGenerator.GeneratorActivityDefinition(sUID);
+                                  _AutoGenerator.Generator(sUID);
 
                                   AutoCoder _AutoCoder  = new AutoCoder();
                                   _AutoCoder.AppConfigs = AppConfigs;
