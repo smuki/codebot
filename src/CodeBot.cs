@@ -56,6 +56,10 @@ namespace Volte.Bot.Term
 
         public static void Main(string[] args)
         {
+            //Console.WriteLine(DateTime.Now.ToUniversalTime().ToString());//2020-01-02T01:08:07.123Z
+            //Console.WriteLine("2022-09-01T18:16:44.542 +08:00");
+            //Console.WriteLine(DateTime.Parse("2022-09-01T18:16:44.542+08:00").ToString());
+
             AppDomain.CurrentDomain.AssemblyResolve += new ResolveEventHandler(CurrentDomain_AssemblyResolve);
             CG _CG = new CG();
             _CG.Process(args);
@@ -91,15 +95,9 @@ namespace Volte.Bot.Term
             Console.WriteLine("");
             Console.WriteLine(" /entity  = build entity");
             Console.WriteLine("");
-            Console.WriteLine("Options :");
-            Console.WriteLine(" /p Parameter");
-            Console.WriteLine("/Delete [Y/N]");
-            Console.WriteLine("          Y : Yes(default)");
-            Console.WriteLine("          N : No");
             Console.WriteLine("");
             Console.WriteLine("/u  [Function Id]");
             Console.WriteLine("/file  [File]");
-            Console.WriteLine("/f2 [File2]");
             Console.WriteLine("/s  [config File Name]");
             Console.WriteLine("/debug [debug mode]");
             Console.WriteLine("");
@@ -172,7 +170,6 @@ namespace Volte.Bot.Term
                 string sDefineFile = "";
                 string sTableName  = "";
                 string _IPAddress  = "";
-                string Port        = "";
                 string sTemplate   = "";
 
                 if (_Arguments["C"] != null)
@@ -190,10 +187,6 @@ namespace Volte.Bot.Term
 
                 if (_Arguments["H"] != null) {
                     _IPAddress = _Arguments["H"];
-                }
-
-                if (_Arguments["P"] != null) {
-                    Port = _Arguments["P"];
                 }
 
                 if (_Arguments["D"] != null) {
