@@ -813,7 +813,7 @@ namespace Volte.Bot.Term
             string code = args[1].ToString();
             _Tmpl = VoltEngine.Parser(code);
 
-            _Tmpl.Debug      = this.DebugMode == "Y";
+            _Tmpl.Debug = this.DebugMode == "Y";
 
             foreach (KeyValuePair<string , object> kvp in _Data) {
 
@@ -868,7 +868,6 @@ namespace Volte.Bot.Term
             _Tmpl.SetValue("ProjectPath" , AppConfigs.ProjectPath);
             _Tmpl.SetValue("AppPath"     , AppConfigs.GetValue("AppPath"));
             _Tmpl.SetValue("ProjectName" , AppConfigs.GetValue("ProjectName"));
-
 
             _Tmpl.RegisterFunction("Process"               , this.Process);
             _Tmpl.RegisterFunction("SqlDataTypeToDataType" , SqlDataTypeToDataType);
