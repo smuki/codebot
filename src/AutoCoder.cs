@@ -141,8 +141,10 @@ namespace Volte.Bot.Term
                     sCommand.sDirectory = UtilSeparator.Separator(UtilSeparator.Separator(sTarget) + sUID);
                     sCommand.sCommand   = Prettify.GetValue("sCommand");
                     sCommand.sArguments = UtilSeparator.Separator(Argument);
-
-                    this.WriteLine(UtilSeparator.Separator(Argument));
+                    
+                    if (this.DebugMode == "Y") {
+                        this.WriteLine(UtilSeparator.Separator(Argument));
+                    }
                     sCommand = _ShellRunner.Execute(sCommand);
 
                     WriteLine(sCommand.Message);
