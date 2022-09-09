@@ -73,10 +73,7 @@ namespace Volte.Bot.Term
             FileSystemInfo[] fileinfo = dir.GetFileSystemInfos();
             foreach (FileSystemInfo i in fileinfo)
             {
-                if (i is DirectoryInfo)//判断是否文件夹
-                {
-                }
-                else
+                if (!(i is DirectoryInfo))//判断是否文件夹
                 {
                     string fileName=Path.GetFileNameWithoutExtension(i.FullName);
 
@@ -220,17 +217,24 @@ namespace Volte.Bot.Term
         {
             CommandEntity sCommand = new CommandEntity();
 
-            if (AppConfigs.GetValue("Compiler").ToLower()=="ignore"){
+            if (AppConfigs.JSONObject("Compiler").GetValue("Compiler").ToLower()=="ignore"){
                 return;
             }
 
-            string sArguments = AppConfigs.GetValue("Arguments");
+            string sArguments = AppConfigs.JSONObject("Compiler").GetValue("Arguments");
+
 
             sArguments = Utils.Util.ReplaceWith(sArguments, "{sUID}", sUID);
 
             sCommand.sDirectory = UtilSeparator.Separator(AppConfigs.ProjectPath + @"\src\" + sUID);
-            sCommand.sCommand   = AppConfigs.GetValue("Compiler");
+            sCommand.sCommand   = AppConfigs.JSONObject("Compiler").GetValue("Compiler");
             sCommand.sArguments = sArguments;
+
+            if (this.DebugMode == "Y") {
+                Console.WriteLine("sDirectory : "+sCommand.sDirectory);
+                Console.WriteLine("sCommand   : "+sCommand.sCommand);
+                Console.WriteLine("sArguments : "+sCommand.sArguments);
+            }
 
             sCommand = _ShellRunner.Execute(sCommand);
             sCommandEntity.Add(sCommand);
@@ -321,7 +325,6 @@ namespace Volte.Bot.Term
             _AutoTemplate.sUID         = sUID;
             _AutoTemplate.Initialize();
             _AutoTemplate.SetValue("sUID"            , sUID);
-            _AutoTemplate.SetValue("DistPath"        , AppConfigs.GetValue("DistPath"));
             _AutoTemplate.SetValue("AppPath"         , AppConfigs.GetValue("AppPath"));
             _AutoTemplate.SetValue("ProjectName"     , AppConfigs.GetValue("ProjectName"));
             _AutoTemplate.SetValue("ProjectPath"     , AppConfigs.ProjectPath);
@@ -482,7 +485,6 @@ namespace Volte.Bot.Term
             _AutoTemplate.AppConfigs   = this.AppConfigs;
 
             _AutoTemplate.SetValue("AppPath"     , AppConfigs.GetValue("AppPath"));
-            _AutoTemplate.SetValue("DistPath"    , AppConfigs.GetValue("DistPath"));
             _AutoTemplate.SetValue("ProjectPath" , AppConfigs.ProjectPath);
             _AutoTemplate.SetValue("ProjectName" , AppConfigs.GetValue("ProjectName"));
 
@@ -620,13 +622,13 @@ namespace Volte.Bot.Term
                 Prettify(AppConfigs.ProjectPath + @"\src\","entity");
                 Prettify(@"\java\","entity");
 
-                string sArguments = AppConfigs.GetValue("Arguments");
+                string sArguments = AppConfigs.JSONObject("Compiler").GetValue("Arguments");
 
                 sArguments = Utils.Util.ReplaceWith(sArguments , "{sUID}" , UtilSeparator.Separator(@"entity"));
 
                 CommandEntity sCommand = new CommandEntity();
                 sCommand.sDirectory    = UtilSeparator.Separator(AppConfigs.ProjectPath + @"\src\entity");
-                sCommand.sCommand      = AppConfigs.GetValue("Compiler");
+                sCommand.sCommand      = AppConfigs.JSONObject("Compiler").GetValue("Compiler");
                 sCommand.sArguments    = sArguments;
 
                 sCommand = _ShellRunner.Execute(sCommand);
