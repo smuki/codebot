@@ -813,7 +813,12 @@ namespace Volte.Bot.Term
             string code = args[1].ToString();
             _Tmpl = VoltEngine.Parser(code);
 
-            _Tmpl.Debug = this.DebugMode == "Y";
+            string sExtension = Path.GetExtension(OutputFile);
+
+            if (sExtension == ".cs")
+            {
+                _Tmpl.Debug = this.DebugMode == "Y";
+            }
 
             foreach (KeyValuePair<string , object> kvp in _Data) {
 
@@ -829,8 +834,8 @@ namespace Volte.Bot.Term
             _Tmpl.RegisterFunction("SqlDataTypeToDataType" , SqlDataTypeToDataType);
             _Tmpl.RegisterFunction("TrimStart"             , TrimStart);
             _Tmpl.RegisterFunction("TrimLowerStart"        , TrimLowerStart);
-            _Tmpl.RegisterFunction("TitleCase"        , TitleCase);
-            _Tmpl.RegisterFunction("LowerCase"        , LowerCase);
+            _Tmpl.RegisterFunction("TitleCase"             , TitleCase);
+            _Tmpl.RegisterFunction("LowerCase"             , LowerCase);
             _Tmpl.RegisterFunction("DefineColumn"          , DefineColumn);
             _Tmpl.RegisterFunction("DbType"                , DbType);
             _Tmpl.RegisterFunction("DataTypeDefault"       , DataTypeDefault);
@@ -861,6 +866,13 @@ namespace Volte.Bot.Term
             this.SetValue("DebugMode", this.DebugMode);
             _Tmpl = VoltEngine.Parser(name , code);
 
+            string sExtension = Path.GetExtension(OutputFile);
+
+            if (sExtension == ".cs")
+            {
+                _Tmpl.Debug = this.DebugMode == "Y";
+            }
+
             foreach (KeyValuePair<string, object> kvp in _Data) {
                 _Tmpl.SetValue(kvp.Key       , _Data[kvp.Key]);
             }
@@ -873,8 +885,8 @@ namespace Volte.Bot.Term
             _Tmpl.RegisterFunction("SqlDataTypeToDataType" , SqlDataTypeToDataType);
             _Tmpl.RegisterFunction("TrimStart"             , TrimStart);
             _Tmpl.RegisterFunction("TrimLowerStart"        , TrimLowerStart);
-            _Tmpl.RegisterFunction("TitleCase"        , TitleCase);
-            _Tmpl.RegisterFunction("LowerCase"        , LowerCase);
+            _Tmpl.RegisterFunction("TitleCase"             , TitleCase);
+            _Tmpl.RegisterFunction("LowerCase"             , LowerCase);
             _Tmpl.RegisterFunction("DefineColumn"          , DefineColumn);
             _Tmpl.RegisterFunction("DbType"                , DbType);
             _Tmpl.RegisterFunction("DataTypeDefault"       , DataTypeDefault);
@@ -901,11 +913,15 @@ namespace Volte.Bot.Term
 
         public void Process()
         {
-            string separator = Path.DirectorySeparatorChar.ToString();
+            string sExtension = Path.GetExtension(OutputFile);
 
             this.SetValue("DebugMode", this.DebugMode);
 
-            _Templates.DebugMode = this.DebugMode;
+            if (sExtension == ".cs")
+            {
+                _Templates.DebugMode = this.DebugMode;
+            }
+
             _Templates.AppPath   = AppConfigs.GetValue("AppPath");
 
             string fileName  = UtilSeparator.Separator(AppConfigs.GetValue("AppPath") + @"\template\" + _Template);
@@ -947,7 +963,6 @@ namespace Volte.Bot.Term
             UTF8Encoding _UTF8Encoding = new UTF8Encoding(false, true);
 
             try {
-                string sExtension = Path.GetExtension(OutputFile);
 
                 JSONObject Substitute = AppConfigs.JSONObject("Substitute");
                 string    sExtensions = Substitute.GetValue("sExtension");
@@ -956,6 +971,7 @@ namespace Volte.Bot.Term
                     Console.WriteLine("bSubstitute="+Substitute.GetBoolean("bActive"));
                     Console.WriteLine("sExtensions="+sExtensions);
                 }
+
                 if (Substitute.GetBoolean("bActive") && 
                       (sExtensions.Contains(sExtension) || sExtension==".cs" || sExtension == ".csproj")
                    )
