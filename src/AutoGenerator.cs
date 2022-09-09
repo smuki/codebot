@@ -146,9 +146,9 @@ namespace Volte.Bot.Term
         private void GeneratorCaptionDefine(string sUID)
         {
 
-            DbContext  _DbContext = new DbContext(AppConfigs.GetValue("sDbName") , AppConfigs.GetValue("Provider") , AppConfigs.GetValue("dbAdapter"));
+            this.PrepareDir();
 
-            CoreUtil.CreateDir(UtilSeparator.Separator(AppConfigs.DevelopPath + @"\definition\functions"));
+            DbContext  _DbContext = new DbContext(AppConfigs.GetValue("sDbName") , AppConfigs.GetValue("Provider") , AppConfigs.GetValue("dbAdapter"));
 
             JSONObject _JSONObject = new JSONObject();
             QueryRows RsSysCaption   = new QueryRows(_DbContext);
@@ -167,23 +167,30 @@ namespace Volte.Bot.Term
             }
             RsSysCaption.Close();
 
-            if (File.Exists(UtilSeparator.Separator(AppConfigs.DevelopPath + @"\definition\"+sUID+".json"))) {
-                File.Delete(UtilSeparator.Separator(AppConfigs.DevelopPath + @"\definition\"+sUID+".json"));
+            string sDefinition = UtilSeparator.Separator(AppConfigs.DevelopPath + @"\definition\functions\"+sUID+".json");
+
+            if (File.Exists(sDefinition)) {
+                File.Delete(sDefinition);
             }
-            Utils.Util.WriteContents(UtilSeparator.Separator(AppConfigs.DevelopPath + @"\definition\"+sUID+".json") , _JSONObject.ToString());
+            Utils.Util.WriteContents(sDefinition , _JSONObject.ToString());
+        }
+
+        private void PrepareDir()
+        {
+            CoreUtil.CreateDir(UtilSeparator.Separator(AppConfigs.DevelopPath + @"\definition\functions"));
         }
 
         public void GeneratorActivityDefinition(string sUID)
         {
             DbContext  _DbContext = new DbContext(AppConfigs.GetValue("sDbName") , AppConfigs.GetValue("Provider") , AppConfigs.GetValue("dbAdapter"));
 
-            CoreUtil.CreateDir(UtilSeparator.Separator(AppConfigs.DevelopPath + @"\definition\functions"));
+            this.PrepareDir();
 
+            string sDefinition = UtilSeparator.Separator(AppConfigs.DevelopPath + @"\definition\functions\"+sUID+".json");
 
-            if (File.Exists(UtilSeparator.Separator(AppConfigs.DevelopPath + "\\definition\\functions\\"+sUID+".json"))) {
-                File.Delete(UtilSeparator.Separator(AppConfigs.DevelopPath + "\\definition\\functions\\"+sUID+".json"));
+            if (File.Exists(sDefinition)) {
+                File.Delete(sDefinition);
             }
-
 
             QueryRows RsZUPRGDTM = new QueryRows(_DbContext);
             RsZUPRGDTM.CommandText = "SELECT * FROM sysfunctiondtl WHERE bActive<>0 AND sUID='" + sUID + "' ORDER BY nIndex";
@@ -472,10 +479,7 @@ namespace Volte.Bot.Term
             _JSONFunction.SetValue("entitys"         , _entitys);
             _JSONFunction.SetValue("sysref"          , _JSONRefs);
 
-Console.WriteLine(".......");
-Console.WriteLine(UtilSeparator.Separator(AppConfigs.DevelopPath + "\\definition\\functions\\"+sUID+".json") );
-
-            Utils.Util.WriteContents(UtilSeparator.Separator(AppConfigs.DevelopPath + "\\definition\\functions\\"+sUID+".json") , JsonFormatter.PrettyPrint(_JSONFunction.ToString()));
+            Utils.Util.WriteContents(sDefinition , JsonFormatter.PrettyPrint(_JSONFunction.ToString()));
 
         }
 
