@@ -489,7 +489,6 @@ namespace Volte.Bot.Term
             DbContext  _Trans = new DbContext(AppConfigs.GetValue("sDbName") , AppConfigs.GetValue("Provider") , AppConfigs.GetValue("dbAdapter"));
             try {
 
-
                 List<JSONObject> _JSONObject = _TableUtil.DatabaseTable(_Trans , gTableName);
 
                 int i = 0;
@@ -513,8 +512,9 @@ namespace Volte.Bot.Term
 
                             List<JSONObject> _JSONColumn = _TableUtil.DatabaseTableColumns(_Trans , _sTableName);
 
-                            if (File.Exists(UtilSeparator.Separator(AppConfigs.DevelopPath + "\\definition\\entity\\"+_sTableName+".json"))) {
-                                File.Delete(UtilSeparator.Separator(AppConfigs.DevelopPath + "\\definition\\entity\\"+_sTableName+".json"));
+                            string sEntityFileName = UtilSeparator.Separator(AppConfigs.DevelopPath + "\\definition\\entity\\"+_sTableName+".json");
+                            if (File.Exists(sEntityFileName)) {
+                                File.Delete(sEntityFileName);
                             }
 
                             JSONArray _Fields = new JSONArray();
@@ -562,7 +562,7 @@ namespace Volte.Bot.Term
 
                             _JSONTableName.SetValue(_sTableName , _Fields);
 
-                            Utils.Util.WriteContents(UtilSeparator.Separator(AppConfigs.DevelopPath + "\\definition\\entity\\"+_sTableName+".json") , JsonFormatter.PrettyPrint(_JSONTableName.ToString()));
+                            Utils.Util.WriteContents(sEntityFileName , JsonFormatter.PrettyPrint(_JSONTableName.ToString()));
 
                         }
                     }
