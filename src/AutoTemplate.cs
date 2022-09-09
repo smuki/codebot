@@ -939,14 +939,16 @@ namespace Volte.Bot.Term
                 return;
             }
 
-            Utils.Util.CreateDir(Term.UtilSeparator.Separator(AppConfigs.GetValue("AppPath") + @"\temp"));
+            string temp=Term.UtilSeparator.Separator(AppConfigs.GetValue("AppPath") + @"\temp\");
 
-            string _t_template = UtilSeparator.Separator(AppConfigs.GetValue("AppPath") + @"\temp\" + this.sUID + "_" + Path.GetFileName(_Template) + ".tpl");
+            Utils.Util.CreateDir(temp);
+
+            string _t_template = UtilSeparator.Separator(temp + this.sUID + "_" + Path.GetFileName(_Template) + ".tpl");
 
             UTF8Encoding _UTF8Encoding = new UTF8Encoding(false, true);
 
             try {
-                string sExtension=Path.GetExtension(OutputFile);
+                string sExtension = Path.GetExtension(OutputFile);
 
                 JSONObject Substitute = AppConfigs.JSONObject("Substitute");
                 string    sExtensions = Substitute.GetValue("sExtension");
