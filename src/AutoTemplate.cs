@@ -820,7 +820,7 @@ namespace Volte.Bot.Term
 
             _Tmpl.SetValue("sUID"   , _UID_CODE);
             _Tmpl.SetValue("ProjectPath" , AppConfigs.ProjectPath);
-            _Tmpl.SetValue("AppPath"     , AppConfigs.GetValue("AppPath"));
+            _Tmpl.SetValue("DevelopPath" , AppConfigs.GetValue("DevelopPath"));
             _Tmpl.SetValue("ProjectName" , AppConfigs.GetValue("ProjectName"));
 
             _Tmpl.RegisterFunction("Process"               , this.Process);
@@ -871,7 +871,7 @@ namespace Volte.Bot.Term
             }
 
             _Tmpl.SetValue("ProjectPath" , AppConfigs.ProjectPath);
-            _Tmpl.SetValue("AppPath"     , AppConfigs.GetValue("AppPath"));
+            _Tmpl.SetValue("DevelopPath" , AppConfigs.GetValue("DevelopPath"));
             _Tmpl.SetValue("ProjectName" , AppConfigs.GetValue("ProjectName"));
 
             _Tmpl.RegisterFunction("Process"               , this.Process);
@@ -916,9 +916,9 @@ namespace Volte.Bot.Term
                 _Templates.DebugMode = "N";
             }
 
-            _Templates.AppPath   = AppConfigs.GetValue("AppPath");
+            _Templates.AppPath = AppConfigs.GetValue("DevelopPath");
 
-            string fileName  = UtilSeparator.Separator(AppConfigs.GetValue("AppPath") + @"\template\" + _Template);
+            string fileName  = UtilSeparator.Separator(AppConfigs.GetValue("DevelopPath") + @"\template\" + _Template);
             string fileName2 = UtilSeparator.Separator(AppConfigs.GetValue("DevelopPath") + @"\template\" + _Template);
             string code      = "";
 
@@ -948,7 +948,7 @@ namespace Volte.Bot.Term
                 return;
             }
 
-            string temp=Term.UtilSeparator.Separator(AppConfigs.GetValue("AppPath") + @"\temp\");
+            string temp=Term.UtilSeparator.Separator(AppConfigs.GetValue("DevelopPath") + @"\temp\");
 
             Utils.Util.CreateDir(temp);
 
