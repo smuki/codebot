@@ -104,13 +104,12 @@ namespace Volte.Bot.Term
             _AutoTemplate.AppConfigs = AppConfigs;
             _AutoTemplate.Initialize();
             _AutoTemplate.SetValue("ProjectName"   , AppConfigs.GetValue("ProjectName"));
-            _AutoTemplate.SetValue("AppPath"       , AppConfigs.GetValue("AppPath"));
             _AutoTemplate.SetValue("ProjectPath"   , AppConfigs.ProjectPath);
             _AutoTemplate.SetValue("DevelopPath"   , AppConfigs.DevelopPath);
             _AutoTemplate.SetValue("CommandEntity" , sCommandEntity);
 
             _AutoTemplate.Template = "Build_Result.shtml";
-            _AutoTemplate.OutputFile = UtilSeparator.Separator(AppConfigs.GetValue("AppPath") + "\\temp\\Build_Result.html");
+            _AutoTemplate.OutputFile = UtilSeparator.Separator(AppConfigs.GetValue("DevelopPath") + "\\temp\\Build_Result.html");
             _AutoTemplate.Process();
             _AutoTemplate.Close();
             if (_FAILURE.Count > 0)
@@ -327,7 +326,6 @@ namespace Volte.Bot.Term
             _AutoTemplate.sUID         = sUID;
             _AutoTemplate.Initialize();
             _AutoTemplate.SetValue("sUID"            , sUID);
-            _AutoTemplate.SetValue("AppPath"         , AppConfigs.GetValue("AppPath"));
             _AutoTemplate.SetValue("ProjectName"     , AppConfigs.GetValue("ProjectName"));
             _AutoTemplate.SetValue("ProjectPath"     , AppConfigs.ProjectPath);
             _AutoTemplate.SetValue("DevelopPath"     , AppConfigs.DevelopPath);
@@ -435,7 +433,6 @@ namespace Volte.Bot.Term
                             cName  = cName.Replace("{sUID}"         , sUID);
                             cName  = cName.Replace("{UID_TP_CODE}"  , sTemplate);
                             cValue = cValue.Replace("{sUID}"        , sUID);
-                            cValue = cValue.Replace("{AppPath}"     , AppConfigs.GetValue("AppPath"));
                             cValue = cValue.Replace("{ProjectPath}" , AppConfigs.ProjectPath);
                             cValue = cValue.Replace("{DevelopPath}" , AppConfigs.DevelopPath);
                             cValue = cValue.Replace("{sTableName}"  , Utils.Util.ToCamelCase(UtilSeparator.TrimStart(_JSONFunction.GetValue("sTableName") , AppConfigs.GetValue("sTablePrefix"))));
@@ -486,7 +483,6 @@ namespace Volte.Bot.Term
             _AutoTemplate.DebugMode    = this.DebugMode;
             _AutoTemplate.AppConfigs   = this.AppConfigs;
 
-            _AutoTemplate.SetValue("AppPath"     , AppConfigs.GetValue("AppPath"));
             _AutoTemplate.SetValue("ProjectPath" , AppConfigs.ProjectPath);
             _AutoTemplate.SetValue("ProjectName" , AppConfigs.GetValue("ProjectName"));
 
@@ -572,7 +568,6 @@ namespace Volte.Bot.Term
 
                                                 cName  = cName.Replace("{sUID}", "entity");
                                                 cValue = cValue.Replace("{sUID}", "entity");
-                                                cValue = cValue.Replace("{AppPath}", AppConfigs.GetValue("AppPath"));
                                                 cValue = cValue.Replace("{ProjectPath}", AppConfigs.ProjectPath);
                                                 cValue = cValue.Replace("{DevelopPath}", AppConfigs.DevelopPath);
                                                 cValue = cValue.Replace("{sTableName}", Utils.Util.ToCamelCase(UtilSeparator.TrimStart(sTableName,AppConfigs.GetValue("sTablePrefix"))));
