@@ -25,7 +25,6 @@ namespace Volte.Bot.Term
         private string _Target        = "MsSqlServer";
         private bool   _lower_name    = false;
         private bool   _lower_column  = false;
-        private string _TemplatePath  = "";
         private string _Compiler      = "";
         private string _Packer        = "";
         private string _DebugMode     = "N";
@@ -259,7 +258,6 @@ namespace Volte.Bot.Term
 
         public string AppSecret      { get { return _AppSecret;      }  }
         public string DebugMode      { get { return _DebugMode;      }  }
-        public string TemplatePath   { get { return _TemplatePath;    }  }
         public string Compiler       { get { return _Compiler;       }  }
         public string Packer         { get { return _Packer;         }  }
         public bool   LowerName      { get { return _lower_name;     }  }
