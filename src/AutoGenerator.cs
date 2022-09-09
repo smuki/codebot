@@ -708,8 +708,8 @@ namespace Volte.Bot.Term
 
                     _NewFunction = true;
 
-                    string fileName1 = UtilSeparator.Separator(AppConfigs.GetValue("CodePath") + "\\L.cs");
-                    string fileName2 = UtilSeparator.Separator(AppConfigs.GetValue("CodePath") + "\\" + sUID + ".cs");
+                    string fileName1 = UtilSeparator.Separator(AppConfigs.GetValue("DevelopPath") + @"\code\L.cs");
+                    string fileName2 = UtilSeparator.Separator(AppConfigs.GetValue("DevelopPath") + @"\code\" + sUID + ".cs");
 
                     if (sUID.Substring(3, 2) == "02") {
                         if (File.Exists(fileName1) && !File.Exists(fileName2)) {
@@ -719,8 +719,8 @@ namespace Volte.Bot.Term
                     }
 
                     if (sUID.Substring(3, 2) == "03") {
-                        fileName1 = UtilSeparator.Separator(AppConfigs.GetValue("CodePath") + "\\T.cs");
-                        fileName2 = UtilSeparator.Separator(AppConfigs.GetValue("CodePath") + "\\" + sUID + ".cs");
+                        fileName1 = UtilSeparator.Separator(AppConfigs.GetValue("DevelopPath") + @"\code\T.cs");
+                        fileName2 = UtilSeparator.Separator(AppConfigs.GetValue("DevelopPath") + @"\code\" + sUID + ".cs");
 
                         if (File.Exists(fileName1) && !File.Exists(fileName2)) {
                             File.Copy(fileName1 , fileName2);
