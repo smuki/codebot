@@ -813,13 +813,6 @@ namespace Volte.Bot.Term
             string code = args[1].ToString();
             _Tmpl = VoltEngine.Parser(code);
 
-            string sExtension = Path.GetExtension(OutputFile);
-
-            if (sExtension == ".cs")
-            {
-                _Tmpl.Debug = this.DebugMode == "Y";
-            }
-
             foreach (KeyValuePair<string , object> kvp in _Data) {
 
                 _Tmpl.SetValue(kvp.Key , _Data[kvp.Key]);
@@ -866,11 +859,11 @@ namespace Volte.Bot.Term
             this.SetValue("DebugMode", this.DebugMode);
             _Tmpl = VoltEngine.Parser(name , code);
 
-            string sExtension = Path.GetExtension(OutputFile);
-
-            if (sExtension == ".cs")
+            if (Path.GetExtension(OutputFile) == ".cs")
             {
                 _Tmpl.Debug = this.DebugMode == "Y";
+            }else{
+
             }
 
             foreach (KeyValuePair<string, object> kvp in _Data) {
@@ -913,19 +906,20 @@ namespace Volte.Bot.Term
 
         public void Process()
         {
-            string sExtension = Path.GetExtension(OutputFile);
 
             this.SetValue("DebugMode", this.DebugMode);
-
+            string sExtension=Path.GetExtension(OutputFile);
             if (sExtension == ".cs")
             {
                 _Templates.DebugMode = this.DebugMode;
+            }else{
+                _Templates.DebugMode = "N";
             }
 
             _Templates.AppPath   = AppConfigs.GetValue("AppPath");
 
             string fileName  = UtilSeparator.Separator(AppConfigs.GetValue("AppPath") + @"\template\" + _Template);
-            string fileName2 = UtilSeparator.Separator(AppConfigs.GetValue("TemplatePath") + @"\" + _Template);
+            string fileName2 = UtilSeparator.Separator(AppConfigs.GetValue("DevelopPath") + @"\template\" + _Template);
             string code      = "";
 
             if (File.Exists(fileName)) {
