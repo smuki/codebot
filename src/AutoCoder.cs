@@ -66,10 +66,6 @@ namespace Volte.Bot.Term
                 sUID = "";
             }
 
-            this.WriteLine("");
-            this.Write(sUID);
-
-
             _L_UID_CODE = new List<string>();
 
             DirectoryInfo dir = new DirectoryInfo(AppConfigs.AddonLocation);
@@ -86,8 +82,11 @@ namespace Volte.Bot.Term
 
                     if (fileName.Contains(sUID))
                     {
-                        this.WriteLine("");
-                        this.Write(fileName);
+                        if (this.DebugMode == "Y") {
+
+                            this.WriteLine("");
+                            this.Write(fileName);
+                        }
 
                         _L_UID_CODE.Add(fileName);
 
@@ -191,30 +190,36 @@ namespace Volte.Bot.Term
                                     tReplication = UtilSeparator.Separator(tRep+ @"\" +Path.GetFileName(_FileInfo.FullName));
 
                                     if (File.Exists(tReplication)){
-                                        this.Write(_FileInfo.FullName+"--->");
-                                        this.WriteLine(tRep);
+                                        if (this.DebugMode == "Y") {
+                                            this.Write(_FileInfo.FullName+"--->");
+                                            this.WriteLine(tRep);
+                                        }
                                         File.Copy(_FileInfo.FullName, tReplication, true);
                                     }
                                 }
                             }
                         }
                     }else{
-                        this.WriteLine("Dir "+tRep+" Ignore");
+                        if (this.DebugMode == "Y") {
+                            this.WriteLine("Dir "+tRep+" Ignore");
+                        }
                     }
                 }
                 
             }else{
-                this.WriteLine("Replication=none");
-                this.WriteLine(sDir+"Exists="+Directory.Exists(sDir));
+                if (this.DebugMode == "Y") {
+                    this.WriteLine("Replication=none");
+                    this.WriteLine(sDir+"Exists="+Directory.Exists(sDir));
+                }
             }
         }
 
-        private string Build(string sUID)
+        private void Build(string sUID)
         {
             CommandEntity sCommand = new CommandEntity();
 
             if (AppConfigs.GetValue("Compiler").ToLower()=="ignore"){
-                return "";
+                return;
             }
 
             string sArguments = AppConfigs.GetValue("Arguments");
@@ -281,17 +286,12 @@ namespace Volte.Bot.Term
             {
                 _FAILURE.Add(sUID);
             }
-
-            return "";
         }
 
         private void GeneratorActivity(string sUID)
         {
 
-            this.WriteLine(UtilSeparator.Separator(AppConfigs.ProjectPath + @"\apps\addons"));
-
             Utils.Util.CreateDir(UtilSeparator.Separator(AppConfigs.ProjectPath + @"\apps\addons"));
-
             Utils.Util.CreateDir(UtilSeparator.Separator(AppConfigs.ProjectPath + @"\src"));
 
             string _TableName = "";
@@ -321,7 +321,6 @@ namespace Volte.Bot.Term
                     _AutoTemplate.SetValue(sName , _JSONFunction.GetValue(sName));
                 }
             }
-
 
             List<COLUMNEntity> Entitys = new List<COLUMNEntity>();
 
@@ -376,16 +375,6 @@ namespace Volte.Bot.Term
 
             }
 
-            JSONObject _JSONObject = AppConfigs.LoadSetting("nScale.json");
-
-            foreach (string sName in _JSONObject.Names)
-            {
-                if (_JSONObject.ContainsKey(sName))
-                {
-                    _AutoTemplate.SetValue(sName + "_Scale", _JSONObject.GetInteger(sName));
-                }
-            }
-
             _AutoTemplate.SetValue("Entitys"       , Entitys);
             _AutoTemplate.SetValue("sTablePrefix"  , AppConfigs.GetValue("sTablePrefix"));
             _AutoTemplate.SetValue("COLUMNS_NAME"  , _COLUMNS_NAME);
@@ -410,7 +399,10 @@ namespace Volte.Bot.Term
                     while ((s = sr.ReadLine()) != null)
                     {
                         int _p = s.IndexOf("=");
-                        this.WriteLine(s);
+
+                        if (this.DebugMode == "Y") {
+                            this.WriteLine(s);
+                        }
 
                         if (_p > 0)
                         {
