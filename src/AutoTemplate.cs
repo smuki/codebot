@@ -960,11 +960,11 @@ namespace Volte.Bot.Term
                    )
                 {
 
-                    string tOutputFile=OutputFile+".bak";
+                    string tOutputFile = OutputFile+".bak";
                     StreamWriter _File = new StreamWriter(tOutputFile, false, _UTF8Encoding);
-
                     _File.Write(Process(Path.GetFileName(_Template) , code));
                     _File.Close();
+
                     _Substitute.Initialize(Substitute.GetValue("sCode"));
                     if (this.DebugMode == "Y") {
 
