@@ -69,7 +69,6 @@ namespace Volte.Bot.Term
                 if (error == 0) {
                     entity.SUCCESS=true;
                     s.Append("BUILD SUCCEEDED. ");
-                    s.AppendLine(entity.sArguments);
                 } else {
                     entity.SUCCESS=false;
                     s.Append("BUILD FAILED.    ");
