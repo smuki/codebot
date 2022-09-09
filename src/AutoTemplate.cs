@@ -337,16 +337,17 @@ namespace Volte.Bot.Term
 
             if (_TableHasColumn.ContainsKey(key))
             {
+                
                 rtv = _TableHasColumn[key];
             }
             else
             {
-                JSONObject _JSONFunction = AppConfigs.LoadJSONObject(AppConfigs.DevelopPath + @"\definition\entity\" + sTableName + ".json");
-                JSONArray _entity = _JSONFunction.GetJSONArray("entitys");
+                JSONObject _JSONFunction = AppConfigs.LoadJSONObject(UtilSeparator.Separator(AppConfigs.DevelopPath + @"\definition\entity\" + sTableName + ".json"));
+                JSONArray _entity = _JSONFunction.GetJSONArray(sTableName);
+
                 foreach (JSONObject it in _entity.JSONObjects)
                 {
-
-                    if (it.GetValue("sColumnName") == name)
+                    if (it.GetValue("sColumnName").ToLower() == name.ToLower())
                     {
                         string s = it.GetValue("sTableName") + "." + it.GetValue("sColumnName");
                         s = s.ToLower();
