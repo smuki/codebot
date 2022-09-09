@@ -193,8 +193,8 @@ namespace Volte.Bot.Term
 
                                     if (File.Exists(tReplication)){
                                         if (this.DebugMode == "Y") {
-                                            this.Write(_FileInfo.FullName+"--->");
-                                            this.WriteLine(tRep);
+                                            this.Write(UtilSeparator.Separator(_FileInfo.FullName)+"--->");
+                                            this.WriteLine(UtilSeparator.Separator(tRep));
                                         }
                                         File.Copy(_FileInfo.FullName, tReplication, true);
                                     }
@@ -256,15 +256,17 @@ namespace Volte.Bot.Term
                     {
                         this.WriteLine("fileName " + fileNameDll);
                         this.WriteLine("Copy file to");
-                        string sPath = AppConfigs.ProjectPath + @"\apps\addons\";
 
-                        this.WriteLine("   " + fileNameDll + " ==> " + sPath + sUID + ".dll");
+                        string sPath = UtilSeparator.Separator(AppConfigs.ProjectPath + @"\apps\addons\");
+
+                        this.WriteLine("   " + sPath);
+                        this.WriteLine("       1) " + sUID + ".dll");
                         File.Copy(fileNameDll, sPath + sUID + ".dll", true);
 
                         string fileName = fileNameDll.Replace(".dll", ".pdb");
                         if (File.Exists(fileName))
                         {
-                            this.WriteLine("   " + fileName + " ==> " + sPath + sUID + ".pdb");
+                            this.WriteLine("       2) "+ sUID + ".pdb");
                             File.Copy(fileName, sPath + sUID + ".pdb", true);
                         }
                         else
@@ -274,7 +276,7 @@ namespace Volte.Bot.Term
                         fileName = fileNameDll.Replace(".dll", ".deps.json");
                         if (File.Exists(fileName))
                         {
-                            this.WriteLine("   " + fileName + " ==> " + sPath + sUID + ".dept.json");
+                            this.WriteLine("       3) "+ sUID + ".dept.json");
                             File.Copy(fileName, sPath + sUID + ".dept.json", true);
                         }
                         else
@@ -443,8 +445,17 @@ namespace Volte.Bot.Term
 
                                 Utils.Util.CreateDir(UtilSeparator.Separator(_Path + sUID));
                                 
+                                _AutoTemplate.DebugMode  = this.DebugMode;
                                 _AutoTemplate.Template   = UtilSeparator.Separator(cName);
                                 _AutoTemplate.OutputFile = UtilSeparator.Separator(_Path + sUID + @"\" + cValue);
+
+                                if (Path.GetExtension(_AutoTemplate.OutputFile) == ".csproj")
+                                {
+                                    _AutoTemplate.DebugMode = "N";
+                                }else{
+                                    _AutoTemplate.DebugMode = this.DebugMode;
+                                }
+
                                 _AutoTemplate.Process();
 
                             }
