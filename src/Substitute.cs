@@ -149,10 +149,10 @@ namespace Volte.Bot.Term
                         }
 
                         if (end=="xx" && c.IndexOf(".Open")>0){
-                            System.Console.WriteLine("Ignore Replace --> "+c);
+                            //System.Console.WriteLine("Ignore Replace --> "+c);
                             sw.WriteLine(content);
                         }else if (bNamespace && _Using.ContainsKey(c) && c.IndexOf("using ")==0){
-                            System.Console.WriteLine("Ignore --> "+c);
+                            //System.Console.WriteLine("Ignore --> "+c);
                         }else{
                             sw.WriteLine(CodeReplace(content));
                         }
