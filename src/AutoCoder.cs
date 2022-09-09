@@ -288,11 +288,22 @@ namespace Volte.Bot.Term
             }
         }
 
+        private void PrepareDir()
+        {
+            Utils.Util.CreateDir(UtilSeparator.Separator(AppConfigs.ProjectPath + @"\apps\addons"));
+            Utils.Util.CreateDir(UtilSeparator.Separator(AppConfigs.ProjectPath + @"\src"));
+            Utils.Util.CreateDir(UtilSeparator.Separator(AppConfigs.ProjectPath + @"\src"));
+            Utils.Util.CreateDir(UtilSeparator.Separator(AppConfigs.ProjectPath + @"\src\entity"));
+
+            Utils.Util.CreateDir(UtilSeparator.Separator(AppConfigs.DevelopPath + @"\definition"));
+            Utils.Util.CreateDir(UtilSeparator.Separator(AppConfigs.DevelopPath + @"\definition\entity"));
+
+        }
+
         private void GeneratorActivity(string sUID)
         {
 
-            Utils.Util.CreateDir(UtilSeparator.Separator(AppConfigs.ProjectPath + @"\apps\addons"));
-            Utils.Util.CreateDir(UtilSeparator.Separator(AppConfigs.ProjectPath + @"\src"));
+            this.PrepareDir();
 
             string _TableName = "";
             string _ColumnName;
@@ -449,10 +460,7 @@ namespace Volte.Bot.Term
         public void GeneratorEntity()
         {
 
-            Utils.Util.CreateDir(UtilSeparator.Separator(AppConfigs.DevelopPath + "\\definition"));
-            Utils.Util.CreateDir(UtilSeparator.Separator(AppConfigs.DevelopPath + "\\definition\\entity"));
-            Utils.Util.CreateDir(UtilSeparator.Separator(AppConfigs.ProjectPath + "\\src"));
-            Utils.Util.CreateDir(UtilSeparator.Separator(AppConfigs.ProjectPath + "\\src\\entity"));
+            this.PrepareDir();
 
             List<string> sTableNames = new List<string>();
 
