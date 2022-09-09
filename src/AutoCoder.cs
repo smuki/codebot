@@ -245,7 +245,8 @@ namespace Volte.Bot.Term
             {
                 if (Directory.Exists(sCommand.sDirectory))
                 {
-                    this.WriteLine("Search In " + sCommand.sDirectory + @"\bin");
+                    this.WriteLine("Search In ");
+                    this.WriteLine("   " + sCommand.sDirectory + @"\bin");
                     string fileNameDll = UtilSeparator.SearchFile(sCommand.sDirectory + @"\bin", sUID + ".dll");
                     if (string.IsNullOrEmpty(fileNameDll))
                     {
@@ -258,19 +259,20 @@ namespace Volte.Bot.Term
                     }
                     else
                     {
-                        this.WriteLine("fileName " + fileNameDll);
+                        this.WriteLine("Found ");
+                        this.WriteLine("   " + fileNameDll);
                         this.WriteLine("Copy file to");
 
                         string sPath = UtilSeparator.Separator(AppConfigs.ProjectPath + @"\apps\addons\");
 
                         this.WriteLine("   " + sPath);
-                        this.WriteLine("       1) " + sUID + ".dll");
+                        this.WriteLine("       1. " + sUID + ".dll");
                         File.Copy(fileNameDll, sPath + sUID + ".dll", true);
 
                         string fileName = fileNameDll.Replace(".dll", ".pdb");
                         if (File.Exists(fileName))
                         {
-                            this.WriteLine("       2) "+ sUID + ".pdb");
+                            this.WriteLine("       2. "+ sUID + ".pdb");
                             File.Copy(fileName, sPath + sUID + ".pdb", true);
                         }
                         else
@@ -280,7 +282,7 @@ namespace Volte.Bot.Term
                         fileName = fileNameDll.Replace(".dll", ".deps.json");
                         if (File.Exists(fileName))
                         {
-                            this.WriteLine("       3) "+ sUID + ".dept.json");
+                            this.WriteLine("       3. "+ sUID + ".dept.json");
                             File.Copy(fileName, sPath + sUID + ".dept.json", true);
                         }
                         else
