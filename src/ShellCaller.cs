@@ -39,9 +39,8 @@ namespace Volte.Bot.Term
                 ZZLogger.Debug(ZFILE_NAME , re);
 
                 s.AppendLine(re);
-                s.AppendLine("");
+
                 s.AppendLine("------------------------------------------------------------");
-                s.AppendLine("");
 
                 int warning = 0;
                 int error   = 0;
