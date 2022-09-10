@@ -241,12 +241,12 @@ namespace Volte.Bot.Term
             {
                 if (Directory.Exists(sCommand.sDirectory))
                 {
-                    this.WriteLine("Search In ");
+                    this.WriteLine("Search File "+sUID + ".dll In ");
                     this.WriteLine("   " + sCommand.sDirectory + @"\bin");
                     string fileNameDll = UtilSeparator.SearchFile(sCommand.sDirectory + @"\bin", sUID + ".dll");
                     if (string.IsNullOrEmpty(fileNameDll))
                     {
-                        this.WriteLine("Search In " + sCommand.sDirectory + @"\obj");
+                        this.WriteLine("   " + sCommand.sDirectory + @"\obj");
                         fileNameDll = UtilSeparator.SearchFile(sCommand.sDirectory + @"\obj", sUID + ".dll");
                     }
                     if (string.IsNullOrEmpty(fileNameDll))
@@ -255,8 +255,7 @@ namespace Volte.Bot.Term
                     }
                     else
                     {
-                        this.WriteLine("Found ");
-                        this.WriteLine("   " + fileNameDll);
+                        this.WriteLine("");
                         this.WriteLine("Copy file to");
 
                         string sPath = UtilSeparator.Separator(AppConfigs.ProjectPath + @"\apps\addons\");
