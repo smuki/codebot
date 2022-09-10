@@ -618,6 +618,10 @@ namespace Volte.Bot.Term
 
                 JSONObject _Compiler = AppConfigs.JSONObject("Compiler");
 
+                if (_Compiler.GetValue("Compiler").ToLower()=="ignore"){
+                    return;
+                }
+
                 string sArguments = _Compiler.GetValue("Arguments");
 
                 sArguments = Utils.Util.ReplaceWith(sArguments , "{sUID}" , UtilSeparator.Separator(@"entity"));
@@ -630,6 +634,12 @@ namespace Volte.Bot.Term
                 sCommand = _ShellRunner.Execute(sCommand);
                 sCommandEntity.Add(sCommand);
 
+                WriteLine(sCommand.Message);
+
+                if (sCommand.SUCCESS)
+                {
+                    WriteLine("Success.");
+                }
                 Replication(AppConfigs.ProjectPath + @"\src\","entity");
                 Replication(@"\java\","entity");
 
