@@ -213,17 +213,18 @@ namespace Volte.Bot.Term
         {
             CommandEntity sCommand = new CommandEntity();
 
-            if (AppConfigs.JSONObject("Compiler").GetValue("Compiler").ToLower()=="ignore"){
+            JSONObject _Compiler = AppConfigs.JSONObject("Compiler");
+
+            if (_Compiler.GetValue("Compiler").ToLower()=="ignore"){
                 return;
             }
 
-            string sArguments = AppConfigs.JSONObject("Compiler").GetValue("Arguments");
-
+            string sArguments = _Compiler.GetValue("Arguments");
 
             sArguments = Utils.Util.ReplaceWith(sArguments, "{sUID}", sUID);
 
             sCommand.sDirectory = UtilSeparator.Separator(AppConfigs.ProjectPath + @"\src\" + sUID);
-            sCommand.sCommand   = AppConfigs.JSONObject("Compiler").GetValue("Compiler");
+            sCommand.sCommand   = _Compiler.GetValue("Compiler");
             sCommand.sArguments = sArguments;
 
             if (this.DebugMode == "Y") {
@@ -615,13 +616,15 @@ namespace Volte.Bot.Term
                 Prettify(AppConfigs.ProjectPath + @"\src\","entity");
                 Prettify(@"\java\","entity");
 
-                string sArguments = AppConfigs.JSONObject("Compiler").GetValue("Arguments");
+                JSONObject _Compiler = AppConfigs.JSONObject("Compiler");
+
+                string sArguments = _Compiler.GetValue("Arguments");
 
                 sArguments = Utils.Util.ReplaceWith(sArguments , "{sUID}" , UtilSeparator.Separator(@"entity"));
 
                 CommandEntity sCommand = new CommandEntity();
                 sCommand.sDirectory    = UtilSeparator.Separator(AppConfigs.ProjectPath + @"\src\entity");
-                sCommand.sCommand      = AppConfigs.JSONObject("Compiler").GetValue("Compiler");
+                sCommand.sCommand      = _Compiler.GetValue("Compiler");
                 sCommand.sArguments    = sArguments;
 
                 sCommand = _ShellRunner.Execute(sCommand);
