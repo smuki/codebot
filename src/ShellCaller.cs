@@ -40,8 +40,7 @@ namespace Volte.Bot.Term
 
                 s.AppendLine(re);
                 s.AppendLine("");
-                s.AppendLine("");
-                s.AppendLine("------------------------------------------------");
+                s.AppendLine("------------------------------------------------------------");
                 s.AppendLine("");
 
                 int warning = 0;
@@ -59,7 +58,6 @@ namespace Volte.Bot.Term
                 }
 
                 s.AppendLine("");
-                s.AppendLine("    ");
                 s.Append(error);
                 s.Append(" error(s)  ");
 
@@ -68,10 +66,10 @@ namespace Volte.Bot.Term
 
                 if (error == 0) {
                     entity.SUCCESS=true;
-                    s.Append("BUILD SUCCEEDED. ");
+                    s.Append("BUILD SUCCEEDED.");
                 } else {
                     entity.SUCCESS=false;
-                    s.Append("BUILD FAILED.    ");
+                    s.Append("BUILD FAILED.");
                     s.AppendLine(entity.sArguments);
                 }
 
