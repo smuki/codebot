@@ -108,9 +108,6 @@ namespace Volte.Bot.Term
             _AutoTemplate.SetValue("DevelopPath"   , AppConfigs.DevelopPath);
             _AutoTemplate.SetValue("CommandEntity" , sCommandEntity);
 
-            _AutoTemplate.Template = "Build_Result.shtml";
-            _AutoTemplate.OutputFile = UtilSeparator.Separator(AppConfigs.GetValue("DevelopPath") + "\\temp\\Build_Result.html");
-            _AutoTemplate.Process();
             _AutoTemplate.Close();
             if (_FAILURE.Count > 0)
             {
