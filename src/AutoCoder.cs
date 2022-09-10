@@ -260,7 +260,7 @@ namespace Volte.Bot.Term
 
                         string sPath = UtilSeparator.Separator(AppConfigs.ProjectPath + @"\apps\addons\");
 
-                        this.WriteLine("   " + sPath);
+                        this.WriteLine("   " + sPath + "*");
                         this.WriteLine("       1. " + sUID + ".dll");
                         File.Copy(fileNameDll, sPath + sUID + ".dll", true);
 
