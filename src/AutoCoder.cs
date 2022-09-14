@@ -81,8 +81,7 @@ namespace Volte.Bot.Term
                     {
                         if (this.DebugMode == "Y") {
 
-                            this.WriteLine("");
-                            this.Write(fileName);
+                            this.WriteLine(fileName);
                         }
 
                         _L_UID_CODE.Add(fileName);
@@ -298,7 +297,6 @@ namespace Volte.Bot.Term
         private void PrepareDir()
         {
             Utils.Util.CreateDir(UtilSeparator.Separator(AppConfigs.ProjectPath + @"\apps\addons"));
-            Utils.Util.CreateDir(UtilSeparator.Separator(AppConfigs.ProjectPath + @"\src"));
             Utils.Util.CreateDir(UtilSeparator.Separator(AppConfigs.ProjectPath + @"\src"));
             Utils.Util.CreateDir(UtilSeparator.Separator(AppConfigs.ProjectPath + @"\src\entity"));
 
@@ -603,8 +601,6 @@ namespace Volte.Bot.Term
                                 sTableNames.Add(sTableName);
 
                                 this.WriteLine("[" + sTableName + "]");
-                            }else{
-                                this.WriteLine(AppConfigs.GetValue("sTablePrefix")+" Ignore [" + sTableName + "]");
                             }
                         }
                     }
