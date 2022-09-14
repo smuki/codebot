@@ -215,7 +215,8 @@ namespace Volte.Bot.Term
 
             JSONObject _Compiler = AppConfigs.JSONObject("Compiler");
 
-            if (_Compiler.GetValue("Compiler").ToLower()=="ignore"){
+            if (_Compiler.GetValue("Compiler").ToLower()=="ignore" || string.IsNullOrEmpty(_Compiler.GetValue("Compiler")))
+            {
                 return;
             }
 
@@ -312,6 +313,7 @@ namespace Volte.Bot.Term
             this.PrepareDir();
 
             string _TableName = "";
+            string sPrimaryKey="";
             string _ColumnName;
             string _DataType;
 
@@ -371,6 +373,9 @@ namespace Volte.Bot.Term
                 if (string.IsNullOrEmpty(_COLUMNEntity.sComment)){
                     _COLUMNEntity.sComment = _ColumnName;
                 }
+                if (_COLUMNEntity.bPrimaryKey){
+                    sPrimaryKey=_COLUMNEntity.sColumnName;
+                }
                 if (_TableName.ToLower() != "variable" && (_DataType == "nvarchar" || _DataType == "ntext"))
                 {
                     if (_ColumnName != "sOriginal")
@@ -391,6 +396,8 @@ namespace Volte.Bot.Term
             }
 
             _AutoTemplate.SetValue("Entitys"       , Entitys);
+            _AutoTemplate.SetValue("sPrimaryKey"   , sPrimaryKey);
+
             _AutoTemplate.SetValue("sTablePrefix"  , AppConfigs.GetValue("sTablePrefix"));
             _AutoTemplate.SetValue("COLUMNS_NAME"  , _COLUMNS_NAME);
             _AutoTemplate.SetValue("COLUMNS_NAMED" , _COLUMNS_NAMEDateTime);
@@ -618,27 +625,28 @@ namespace Volte.Bot.Term
 
                 JSONObject _Compiler = AppConfigs.JSONObject("Compiler");
 
-                if (_Compiler.GetValue("Compiler").ToLower()=="ignore"){
+                if (_Compiler.GetValue("Compiler").ToLower()=="ignore" || string.IsNullOrEmpty(_Compiler.GetValue("Compiler"))){
                     return;
-                }
+                }else{
 
-                string sArguments = _Compiler.GetValue("Arguments");
+                    string sArguments = _Compiler.GetValue("Arguments");
 
-                sArguments = Utils.Util.ReplaceWith(sArguments , "{sUID}" , UtilSeparator.Separator(@"entity"));
+                    sArguments = Utils.Util.ReplaceWith(sArguments , "{sUID}" , UtilSeparator.Separator(@"entity"));
 
-                CommandEntity sCommand = new CommandEntity();
-                sCommand.sDirectory    = UtilSeparator.Separator(AppConfigs.ProjectPath + @"\src\entity");
-                sCommand.sCommand      = _Compiler.GetValue("Compiler");
-                sCommand.sArguments    = sArguments;
+                    CommandEntity sCommand = new CommandEntity();
+                    sCommand.sDirectory    = UtilSeparator.Separator(AppConfigs.ProjectPath + @"\src\entity");
+                    sCommand.sCommand      = _Compiler.GetValue("Compiler");
+                    sCommand.sArguments    = sArguments;
 
-                sCommand = _ShellRunner.Execute(sCommand);
-                sCommandEntity.Add(sCommand);
+                    sCommand = _ShellRunner.Execute(sCommand);
+                    sCommandEntity.Add(sCommand);
 
-                WriteLine(sCommand.Message);
+                    WriteLine(sCommand.Message);
 
-                if (sCommand.SUCCESS)
-                {
-                    WriteLine("Success.");
+                    if (sCommand.SUCCESS)
+                    {
+                        WriteLine("Success.");
+                    }
                 }
                 Replication(AppConfigs.ProjectPath + @"\src\","entity");
                 Replication(@"\java\","entity");
