@@ -126,15 +126,10 @@ namespace Volte.Bot.Term
             {
                 GeneratorCaptionDefine(sUID.ToLower());
             }
-            WriteLine("EOF-->" + RsSysFunction.EOF);
-            WriteLine("CommandText-->" + RsSysFunction.CommandText);
             while (!RsSysFunction.EOF)
             {
                 string _UID_CODE = RsSysFunction.GetValue("sUID");
-                WriteLine(_UID_CODE);
 
-                WriteLine("");
-                Write(_UID_CODE);
                 _L_UID_CODE.Add(_UID_CODE);
                 GeneratorActivityDefinition(_UID_CODE);
                 RsSysFunction.MoveNext();
