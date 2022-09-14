@@ -368,6 +368,8 @@ namespace Volte.Bot.Term
                 _COLUMNEntity.sRefViewer     = _NameValue.GetValue("sRefViewer");
                 _COLUMNEntity.bPrimaryKey    = _NameValue.GetBoolean("bPrimaryKey");
                 _COLUMNEntity.bAutoIdentity  = _NameValue.GetBoolean("bAutoIdentity");
+                _COLUMNEntity.nWidth         = _NameValue.GetInteger("nWidth");
+
                 if (string.IsNullOrEmpty(_COLUMNEntity.sComment)){
                     _COLUMNEntity.sComment = _ColumnName;
                 }
