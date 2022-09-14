@@ -271,6 +271,7 @@ namespace Volte.Bot.Term
                 _COLUMNEntity.Options        = RsZUPRGDTM.GetValue("sOption");
                 _COLUMNEntity.sTableName     = _TableName;
                 _COLUMNEntity.bWriteable     = RsZUPRGDTM.GetBoolean("bWriteable");
+                _COLUMNEntity.nWidth         = RsZUPRGDTM.GetInteger("nWidth");
 
                 if (_TableName.ToLower() == "variable") {
                     _COLUMNEntity.bWriteable = false;
@@ -369,6 +370,10 @@ namespace Volte.Bot.Term
                 _entity.SetBoolean("bPrimaryKey" , _COLUMNEntity.bPrimaryKey);
                 _entity.SetBoolean("bNullable"   , _COLUMNEntity.bNullable);
                 _entity.SetBoolean("Writeable"   , _COLUMNEntity.bWriteable);
+
+                if (_COLUMNEntity.nWidth>0){
+                    _entity.SetInteger("nWidth"  , _COLUMNEntity.nWidth);
+                }
 
                 if (!string.IsNullOrEmpty(_COLUMNEntity.sDescriptionId)){
                     _entity.SetValue("sDescriptionId"   , _COLUMNEntity.sDescriptionId);
