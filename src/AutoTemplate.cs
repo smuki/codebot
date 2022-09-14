@@ -808,11 +808,11 @@ namespace Volte.Bot.Term
 
         public string Process(object[] args)
         {
+
             this.SetValue("DebugMode" , this.DebugMode);
             string _UID_CODE = args[0].ToString();
             string code = args[1].ToString();
             _Tmpl = VoltEngine.Parser(code);
-
             foreach (KeyValuePair<string , object> kvp in _Data) {
 
                 _Tmpl.SetValue(kvp.Key , _Data[kvp.Key]);
@@ -862,8 +862,6 @@ namespace Volte.Bot.Term
             if (Path.GetExtension(OutputFile) == ".cs")
             {
                 _Tmpl.Debug = this.DebugMode == "Y";
-            }else{
-
             }
 
             foreach (KeyValuePair<string, object> kvp in _Data) {
@@ -983,6 +981,7 @@ namespace Volte.Bot.Term
                         Console.WriteLine("OutputFile  = " + OutputFile);
                     }
                     _Substitute.CopyFile(tOutputFile,OutputFile);
+
                     if (File.Exists(tOutputFile))
                     {
                         File.Delete(tOutputFile);
