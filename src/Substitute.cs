@@ -129,12 +129,9 @@ namespace Volte.Bot.Term
 
                 Dictionary<string, string> _Using = new Dictionary<string, string>();
 
-                System.Console.WriteLine("");
                 string f = System.IO.Path.GetFileNameWithoutExtension(dest);
-                //System.Console.WriteLine("xxxxxx------"+f);
 
                 string end = f.Substring(f.Length-1,1);
-                //System.Console.WriteLine("xxxxxx------"+end);
 
                 bool bNamespace=true;
                 while (content != null)
