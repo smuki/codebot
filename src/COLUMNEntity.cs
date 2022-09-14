@@ -25,7 +25,7 @@ namespace Volte.Bot.Term
 
         public bool bWriteable { get; set; }
         public bool bPrimaryKey { get; set; }
-        public int  nWidth { get; set; }
+        public int  nMaxLength { get; set; }
         public string ZZVIEW { get; set; }
 
         public string TableColumnName { get { return this.sTableName + "_" + this.sColumnName; } }
