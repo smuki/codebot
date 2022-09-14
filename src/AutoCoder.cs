@@ -214,18 +214,18 @@ namespace Volte.Bot.Term
             CommandEntity sCommand = new CommandEntity();
 
             JSONObject _Compiler = AppConfigs.JSONObject("Compiler");
+            string sCompiler     = _Compiler.GetValue("Compiler");
+            string sArguments    = _Compiler.GetValue("Arguments");
 
-            if (_Compiler.GetValue("Compiler").ToLower()=="ignore" || string.IsNullOrEmpty(_Compiler.GetValue("Compiler")))
+            if (sCompiler.ToLower()=="ignore" || string.IsNullOrEmpty(sCompiler))
             {
                 return;
             }
 
-            string sArguments = _Compiler.GetValue("Arguments");
-
             sArguments = Utils.Util.ReplaceWith(sArguments, "{sUID}", sUID);
 
             sCommand.sDirectory = UtilSeparator.Separator(AppConfigs.ProjectPath + @"\src\" + sUID);
-            sCommand.sCommand   = _Compiler.GetValue("Compiler");
+            sCommand.sCommand   = sCompiler;
             sCommand.sArguments = sArguments;
 
             if (this.DebugMode == "Y") {
@@ -624,18 +624,18 @@ namespace Volte.Bot.Term
                 Prettify(@"\java\","entity");
 
                 JSONObject _Compiler = AppConfigs.JSONObject("Compiler");
+                string sCompiler     = _Compiler.GetValue("Compiler");
+                string sArguments    = _Compiler.GetValue("Arguments");
 
-                if (_Compiler.GetValue("Compiler").ToLower()=="ignore" || string.IsNullOrEmpty(_Compiler.GetValue("Compiler"))){
+                if (sCompiler.ToLower()=="ignore" || string.IsNullOrEmpty(sCompiler)){
                     return;
                 }else{
-
-                    string sArguments = _Compiler.GetValue("Arguments");
 
                     sArguments = Utils.Util.ReplaceWith(sArguments , "{sUID}" , UtilSeparator.Separator(@"entity"));
 
                     CommandEntity sCommand = new CommandEntity();
                     sCommand.sDirectory    = UtilSeparator.Separator(AppConfigs.ProjectPath + @"\src\entity");
-                    sCommand.sCommand      = _Compiler.GetValue("Compiler");
+                    sCommand.sCommand      = sCompiler;
                     sCommand.sArguments    = sArguments;
 
                     sCommand = _ShellRunner.Execute(sCommand);
