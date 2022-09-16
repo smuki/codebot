@@ -98,8 +98,58 @@ namespace Volte.Bot.Term
             if (string.IsNullOrEmpty(_AppPath)) {
                 _AppPath = System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetEntryAssembly().Location);
             }
+            this.Process();
         }
 
+        public void Process()
+        {
+            foreach (JSONObject its in _JSONObject.GetJSONArray("DataTypeMapping").JSONObjects) {
+                string DataType = its.GetValue("value");
+                foreach(string DbType in its.GetValue("name").Split(',')){
+                    if (!string.IsNullOrEmpty(DbType)){
+                        _DataTypeMapping["DataType_"+DbType] = DataType;
+                    }
+                }
+            }
+
+            foreach (JSONObject its in _JSONObject.GetJSONArray("ToDataTypeMapping").JSONObjects) {
+                string value = its.GetValue("value");
+                foreach(string item in its.GetValue("name").Split(',')){
+                    if (!string.IsNullOrEmpty(item)){
+                        _DataTypeMapping["ToDataTypeMapping_"+item] = value;
+                    }
+                }
+            }
+            foreach (JSONObject its in _JSONObject.GetJSONArray("DataTypeDefault").JSONObjects) {
+                string sDefault = its.GetValue("value");
+                foreach(string DbType in its.GetValue("name").Split(',')){
+                    if (!string.IsNullOrEmpty(DbType)){
+                        _DataTypeMapping["DataTypeDefault_"+DbType] = sDefault;
+                    }
+                }
+            }
+
+            foreach (JSONObject its in _JSONObject.GetJSONArray("DbTypeMapping").JSONObjects) {
+                string sDefault = its.GetValue("value");
+                foreach(string DbType in its.GetValue("name").Split(',')){
+                    if (!string.IsNullOrEmpty(DbType)){
+                        _DataTypeMapping["DbTypeMapping_"+DbType] = sDefault;
+                    }
+                }
+            }
+
+            
+        }
+
+        public string Mapping(string sType, string name)
+        {
+            string sKey = sType+"_"+name;
+            if (_DataTypeMapping.ContainsKey(sKey))
+            {
+                return _DataTypeMapping[sKey];
+            }
+            return name;
+        }
         public JSONObject JSONObject(string name)
         {
             string vValue = _JSONObject.GetJSONObject(name).ToString();
@@ -218,6 +268,7 @@ namespace Volte.Bot.Term
                 return _JSONObject.Names;
             }
         }
+        
         public JSONObject LoadSetting(string fileName){
             return this.LoadJSONObject(this.AppSetting+fileName);
         }
@@ -250,6 +301,8 @@ namespace Volte.Bot.Term
             return _Json;
         }
         private JSONObject _JSONObject = new JSONObject();
+
+        private Dictionary<string, string> _DataTypeMapping  = new Dictionary<string, string>();
 
         private Dictionary<string, JSONObject> _JSONObjects  = new Dictionary<string, JSONObject>();
 
