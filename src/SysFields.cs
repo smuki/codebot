@@ -42,11 +42,11 @@ namespace Volte.Bot.Term
 
             private string _sChgUser="";
 
-            private string _sColumnClass="";
+            private string _sGroup="";
 
             private string _sColumnName="";
 
-            private string _sColumnTypeCode="";
+            private string _sDataType="";
 
             private string _sRefBrowse="";
 
@@ -363,23 +363,23 @@ namespace Volte.Bot.Term
                 }
 
             //<Summary>
-            //SysFields,sColumnClass
+            //SysFields,sGroup
             //</Summary>
             [AttributeMapping(Type=DbType.String)]
-                public string sColumnClass
+                public string sGroup
                 {
-                    get { return _sColumnClass; }
+                    get { return _sGroup; }
                     set
                     {
                         if (this.Verified)
                         {
-                            if (value!=_sColumnClass)
+                            if (value!=_sGroup)
                             {
-                                _sColumnClass = value;
-                                this.PropertyChange("sColumnClass");
+                                _sGroup = value;
+                                this.PropertyChange("sGroup");
                             }
                         }else{
-                            _sColumnClass = value;
+                            _sGroup = value;
                         }
                     }
                 }
@@ -413,18 +413,18 @@ namespace Volte.Bot.Term
             [AttributeMapping(Type=DbType.String)]
                 public string sDataType
                 {
-                    get { return _sColumnTypeCode; }
+                    get { return _sDataType; }
                     set
                     {
                         if (this.Verified)
                         {
-                            if (value!=_sColumnTypeCode)
+                            if (value!=_sDataType)
                             {
-                                _sColumnTypeCode = value;
+                                _sDataType = value;
                                 this.PropertyChange("sDataType");
                             }
                         }else{
-                            _sColumnTypeCode = value;
+                            _sDataType = value;
                         }
                     }
                 }
