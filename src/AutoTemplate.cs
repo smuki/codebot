@@ -402,22 +402,6 @@ namespace Volte.Bot.Term
             }
         }
 
-        string DbType(object[] args)
-        {
-            string dataType = args[0].ToString();
-            string sLang="";
-            if (args.Length > 1) {
-                sLang = args[1].ToString();
-            }
-
-            string sValue = AppConfigs.LoadSetting("DbType"+sLang+".json").GetValue(dataType);
-            if (sValue==""){
-                return "undefine"+dataType;
-            }else{
-                return sValue;
-            }
-        }
-
         string LowerCase(object[] args)
         {
             string str = args[0].ToString();
@@ -485,12 +469,7 @@ namespace Volte.Bot.Term
                 sLang = args[1].ToString();
             }
 
-            string sValue = AppConfigs.LoadSetting("SqlDataTypeToDataType"+sLang+".json").GetValue(dataType);
-            if (sValue==""){
-                return "undefine-"+dataType;
-            }else{
-                return sValue;
-            }
+            return AppConfigs.Mapping("DataType", dataType);
         }
 
         string StringToDataType(object[] args)
@@ -503,9 +482,20 @@ namespace Volte.Bot.Term
                 sLang = args[1].ToString();
             }
 
-            string sValue = AppConfigs.LoadSetting("StringToDataType"+sLang+".json").GetValue(dataType);
+            return AppConfigs.Mapping("ToDataTypeMapping",dataType);
+        }
+
+        string DbType(object[] args)
+        {
+            string dataType = args[0].ToString();
+            string sLang="";
+            if (args.Length > 1) {
+                sLang = args[1].ToString();
+            }
+
+            string sValue = AppConfigs.Mapping("DbTypeMapping",dataType);
             if (sValue==""){
-                return "undefine"+dataType;
+                return "undefine-"+dataType;
             }else{
                 return sValue;
             }
@@ -516,7 +506,8 @@ namespace Volte.Bot.Term
 
             string dataType = args[0].ToString();
 
-            string sValue = AppConfigs.LoadSetting("DataTypeDefault.json").GetValue(dataType);
+            string sValue =  AppConfigs.Mapping("DataTypeDefault",dataType);
+
             if (sValue==""){
                 return "=\"" + dataType + "\"";
             }else{
@@ -584,7 +575,6 @@ namespace Volte.Bot.Term
             string rtv                = "";
 
             string key = tableName + "_" + columnName + "_" + type + "_" + captionCode + "_" + scale;
-            JSONObject _DataTypeChar = AppConfigs.LoadSetting("DataTypeChar.json");
 
             if (captionCode.IndexOf("=") > 0) {
                 captionCode = captionCode + ",";
@@ -683,13 +673,6 @@ namespace Volte.Bot.Term
                     nScale        = RsZUCOLUTM.GetInteger("nScale");
                     string sGroup = RsZUCOLUTM.GetValue("sGroup");
 
-                    if (nScale < 0) {
-                        JSONObject _JSONObject2= AppConfigs.LoadSetting("ColumnScale.json");
-
-                        if (_JSONObject2.ContainsKey(sGroup)){
-                            nScale =_JSONObject2.GetInteger(sGroup);
-                        }
-                    }
                 } else {
                     if (tableName != "ZZFields" && tableName != "VARIABLE") {
                         JSONObject _JSONObject2= AppConfigs.LoadSetting("AppSettings.json");
