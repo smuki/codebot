@@ -681,13 +681,13 @@ namespace Volte.Bot.Term
                     type                = RsZUCOLUTM.GetValue("sDataType");
                     nColumnLength       = RsZUCOLUTM.GetInteger("nColumnLength");
                     nScale        = RsZUCOLUTM.GetInteger("nScale");
-                    string sColumnClass = RsZUCOLUTM.GetValue("sColumnClass");
+                    string sGroup = RsZUCOLUTM.GetValue("sGroup");
 
                     if (nScale < 0) {
                         JSONObject _JSONObject2= AppConfigs.LoadSetting("ColumnScale.json");
 
-                        if (_JSONObject2.ContainsKey(sColumnClass)){
-                            nScale =_JSONObject2.GetInteger(sColumnClass);
+                        if (_JSONObject2.ContainsKey(sGroup)){
+                            nScale =_JSONObject2.GetInteger(sGroup);
                         }
                     }
                 } else {
