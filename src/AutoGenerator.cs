@@ -243,7 +243,7 @@ namespace Volte.Bot.Term
 
             string _COLUMNS_NAME  = "";
             string _COLUMNS_NAMED = "";
-            string _sColumnClass  = "";
+            string sGroup  = "";
 
             List<COLUMNEntity> Entitys = new List<COLUMNEntity>();
             List<string> sRef          = new List<string>();
@@ -260,7 +260,7 @@ namespace Volte.Bot.Term
 
                 _ColumnName   = RsZUPRGDTM.GetValue("sColumnName");
                 _DataType     = RsZUPRGDTM.GetValue("sDataType");
-                _sColumnClass = RsZUPRGDTM.GetValue("sColumnClass");
+                sGroup = RsZUPRGDTM.GetValue("sGroup");
 
                 COLUMNEntity _COLUMNEntity   = new COLUMNEntity();
                 _COLUMNEntity.sDescriptionId = RsZUPRGDTM.GetValue("sCaptionCode");
@@ -326,8 +326,6 @@ namespace Volte.Bot.Term
                     }
 
                     _COLUMNEntity.bPrimaryKey = RsSysFields.GetBoolean("bPrimaryKey");
-
-                    string sColumnClass = RsSysFields.GetValue("sColumnClass");
 
                 }
                 RsSysFields.Close();
