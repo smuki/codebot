@@ -330,8 +330,6 @@ namespace Volte.Bot.Term
                 }
                 RsSysFields.Close();
 
-                JSONObject _JSONObject3= AppConfigs.LoadSetting("AdjustmentLength.json");
-
                 if (_COLUMNEntity.bPrimaryKey) 
                 {
                     Keys++;
