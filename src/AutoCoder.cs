@@ -643,7 +643,7 @@ namespace Volte.Bot.Term
 
                     if (sCommand.SUCCESS)
                     {
-                        WriteLine("Success.");
+                        //WriteLine("SUCCESS.");
                     }
                 }
                 Replication(AppConfigs.ProjectPath + @"\src\","entity");
