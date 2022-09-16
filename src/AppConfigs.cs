@@ -107,6 +107,7 @@ namespace Volte.Bot.Term
                 string DataType = its.GetValue("value");
                 foreach(string DbType in its.GetValue("name").Split(',')){
                     if (!string.IsNullOrEmpty(DbType)){
+
                         _DataTypeMapping["DataType_"+DbType] = DataType;
                     }
                 }
