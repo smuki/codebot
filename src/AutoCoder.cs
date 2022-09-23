@@ -610,9 +610,9 @@ namespace Volte.Bot.Term
 
                 _AutoTemplate.SetValue("sTableNames" , sTableNames);
 
-                _AutoTemplate.Template   = "N_Entity_Build_Template.cs";
-                _AutoTemplate.OutputFile = UtilSeparator.Separator(AppConfigs.ProjectPath  + @"\src\entity\Zero.Addons.entity.Build");
-                _AutoTemplate.Process();
+                //_AutoTemplate.Template   = "N_Entity_Build_Template.cs";
+                //_AutoTemplate.OutputFile = UtilSeparator.Separator(AppConfigs.ProjectPath  + @"\src\entity\Zero.Addons.entity.Build");
+                //_AutoTemplate.Process();
 
                 _AutoTemplate.Template   = "N_Entity_Build_Template.csproj";
                 _AutoTemplate.OutputFile = UtilSeparator.Separator(AppConfigs.ProjectPath + @"\src\entity\Zero.Addons.entity.csproj");
