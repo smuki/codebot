@@ -547,6 +547,7 @@ namespace Volte.Bot.Term
                                 _AutoTemplate.SetValue("sTablePrefix" , AppConfigs.GetValue("sTablePrefix"));
 
                                 string entityTpl=UtilSeparator.Separator(AppConfigs.DevelopPath + "/"+sTemplate+".tpl");
+                                Console.WriteLine("entityTpl="+entityTpl);
                                 if (File.Exists(entityTpl))
                                 {
                                     string sUID      = "entity";
@@ -576,6 +577,9 @@ namespace Volte.Bot.Term
                                                 cValue = cValue.Replace("{DevelopPath}", AppConfigs.DevelopPath);
                                                 cValue = cValue.Replace("{sTableName}", Utils.Util.ToCamelCase(UtilSeparator.TrimStart(sTableName,AppConfigs.GetValue("sTablePrefix"))));
                                             
+                                                Console.WriteLine("cName="+cName);
+                                                Console.WriteLine("cValue="+cValue);
+
                                                 if (cName == "Path")
                                                 {
                                                     _Path = UtilSeparator.Separator(cValue);
@@ -609,10 +613,6 @@ namespace Volte.Bot.Term
                 }
 
                 _AutoTemplate.SetValue("sTableNames" , sTableNames);
-
-                //_AutoTemplate.Template   = "N_Entity_Build_Template.cs";
-                //_AutoTemplate.OutputFile = UtilSeparator.Separator(AppConfigs.ProjectPath  + @"\src\entity\Zero.Addons.entity.Build");
-                //_AutoTemplate.Process();
 
                 _AutoTemplate.Template   = "N_Entity_Build_Template.csproj";
                 _AutoTemplate.OutputFile = UtilSeparator.Separator(AppConfigs.ProjectPath + @"\src\entity\Zero.Addons.entity.csproj");
