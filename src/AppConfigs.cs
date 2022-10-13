@@ -29,6 +29,7 @@ namespace Volte.Bot.Term
         private string _Packer        = "";
         private string _DebugMode     = "N";
         private string _Separator     = "/";
+        private UTF8Encoding _UTF8Encoding = new UTF8Encoding(false, true);
 
         public static DateTime GetFileDateTime(string fileName)
         {
@@ -74,7 +75,6 @@ namespace Volte.Bot.Term
 
                 ZZLogger.Debug(ZFILE_NAME , "Load config file : [" + _FileName + "]");
 
-                UTF8Encoding _UTF8Encoding = new UTF8Encoding(false, true);
                 string sValue  = "";
 
                 using(StreamReader sr = new StreamReader(_FileName, _UTF8Encoding)) {
@@ -103,6 +103,28 @@ namespace Volte.Bot.Term
 
         public void Process()
         {
+            string sValue="";
+            using(StreamReader sr = new StreamReader(this.GetValue("sLanguage"), _UTF8Encoding)) {
+                sValue = sr.ReadToEnd();
+            }
+                
+            JSONObject _Language = new JSONObject(sValue);
+
+            foreach (string sKey in _Language.Names)
+            {
+                if (_Language.IsJSONObject(sKey))
+                {
+                    _JSONObject.SetValue(sKey, _Language.GetJSONObject(sKey));
+                }else if (_Language.IsJSONArray(sKey))
+                {
+                    _JSONObject.SetValue(sKey, _Language.GetJSONArray(sKey));
+                }
+                else
+                {
+                    _JSONObject.SetValue(sKey, _Language.GetValue(sKey));
+                }
+            }
+
             foreach (JSONObject its in _JSONObject.GetJSONArray("DataTypeMapping").JSONObjects) {
                 string DataType = its.GetValue("value");
                 foreach(string DbType in its.GetValue("name").Split(',')){
