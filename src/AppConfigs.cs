@@ -28,6 +28,8 @@ namespace Volte.Bot.Term
         private string _Compiler      = "";
         private string _Packer        = "";
         private string _DebugMode     = "N";
+        private string _DirectoryName  = "";
+        private string _CurrentDirectory  = "";
         private string _Separator     = "/";
         private UTF8Encoding _UTF8Encoding = new UTF8Encoding(false, true);
 
@@ -81,15 +83,16 @@ namespace Volte.Bot.Term
                     sValue = sr.ReadToEnd();
                 }
                 
-                string DirectoryName = System.IO.Path.GetFileNameWithoutExtension(System.IO.Directory.GetCurrentDirectory());
-                string CurrentDirectory = System.IO.Directory.GetCurrentDirectory();
-                CurrentDirectory=CurrentDirectory.Replace("\\","/");
-                DirectoryName=DirectoryName.Replace("\\","/");
+                _DirectoryName = System.IO.Path.GetFileNameWithoutExtension(System.IO.Directory.GetCurrentDirectory());
+                _CurrentDirectory = System.IO.Directory.GetCurrentDirectory();
+                _CurrentDirectory=_CurrentDirectory.Replace("\\","/");
+                _DirectoryName=_DirectoryName.Replace("\\","/");
+                _AppPath=_AppPath.Replace("\\","/");
 
                 sValue = Utils.Util.ReplaceWith(sValue , "%AppPath%" , _AppPath);
                 sValue = Utils.Util.ReplaceWith(sValue , "%Sep%"     , _Separator);
-                sValue = Utils.Util.ReplaceWith(sValue , "%DirectoryName%" , DirectoryName);
-                sValue = Utils.Util.ReplaceWith(sValue , "%CurrentDirectory%" , CurrentDirectory);
+                sValue = Utils.Util.ReplaceWith(sValue , "%DirectoryName%" , _DirectoryName);
+                sValue = Utils.Util.ReplaceWith(sValue , "%CurrentDirectory%" , _CurrentDirectory);
 
                 _JSONObject = new JSONObject(sValue);
 
@@ -103,28 +106,37 @@ namespace Volte.Bot.Term
 
         public void Process()
         {
-            string sValue="";
-            using(StreamReader sr = new StreamReader(this.GetValue("sLanguage"), _UTF8Encoding)) {
-                sValue = sr.ReadToEnd();
-            }
-                
-            JSONObject _Language = new JSONObject(sValue);
+            string sValue = "";
+            string sLanguage = _JSONObject.GetValue("Language");
 
-            foreach (string sKey in _Language.Names)
+            if (File.Exists(sLanguage))
             {
-                if (_Language.IsJSONObject(sKey))
-                {
-                    _JSONObject.SetValue(sKey, _Language.GetJSONObject(sKey));
-                }else if (_Language.IsJSONArray(sKey))
-                {
-                    _JSONObject.SetValue(sKey, _Language.GetJSONArray(sKey));
+                Console.WriteLine("loading Language " +sLanguage);
+                using(StreamReader sr = new StreamReader(sLanguage, _UTF8Encoding)) {
+                    sValue = sr.ReadToEnd();
                 }
-                else
+                sValue = Utils.Util.ReplaceWith(sValue , "%AppPath%" , _AppPath);
+                sValue = Utils.Util.ReplaceWith(sValue , "%Sep%"     , _Separator);
+                sValue = Utils.Util.ReplaceWith(sValue , "%DirectoryName%" , _DirectoryName);
+                sValue = Utils.Util.ReplaceWith(sValue , "%CurrentDirectory%" , _CurrentDirectory);
+                    
+                JSONObject _Language = new JSONObject(sValue);
+
+                foreach (string sKey in _Language.Names)
                 {
-                    _JSONObject.SetValue(sKey, _Language.GetValue(sKey));
+                    if (_Language.IsJSONObject(sKey))
+                    {
+                        _JSONObject.SetValue(sKey, _Language.GetJSONObject(sKey));
+                    }else if (_Language.IsJSONArray(sKey))
+                    {
+                        _JSONObject.SetValue(sKey, _Language.GetJSONArray(sKey));
+                    }
+                    else
+                    {
+                        _JSONObject.SetValue(sKey, _Language.GetValue(sKey));
+                    }
                 }
             }
-
             foreach (JSONObject its in _JSONObject.GetJSONArray("DataTypeMapping").JSONObjects) {
                 string DataType = its.GetValue("value");
                 foreach(string DbType in its.GetValue("name").Split(',')){
