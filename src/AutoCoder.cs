@@ -416,67 +416,52 @@ namespace Volte.Bot.Term
                 sTemplate="N";
             }
             string tTemplate=_App_Path + sTemplate + ".tpl";
-            if (File.Exists(tTemplate))
+
+            foreach (JSONObject Template in AppConfigs.JSONArray("activity").JSONObjects)
             {
-                using (StreamReader sr = new StreamReader(tTemplate))
+
+                string cName  = Template.GetValue("name");
+                string cValue = Template.GetValue("value");
+
+                cName = cName.Trim();
+                cValue = cValue.Trim();
+
+                cName  = cName.Replace("{sUID}"         , sUID);
+                cName  = cName.Replace("{UID_TP_CODE}"  , sTemplate);
+                cValue = cValue.Replace("{sUID}"        , sUID);
+                cValue = cValue.Replace("{ProjectPath}" , AppConfigs.ProjectPath);
+                cValue = cValue.Replace("{DevelopPath}" , AppConfigs.DevelopPath);
+                cValue = cValue.Replace("{sTableName}"  , Utils.Util.ToCamelCase(UtilSeparator.TrimStart(_JSONFunction.GetValue("sTableName") , sTablePrefix)));
+                cValue = cValue.Replace("{UID_TP_CODE}" , sTemplate);
+
+Console.WriteLine(cName+"="+cValue);
+                if (cName == "Path")
                 {
-                    string s;
-                    StringBuilder XCodeObject = new StringBuilder();
-
-                    while ((s = sr.ReadLine()) != null)
-                    {
-                        int _p = s.IndexOf("=");
-
-                        if (this.DebugMode == "Y") {
-                            this.WriteLine(s);
-                        }
-
-                        if (_p > 0)
-                        {
-                            string cName = s.Substring(0, _p);
-                            string cValue = s.Substring(_p + 1, s.Length - _p - 1);
-
-                            cName = cName.Trim();
-                            cValue = cValue.Trim();
-
-                            cName  = cName.Replace("{sUID}"         , sUID);
-                            cName  = cName.Replace("{UID_TP_CODE}"  , sTemplate);
-                            cValue = cValue.Replace("{sUID}"        , sUID);
-                            cValue = cValue.Replace("{ProjectPath}" , AppConfigs.ProjectPath);
-                            cValue = cValue.Replace("{DevelopPath}" , AppConfigs.DevelopPath);
-                            cValue = cValue.Replace("{sTableName}"  , Utils.Util.ToCamelCase(UtilSeparator.TrimStart(_JSONFunction.GetValue("sTableName") , sTablePrefix)));
-                            cValue = cValue.Replace("{UID_TP_CODE}" , sTemplate);
-
-                            if (cName == "Path")
-                            {
-                                _Path = UtilSeparator.Separator(cValue);
-                            }
-                            else
-                            {
-
-                                Utils.Util.CreateDir(UtilSeparator.Separator(_Path + sUID));
-                                
-                                _AutoTemplate.DebugMode  = this.DebugMode;
-                                _AutoTemplate.Template   = UtilSeparator.Separator(cName);
-                                _AutoTemplate.OutputFile = UtilSeparator.Separator(_Path + sUID + @"\" + cValue);
-
-                                if (Path.GetExtension(_AutoTemplate.OutputFile) == ".csproj")
-                                {
-                                    _AutoTemplate.DebugMode = "N";
-                                }else{
-                                    _AutoTemplate.DebugMode = this.DebugMode;
-                                }
-
-                                _AutoTemplate.Process();
-
-                            }
-
-                        }
-                    }
+                    _Path = UtilSeparator.Separator(cValue);
                 }
-            }else{
-                this.WriteLine(tTemplate+" Not Found!");
+                else
+                {
+
+                    Utils.Util.CreateDir(UtilSeparator.Separator(_Path + sUID));
+                    
+                    _AutoTemplate.DebugMode  = this.DebugMode;
+                    _AutoTemplate.Template   = UtilSeparator.Separator(cName);
+                    _AutoTemplate.OutputFile = UtilSeparator.Separator(_Path + sUID + @"\" + cValue);
+
+                    if (Path.GetExtension(_AutoTemplate.OutputFile) == ".csproj")
+                    {
+                        _AutoTemplate.DebugMode = "N";
+                    }else{
+                        _AutoTemplate.DebugMode = this.DebugMode;
+                    }
+
+                    _AutoTemplate.Process();
+
+                }
+
+
             }
+
             _AutoTemplate.Close();
 
         }
