@@ -554,7 +554,7 @@ namespace Volte.Bot.Term
                                     cValue = cValue.Replace("{sUID}", "entity");
                                     cValue = cValue.Replace("{ProjectPath}", AppConfigs.ProjectPath);
                                     cValue = cValue.Replace("{DevelopPath}", AppConfigs.DevelopPath);
-                                    cValue = cValue.Replace("{sTableName}", Utils.Util.ToCamelCase(UtilSeparator.TrimStart(sTableName,AppConfigs.GetValue("sTablePrefix"))));
+                                    cValue = cValue.Replace("{sTableName}", Utils.Util.ToCamelCase(UtilSeparator.TrimStart(sTableName,sTablePrefix)));
                                 
                                     _AutoTemplate.Template = UtilSeparator.Separator(cName);
                                     if (cValue.IndexOf("/")>=0){
