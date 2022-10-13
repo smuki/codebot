@@ -490,8 +490,9 @@ namespace Volte.Bot.Term
                 int i = 0;
                 int n = 0;
 
-                JSONObject Ignore = AppConfigs.JSONObject("Ignore");
-                string IgnoreTables=Ignore.GetValue("Tables");
+                JSONObject Ignore   = AppConfigs.JSONObject("Table");
+                string IgnoreTables = Ignore.GetValue("Tables");
+                string sTablePrefix = Ignore.GetValue("Prefix");
                 string IgnoreTableColumns=Ignore.GetValue("TableColumns");
                 List<string> hIgnoreTables = (IgnoreTables + ",").Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries).ToList<string>();
                 List<string> hIgnoreTableColumns = (IgnoreTableColumns + ",").Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries).ToList<string>();
@@ -501,7 +502,7 @@ namespace Volte.Bot.Term
                 foreach (JSONObject _Table in _JSONObject)
                 {
                     string _sTableName = _Table.GetValue("sTableName");
-                    if (AppConfigs.GetValue("sTablePrefix")=="" || _sTableName.StartsWith(AppConfigs.GetValue("sTablePrefix"))){
+                    if (sTablePrefix=="" || _sTableName.StartsWith(sTablePrefix)){
                         if (hIgnoreTables.Contains(_sTableName)) {
 
                         } else {
