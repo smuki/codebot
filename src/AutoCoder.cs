@@ -415,13 +415,12 @@ namespace Volte.Bot.Term
             if (string.IsNullOrEmpty(sTemplate)){
                 sTemplate="N";
             }
-            string tTemplate=_App_Path + sTemplate + ".tpl";
 
             foreach (JSONObject Template in AppConfigs.JSONArray("activity").JSONObjects)
             {
 
-                string cName  = Template.GetValue("name");
-                string cValue = Template.GetValue("value");
+                string cName  = Template.GetValue("template");
+                string cValue = Template.GetValue("target");
 
                 cName = cName.Trim();
                 cValue = cValue.Trim();
@@ -434,7 +433,6 @@ namespace Volte.Bot.Term
                 cValue = cValue.Replace("{sTableName}"  , Utils.Util.ToCamelCase(UtilSeparator.TrimStart(_JSONFunction.GetValue("sTableName") , sTablePrefix)));
                 cValue = cValue.Replace("{UID_TP_CODE}" , sTemplate);
 
-Console.WriteLine(cName+"="+cValue);
                 if (cName == "Path")
                 {
                     _Path = UtilSeparator.Separator(cValue);
@@ -540,62 +538,32 @@ Console.WriteLine(cName+"="+cValue);
                                 _AutoTemplate.SetValue("sPrimaryKey"  , sPrimaryKey);
                                 _AutoTemplate.SetValue("sTablePrefix" , sTablePrefix);
 
-                                string entityTpl=UtilSeparator.Separator(AppConfigs.DevelopPath + "/"+sTemplate+".tpl");
-                                Console.WriteLine("entityTpl="+entityTpl);
-                                if (File.Exists(entityTpl))
+                                foreach (JSONObject Template in AppConfigs.JSONArray("entity").JSONObjects)
                                 {
+
                                     string sUID      = "entity";
                                     string _App_Path = UtilSeparator.Separator(AppConfigs.DevelopPath + "\\");
                                     string _Path     = UtilSeparator.Separator(AppConfigs.ProjectPath + "\\src\\");
 
-                                    using (StreamReader sr = new StreamReader(entityTpl))
-                                    {
-                                        string s;
-                                        StringBuilder XCodeObject = new StringBuilder();
+                                    string cName  = Template.GetValue("template");
+                                    string cValue = Template.GetValue("target");
 
-                                        while ((s = sr.ReadLine()) != null)
-                                        {
-                                            int _p = s.IndexOf("=");
-
-                                            if (_p > 0)
-                                            {
-                                                string cName = s.Substring(0, _p);
-                                                string cValue = s.Substring(_p + 1, s.Length - _p - 1);
-
-                                                cName = cName.Trim();
-                                                cValue = cValue.Trim();
-
-                                                cName  = cName.Replace("{sUID}", "entity");
-                                                cValue = cValue.Replace("{sUID}", "entity");
-                                                cValue = cValue.Replace("{ProjectPath}", AppConfigs.ProjectPath);
-                                                cValue = cValue.Replace("{DevelopPath}", AppConfigs.DevelopPath);
-                                                cValue = cValue.Replace("{sTableName}", Utils.Util.ToCamelCase(UtilSeparator.TrimStart(sTableName,AppConfigs.GetValue("sTablePrefix"))));
-                                            
-                                                Console.WriteLine("cName="+cName);
-                                                Console.WriteLine("cValue="+cValue);
-
-                                                if (cName == "Path")
-                                                {
-                                                    _Path = UtilSeparator.Separator(cValue);
-                                                }
-                                                else
-                                                {
-
-                                                    _AutoTemplate.Template = UtilSeparator.Separator(cName);
-                                                    if (cValue.IndexOf("/")>=0){
-                                                        _AutoTemplate.OutputFile = UtilSeparator.Separator(cValue);
-                                                    }else{
-                                                        _AutoTemplate.OutputFile = UtilSeparator.Separator(_Path + sUID + @"\" + cValue);
-                                                    }
-                                                    _AutoTemplate.Process();
-
-                                                }
-
-                                            }
-                                        }
+                                    cName = cName.Trim();
+                                    cValue = cValue.Trim();
+                                    cName  = cName.Replace("{sUID}", "entity");
+                                    cValue = cValue.Replace("{sUID}", "entity");
+                                    cValue = cValue.Replace("{ProjectPath}", AppConfigs.ProjectPath);
+                                    cValue = cValue.Replace("{DevelopPath}", AppConfigs.DevelopPath);
+                                    cValue = cValue.Replace("{sTableName}", Utils.Util.ToCamelCase(UtilSeparator.TrimStart(sTableName,AppConfigs.GetValue("sTablePrefix"))));
+                                
+                                    _AutoTemplate.Template = UtilSeparator.Separator(cName);
+                                    if (cValue.IndexOf("/")>=0){
+                                        _AutoTemplate.OutputFile = UtilSeparator.Separator(cValue);
+                                    }else{
+                                        _AutoTemplate.OutputFile = UtilSeparator.Separator(_Path + sUID + @"\" + cValue);
                                     }
-                                }else{
-                                    this.WriteLine(entityTpl + "/entity.tpl Not Found!");
+                                    _AutoTemplate.Process();
+                                            
                                 }
 
                                 sTableNames.Add(sTableName);
@@ -609,7 +577,7 @@ Console.WriteLine(cName+"="+cValue);
                 _AutoTemplate.SetValue("sTableNames" , sTableNames);
 
                 _AutoTemplate.Template   = "N_Entity_Build_Template.csproj";
-                _AutoTemplate.OutputFile = UtilSeparator.Separator(AppConfigs.ProjectPath + @"\src\entity\Zero.Addons.entity.csproj");
+                _AutoTemplate.OutputFile = UtilSeparator.Separator(AppConfigs.ProjectPath + @"\src\entity\entity.csproj");
                 _AutoTemplate.Process();
 
                 Prettify(AppConfigs.ProjectPath + @"\src\","entity");
@@ -624,7 +592,9 @@ Console.WriteLine(cName+"="+cValue);
                 }else{
 
                     sArguments = Utils.Util.ReplaceWith(sArguments , "{sUID}" , UtilSeparator.Separator(@"entity"));
-
+                    if (this.DebugMode == "Y") {
+                        Console.WriteLine("Arguments="+sArguments);
+                    }
                     CommandEntity sCommand = new CommandEntity();
                     sCommand.sDirectory    = UtilSeparator.Separator(AppConfigs.ProjectPath + @"\src\entity");
                     sCommand.sCommand      = sCompiler;
