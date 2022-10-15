@@ -171,7 +171,7 @@ namespace Volte.Bot.Term
 
         object IgnoreCopyColumn(object[] args)
         {
-            string sColumnName  = args[0].ToString();
+            string sColumnName = args[0].ToString();
 
             JSONObject _JSONObject= AppConfigs.LoadSetting("IgnoreCopyColumn.json");
             return  _JSONObject.GetBoolean(sColumnName).ToString();
