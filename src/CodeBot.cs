@@ -273,8 +273,13 @@ namespace Volte.Bot.Term
                         Console.WriteLine("[" + fileName + "] Not Found!");
                     }
                 }
-
-                AppConfigs AppConfigs = new AppConfigs(fileName.Replace(".ini", ".json"));
+                if (!File.Exists(fileName))
+                {
+                    Console.WriteLine("AppSetting : [" + fileName + "] Not Found!!");
+                    Console.WriteLine("exit....");
+                    return;
+                }
+                AppConfigs AppConfigs = new AppConfigs(fileName);
 
                 Console.WriteLine("AppSetting : [" + fileName + "]");
                 Console.WriteLine("sCommand : [" + sCommand + "]");
