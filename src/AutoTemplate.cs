@@ -169,14 +169,6 @@ namespace Volte.Bot.Term
             return rtv;
         }
 
-        object IgnoreCopyColumn(object[] args)
-        {
-            string sColumnName = args[0].ToString();
-
-            JSONObject _JSONObject= AppConfigs.LoadSetting("IgnoreCopyColumn.json");
-            return  _JSONObject.GetBoolean(sColumnName).ToString();
-        }
-
         object FiltersWith(object[] args)
         {
             string s1 = args[0].ToString();
@@ -824,7 +816,6 @@ namespace Volte.Bot.Term
             _Tmpl.RegisterFunction("FunctionTableName"     , FunctionTableName);
             _Tmpl.RegisterFunction("getHash"               , getHash);
             _Tmpl.RegisterFunction("FunctionColumnName"    , FunctionColumnName);
-            _Tmpl.RegisterFunction("IgnoreCopyColumn"      , IgnoreCopyColumn);
             _Tmpl.RegisterFunction("FiltersWith"           , FiltersWith);
             _Tmpl.RegisterFunction("HasRegion"             , HasRegion);
             _Tmpl.RegisterFunction("JSONObject"            , this.JSONObject);
@@ -873,7 +864,6 @@ namespace Volte.Bot.Term
             _Tmpl.RegisterFunction("FunctionTableName"     , FunctionTableName);
             _Tmpl.RegisterFunction("FunctionColumnName"    , FunctionColumnName);
             _Tmpl.RegisterFunction("getHash"               , getHash);
-            _Tmpl.RegisterFunction("IgnoreCopyColumn"      , IgnoreCopyColumn);
             _Tmpl.RegisterFunction("FiltersWith"           , FiltersWith);
             _Tmpl.RegisterFunction("HasRegion"             , this.HasRegion);
             _Tmpl.RegisterFunction("JSONObject"            , this.JSONObject);
