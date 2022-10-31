@@ -140,7 +140,6 @@ namespace Volte.Bot.Term
             return rtv;
         }
 
-
         string HasColumn(object[] args)
         {
             string name = args[0].ToString();
@@ -168,46 +167,6 @@ namespace Volte.Bot.Term
             }
             return rtv;
         }
-
-        object FiltersWith(object[] args)
-        {
-            string s1 = args[0].ToString();
-            string a1 = args[1].ToString();
-            string[] sep = new string[1];
-
-            if (args.Length == 3) {
-                sep = new string[1];
-                sep[0] = args[2].ToString();
-
-            } else if (args.Length == 4) {
-                sep = new string[2];
-                sep[0] = args[2].ToString();
-                sep[1] = args[3].ToString();
-            } else if (args.Length == 5) {
-                sep = new string[3];
-                sep[0] = args[2].ToString();
-                sep[1] = args[3].ToString();
-                sep[2] = args[4].ToString();
-            }
-
-            string[]  array = a1.Split(sep, StringSplitOptions.RemoveEmptyEntries);
-            int i = 1;
-
-            foreach (string a in array) {
-
-                string ss = a.Replace("[[" , "");
-                ss = ss.Replace("]]" , "");
-                ss = ss.Replace("[" , "");
-                ss = ss.Replace("]" , "");
-
-                s1 = s1.Replace("<r" + i + ">", ss);
-                s1 = s1.Replace("\\n" , "\n");
-                i++;
-            }
-
-            return s1;
-        }
-
 
         public string TableColumnType(string sTableName, string sColumnName)
         {
@@ -816,7 +775,6 @@ namespace Volte.Bot.Term
             _Tmpl.RegisterFunction("FunctionTableName"     , FunctionTableName);
             _Tmpl.RegisterFunction("getHash"               , getHash);
             _Tmpl.RegisterFunction("FunctionColumnName"    , FunctionColumnName);
-            _Tmpl.RegisterFunction("FiltersWith"           , FiltersWith);
             _Tmpl.RegisterFunction("HasRegion"             , HasRegion);
             _Tmpl.RegisterFunction("JSONObject"            , this.JSONObject);
             _Tmpl.RegisterFunction("Print"                 , this.Print);
@@ -864,7 +822,6 @@ namespace Volte.Bot.Term
             _Tmpl.RegisterFunction("FunctionTableName"     , FunctionTableName);
             _Tmpl.RegisterFunction("FunctionColumnName"    , FunctionColumnName);
             _Tmpl.RegisterFunction("getHash"               , getHash);
-            _Tmpl.RegisterFunction("FiltersWith"           , FiltersWith);
             _Tmpl.RegisterFunction("HasRegion"             , this.HasRegion);
             _Tmpl.RegisterFunction("JSONObject"            , this.JSONObject);
             _Tmpl.RegisterFunction("Print"                 , this.Print);
