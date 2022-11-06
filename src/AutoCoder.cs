@@ -445,14 +445,9 @@ namespace Volte.Bot.Term
                     }
 
                     _AutoTemplate.Process();
-
                 }
-
-
             }
-
             _AutoTemplate.Close();
-
         }
 
         public void GeneratorEntity()
@@ -541,11 +536,12 @@ namespace Volte.Bot.Term
 
                                     cName = cName.Trim();
                                     cValue = cValue.Trim();
-                                    cName  = cName.Replace("{sUID}", "entity");
+                                    cName  = cName.Replace("{sUID}" , "entity");
+                                    
                                     cValue = cValue.Replace("{sUID}", "entity");
                                     cValue = cValue.Replace("{ProjectPath}", AppConfigs.ProjectPath);
                                     cValue = cValue.Replace("{DevelopPath}", AppConfigs.DevelopPath);
-                                    cValue = cValue.Replace("{sTableName}", Utils.Util.ToCamelCase(UtilSeparator.TrimStart(sTableName,sTablePrefix)));
+                                    cValue = cValue.Replace("{sTableName}" , Utils.Util.ToCamelCase(UtilSeparator.TrimStart(sTableName,sTablePrefix)));
                                 
                                     _AutoTemplate.Template = UtilSeparator.Separator(cName);
                                     if (cValue.IndexOf("/")>=0){
