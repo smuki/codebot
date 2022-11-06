@@ -37,8 +37,6 @@ namespace Volte.Bot.Term
 
         private List<string> _L_UID_CODE = new List<string>();
 
-        public string gTableName   { get ; set ; }
-
         public AutoCoder()
         {
 
