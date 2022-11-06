@@ -39,10 +39,9 @@ namespace Volte.Bot.Term
 
         public string FileName     { get ; set ; }
         public string gTableName   { get ; set ; }
-        public string sTemplate    { get ; set ; }
         public AutoGenerator()
         {
-            sTemplate = "N";
+
         }
         public void Write(object message)
         {
