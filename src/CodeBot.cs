@@ -153,11 +153,7 @@ namespace Volte.Bot.Term
                 string sCommand    = "";
                 string sUID        = "";
                 string _debugMode  = "N";
-                string _FileName   = "";
-                string sMode       = "";
-                string sDefineFile = "";
                 string sTableName  = "";
-                string _IPAddress  = "";
 
                 if (_Arguments["C"] != null)
                 {
@@ -172,17 +168,6 @@ namespace Volte.Bot.Term
                     sCommand = "G";
                 }
 
-                if (_Arguments["H"] != null) {
-                    _IPAddress = _Arguments["H"];
-                }
-
-                if (_Arguments["D"] != null) {
-                    sDefineFile = _Arguments["D"];
-                }
-
-                if (_Arguments["Run"] != null) {
-                    sCommand = "A";
-                }
                 if (_Arguments["FIELDS"] != null) {
                     sCommand = "FIELDS";
                 }
@@ -199,28 +184,6 @@ namespace Volte.Bot.Term
                     {
                         sUID = "A";
                     }
-                }
-
-                if (_Arguments["F"] != null)
-                {
-                    _FileName = _Arguments["F"];
-                }
-
-                if (_Arguments["File"] != null)
-                {
-                    _FileName = _Arguments["File"];
-                }
-
-                if (_Arguments["M"] != null)
-                {
-
-                    sMode = _Arguments["M"].ToUpper();
-                }
-
-                if (_Arguments["MODE"] != null)
-                {
-
-                    sMode = _Arguments["MODE"].ToUpper();
                 }
 
                 if (_Arguments["Entity"] != null) {
@@ -267,9 +230,7 @@ namespace Volte.Bot.Term
                     case "B": {
                                 AutoCoder _AutoCoder  = new AutoCoder();
                                 _AutoCoder.AppConfigs = AppConfigs;
-                                _AutoCoder.FileName   = _FileName;
                                 _AutoCoder.DebugMode  = _debugMode;
-                                _AutoCoder.Mode       = sMode;
                                 _AutoCoder.Process(sUID);
 
                                 sUID = "";
@@ -281,16 +242,12 @@ namespace Volte.Bot.Term
 
                                   AutoGenerator _AutoGenerator  = new AutoGenerator();
                                   _AutoGenerator.AppConfigs = AppConfigs;
-                                  _AutoGenerator.FileName   = _FileName;
                                   _AutoGenerator.DebugMode  = _debugMode;
-                                  _AutoGenerator.Mode       = sMode;
                                   _AutoGenerator.Generator(sUID);
 
                                   AutoCoder _AutoCoder  = new AutoCoder();
                                   _AutoCoder.AppConfigs = AppConfigs;
-                                  _AutoCoder.FileName   = _FileName;
                                   _AutoCoder.DebugMode  = _debugMode;
-                                  _AutoCoder.Mode       = sMode;
                                   _AutoCoder.Process(sUID);
 
                                   sUID = "";
@@ -301,14 +258,12 @@ namespace Volte.Bot.Term
 
                                 AutoGenerator _AutoGenerator  = new AutoGenerator();
                                 _AutoGenerator.AppConfigs = AppConfigs;
-                                _AutoGenerator.FileName   = _FileName;
                                 _AutoGenerator.DebugMode  = _debugMode;
                                 _AutoGenerator.gTableName = sTableName;
                                 _AutoGenerator.GeneratorEntityDefinition();
 
                                 AutoCoder _AutoCoder  = new AutoCoder();
                                 _AutoCoder.AppConfigs = AppConfigs;
-                                _AutoCoder.FileName   = _FileName;
                                 _AutoCoder.DebugMode  = _debugMode;
                                 _AutoCoder.gTableName = sTableName;
                                 _AutoCoder.GeneratorEntity();
@@ -320,9 +275,7 @@ namespace Volte.Bot.Term
                                 AutoGenerator _AutoGenerator  = new AutoGenerator();
                                 _AutoGenerator.AppConfigs = AppConfigs;
                                 _AutoGenerator.DebugMode  = _debugMode;
-                                _AutoGenerator.FileName   = _FileName;
                                 _AutoGenerator.RefreshSysFields();
-                                Console.WriteLine(_FileName);
                                 break;
                             }
 
