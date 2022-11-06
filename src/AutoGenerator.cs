@@ -30,14 +30,12 @@ namespace Volte.Bot.Term
         public StringBuilder Message = new StringBuilder();
         public AppConfigs AppConfigs;
 
-        public  string  Mode         = "";
         public  string  DebugMode    = "N";
         private TableUtil _TableUtil = new TableUtil();
         private Substitute _Substitute=new Substitute();
 
         private List<string> _L_UID_CODE = new List<string>();
 
-        public string FileName     { get ; set ; }
         public string gTableName   { get ; set ; }
         public AutoGenerator()
         {
