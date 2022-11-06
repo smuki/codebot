@@ -40,11 +40,10 @@ namespace Volte.Bot.Term
 
         public string FileName     { get ; set ; }
         public string gTableName   { get ; set ; }
-        public string sTemplate    { get ; set ; }
 
         public AutoCoder()
         {
-            sTemplate = "N";
+
         }
 
         public void Write(object message)
@@ -327,12 +326,12 @@ namespace Volte.Bot.Term
             _AutoTemplate.AppConfigs   = AppConfigs;
             _AutoTemplate.sUID         = sUID;
             _AutoTemplate.Initialize();
-            _AutoTemplate.SetValue("sUID"            , sUID);
-            _AutoTemplate.SetValue("ProjectName"     , AppConfigs.GetValue("ProjectName"));
-            _AutoTemplate.SetValue("ProjectPath"     , AppConfigs.ProjectPath);
-            _AutoTemplate.SetValue("DevelopPath"     , AppConfigs.DevelopPath);
-            _AutoTemplate.SetValue("RefCode"         , "QD" + sUID.ToUpper());
-            _AutoTemplate.SetValue("sSqlCode"        , "Q" + sUID.ToUpper());
+            _AutoTemplate.SetValue("sUID"         , sUID);
+            _AutoTemplate.SetValue("ProjectName"  , AppConfigs.GetValue("ProjectName"));
+            _AutoTemplate.SetValue("ProjectPath"  , AppConfigs.ProjectPath);
+            _AutoTemplate.SetValue("DevelopPath"  , AppConfigs.DevelopPath);
+            _AutoTemplate.SetValue("RefCode"      , "QD" + sUID.ToUpper());
+            _AutoTemplate.SetValue("sSqlCode"     , "Q" + sUID.ToUpper());
 
             foreach (string sName in _JSONFunction.Names)
             {
@@ -412,9 +411,6 @@ namespace Volte.Bot.Term
             string _Path          = UtilSeparator.Separator(AppConfigs.ProjectPath + "\\src\\");
             string _Replications  = UtilSeparator.Separator(AppConfigs.Replications);
             string[] aReplication = _Replications.Split(';');
-            if (string.IsNullOrEmpty(sTemplate)){
-                sTemplate="N";
-            }
 
             foreach (JSONObject Template in AppConfigs.JSONArray("activity").JSONObjects)
             {
@@ -426,12 +422,11 @@ namespace Volte.Bot.Term
                 cValue = cValue.Trim();
 
                 cName  = cName.Replace("{sUID}"         , sUID);
-                cName  = cName.Replace("{UID_TP_CODE}"  , sTemplate);
+                cName  = cName.Replace("{UID_TP_CODE}"  , cName);
                 cValue = cValue.Replace("{sUID}"        , sUID);
                 cValue = cValue.Replace("{ProjectPath}" , AppConfigs.ProjectPath);
                 cValue = cValue.Replace("{DevelopPath}" , AppConfigs.DevelopPath);
                 cValue = cValue.Replace("{sTableName}"  , Utils.Util.ToCamelCase(UtilSeparator.TrimStart(_JSONFunction.GetValue("sTableName") , sTablePrefix)));
-                cValue = cValue.Replace("{UID_TP_CODE}" , sTemplate);
 
                 if (cName == "Path")
                 {
