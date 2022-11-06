@@ -265,7 +265,6 @@ namespace Volte.Bot.Term
                                 AutoCoder _AutoCoder  = new AutoCoder();
                                 _AutoCoder.AppConfigs = AppConfigs;
                                 _AutoCoder.DebugMode  = _debugMode;
-                                _AutoCoder.gTableName = sTableName;
                                 _AutoCoder.GeneratorEntity();
                                 break ;
                               }
