@@ -56,10 +56,6 @@ namespace Volte.Bot.Term
 
         public static void Main(string[] args)
         {
-            //Console.WriteLine(DateTime.Now.ToUniversalTime().ToString());//2020-01-02T01:08:07.123Z
-            //Console.WriteLine("2022-09-01T18:16:44.542 +08:00");
-            //Console.WriteLine(DateTime.Parse("2022-09-01T18:16:44.542+08:00").ToString());
-
             AppDomain.CurrentDomain.AssemblyResolve += new ResolveEventHandler(CurrentDomain_AssemblyResolve);
             CG _CG = new CG();
             _CG.Process(args);
@@ -71,13 +67,6 @@ namespace Volte.Bot.Term
         const string ZFILE_NAME = "CG";
 
         private readonly object _PENDING     = new object();
-        private FileSystemWatcher[] watcher  = new FileSystemWatcher[20];
-        private string[] _filePath           = new string[20];
-        private List<String> _FileQueue      = new List<string>();
-        private List<String> _FormatQueue    = new List<string>();
-
-        private Dictionary<string, DateTime> Check       = new Dictionary<string, DateTime>();
-        private Dictionary<string, DateTime> FormatCheck = new Dictionary<string, DateTime>();
 
         public void PrintHelp()
         {
@@ -101,7 +90,6 @@ namespace Volte.Bot.Term
             Console.WriteLine("/s  [config File Name]");
             Console.WriteLine("/debug [debug mode]");
             Console.WriteLine("");
-
         }
 
         public void PrintConfig(JSONArray obj, int nIndent)
@@ -170,7 +158,6 @@ namespace Volte.Bot.Term
                 string sDefineFile = "";
                 string sTableName  = "";
                 string _IPAddress  = "";
-                string sTemplate   = "";
 
                 if (_Arguments["C"] != null)
                 {
@@ -219,11 +206,6 @@ namespace Volte.Bot.Term
                     _FileName = _Arguments["F"];
                 }
 
-                if (_Arguments["tpl"] != null)
-                {
-                    sTemplate = _Arguments["tpl"];
-                }
-
                 if (_Arguments["File"] != null)
                 {
                     _FileName = _Arguments["File"];
@@ -253,10 +235,6 @@ namespace Volte.Bot.Term
                         _debugMode = "Y";
                     }
                 }
-                else
-                {
-                    _debugMode = "N";
-                }
 
                 string fileName = Path.GetFileNameWithoutExtension(System.Diagnostics.Process.GetCurrentProcess().MainModule.FileName) + ".json";
 
@@ -285,20 +263,12 @@ namespace Volte.Bot.Term
                 Console.WriteLine("sCommand : [" + sCommand + "]");
                 PrintConfig(AppConfigs.JSONObjects, 0);
 
-
                 switch (sCommand) {
                     case "B": {
-                                if (string.IsNullOrEmpty(sTemplate)){
-                                    sTemplate = AppConfigs.GetValue("sTemplate");
-                                }
-                                if (string.IsNullOrEmpty(sTemplate)){
-                                    sTemplate = "N";
-                                }
                                 AutoCoder _AutoCoder  = new AutoCoder();
                                 _AutoCoder.AppConfigs = AppConfigs;
                                 _AutoCoder.FileName   = _FileName;
                                 _AutoCoder.DebugMode  = _debugMode;
-                                _AutoCoder.sTemplate  = sTemplate;
                                 _AutoCoder.Mode       = sMode;
                                 _AutoCoder.Process(sUID);
 
@@ -313,7 +283,6 @@ namespace Volte.Bot.Term
                                   _AutoGenerator.AppConfigs = AppConfigs;
                                   _AutoGenerator.FileName   = _FileName;
                                   _AutoGenerator.DebugMode  = _debugMode;
-                                  _AutoGenerator.sTemplate  = sTemplate;
                                   _AutoGenerator.Mode       = sMode;
                                   _AutoGenerator.Generator(sUID);
 
@@ -321,7 +290,6 @@ namespace Volte.Bot.Term
                                   _AutoCoder.AppConfigs = AppConfigs;
                                   _AutoCoder.FileName   = _FileName;
                                   _AutoCoder.DebugMode  = _debugMode;
-                                  _AutoCoder.sTemplate  = sTemplate;
                                   _AutoCoder.Mode       = sMode;
                                   _AutoCoder.Process(sUID);
 
@@ -330,20 +298,12 @@ namespace Volte.Bot.Term
                               }
 
                     case "T": {
-                                Console.WriteLine("sTableName   = "+sTableName);
-                                if (string.IsNullOrEmpty(sTemplate)){
-                                    sTemplate = AppConfigs.GetValue("sTemplate");
-                                }
-                                if (string.IsNullOrEmpty(sTemplate)){
-                                    sTemplate = "entity";
-                                }
 
                                 AutoGenerator _AutoGenerator  = new AutoGenerator();
                                 _AutoGenerator.AppConfigs = AppConfigs;
                                 _AutoGenerator.FileName   = _FileName;
                                 _AutoGenerator.DebugMode  = _debugMode;
                                 _AutoGenerator.gTableName = sTableName;
-                                _AutoGenerator.sTemplate  = sTemplate;
                                 _AutoGenerator.GeneratorEntityDefinition();
 
                                 AutoCoder _AutoCoder  = new AutoCoder();
@@ -351,7 +311,6 @@ namespace Volte.Bot.Term
                                 _AutoCoder.FileName   = _FileName;
                                 _AutoCoder.DebugMode  = _debugMode;
                                 _AutoCoder.gTableName = sTableName;
-                                _AutoCoder.sTemplate  = sTemplate;
                                 _AutoCoder.GeneratorEntity();
                                 break ;
                               }
@@ -373,13 +332,11 @@ namespace Volte.Bot.Term
                             break;
                         }
                 }
-
             }
             catch (Exception e)
             {
                 Console.WriteLine("Exception=" + e.ToString());
             }
-
         }
     }
 }
