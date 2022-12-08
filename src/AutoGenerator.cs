@@ -115,8 +115,10 @@ namespace Volte.Bot.Term
                 sUID = "%";
             }
             DbContext _DbContext = new DbContext(AppConfigs.GetValue("sDbName"), AppConfigs.GetValue("Provider"), AppConfigs.GetValue("dbAdapter"));
+
             QueryRows RsSysFunction = new QueryRows(_DbContext);
-            RsSysFunction.CommandText="SELECT sUID FROM sysfunction WHERE sUID LIKE '%" + sUID + "%' ORDER BY sUID DESC";
+            RsSysFunction.CommandText="SELECT sUID FROM sysfunction WHERE sUID LIKE @sUID ORDER BY sUID DESC";
+            RsSysFunction.SetParameter("sUID","%" + sUID + "%");
             RsSysFunction.Open();
             _L_UID_CODE = new List<string>();
             if (sUID.ToLower() == "en")
@@ -144,7 +146,8 @@ namespace Volte.Bot.Term
 
             JSONObject _JSONObject = new JSONObject();
             QueryRows RsSysCaption   = new QueryRows(_DbContext);
-            RsSysCaption.CommandText = "SELECT * FROM syscaption WHERE sCaptionLang = '" + sUID + "' ORDER BY sCaptionCode";
+            RsSysCaption.CommandText = "SELECT * FROM syscaption WHERE sCaptionLang=@sUID ORDER BY sCaptionCode";
+            RsSysCaption.SetParameter("sUID",sUID);
             RsSysCaption.Open();
 
             while (!RsSysCaption.EOF)
@@ -185,7 +188,8 @@ namespace Volte.Bot.Term
             }
 
             QueryRows RsZUPRGDTM = new QueryRows(_DbContext);
-            RsZUPRGDTM.CommandText = "SELECT * FROM sysfunctiondtl WHERE bActive<>0 AND sUID='" + sUID + "' ORDER BY nIndex";
+            RsZUPRGDTM.CommandText = "SELECT * FROM sysfunctiondtl WHERE bActive<>0 AND sUID=@sUID ORDER BY nIndex";
+            RsZUPRGDTM.SetParameter("sUID",sUID);
             RsZUPRGDTM.Open();
             if (RsZUPRGDTM.EOF) {
                 Console.WriteLine("EOF By "+RsZUPRGDTM.CommandText);
@@ -195,7 +199,8 @@ namespace Volte.Bot.Term
             QueryRows RsSysFunction   = new QueryRows(_DbContext);
             QueryRows _SysColumnClass = new QueryRows(_DbContext);
 
-            RsSysFunction.CommandText = "SELECT * FROM sysfunction WHERE sUID='" + sUID + "'";
+            RsSysFunction.CommandText = "SELECT * FROM sysfunction WHERE sUID=@sUID";
+            RsSysFunction.SetParameter("sUID",sUID);
             RsSysFunction.Open();
 
             string _TableName     = "";
@@ -213,6 +218,7 @@ namespace Volte.Bot.Term
             bool   bActive        = false;
 
             if (RsSysFunction.EOF) {
+                Console.WriteLine("fucntion not define");
                 return;
             } else {
                 sTableName   = RsSysFunction.GetValue("sTableName");
@@ -288,7 +294,8 @@ namespace Volte.Bot.Term
                 }
 
                 _SysRef = new QueryRows(_DbContext);
-                _SysRef.CommandText = "SELECT * FROM sysref WHERE sRefCode = '" + _COLUMNEntity.sRefBrowse + "'";
+                _SysRef.CommandText = "SELECT * FROM sysref WHERE sRefCode=@sRefCode";
+                _SysRef.SetParameter("sRefCode", _COLUMNEntity.sRefBrowse);
                 _SysRef.Open();
 
                 if (!_SysRef.EOF) {
@@ -396,7 +403,6 @@ namespace Volte.Bot.Term
 
                 RsZUPRGDTM.MoveNext();
             }
-
             RsZUPRGDTM.Close();
 
             JSONObject _JSONRefs = new JSONObject();
@@ -405,7 +411,8 @@ namespace Volte.Bot.Term
                 JSONObject _JSONRef = new JSONObject();
 
                 _SysRef = new QueryRows(_DbContext);
-                _SysRef.CommandText = "SELECT * FROM sysref WHERE sRefCode = '" + sRefCode+ "'";
+                _SysRef.CommandText = "SELECT * FROM sysref WHERE sRefCode=@sRefCode";
+                _SysRef.SetParameter("sRefCode", sRefCode);
                 _SysRef.Open();
 
                 if (!_SysRef.EOF) {
@@ -417,7 +424,8 @@ namespace Volte.Bot.Term
                     _JSONRef.SetValue("sWhereClause" , _SysRef.GetValue("sWhereClause"));
 
                     QueryRows _SysData = new QueryRows(_DbContext);
-                    _SysData.CommandText = "SELECT * FROM sysdata WHERE sSqlCode = '" + _SysRef.GetValue("sSqlCode")+ "'";
+                    _SysData.CommandText = "SELECT * FROM sysdata WHERE sSqlCode=@sSqlCode";
+                    _SysData.SetParameter("sSqlCode", _SysRef.GetValue("sSqlCode"));
                     _SysData.Open();
 
                     if (!_SysData.EOF) {
@@ -430,7 +438,8 @@ namespace Volte.Bot.Term
                 JSONArray _JSONSysRefDtl = new JSONArray();
 
                 QueryRows _SysRefDtl = new QueryRows(_DbContext);
-                _SysRefDtl.CommandText = "SELECT * FROM sysrefdtl WHERE sRefCode = '" + sRefCode+ "'";
+                _SysRefDtl.CommandText = "SELECT * FROM sysrefdtl WHERE sRefCode=@sRefCode";
+                _SysRefDtl.SetParameter("sRefCode", sRefCode);
                 _SysRefDtl.Open();
 
                 while (!_SysRefDtl.EOF) {
@@ -716,7 +725,8 @@ namespace Volte.Bot.Term
             QueryRows RsSysFunction = new QueryRows(_DbContext);
             string sValue="";
 
-            RsSysFunction.CommandText = "SELECT * FROM sysfunction WHERE sUID='" + sUID + "'";
+            RsSysFunction.CommandText = "SELECT * FROM sysfunction WHERE sUID=@sUID";
+            RsSysFunction.SetParameter("sUID", sUID);
             RsSysFunction.Open();
 
             if (!RsSysFunction.EOF) {
@@ -733,7 +743,8 @@ namespace Volte.Bot.Term
 
             string sValue="";
 
-            RsSysFunction.CommandText = "SELECT * FROM sysfunction WHERE sUID='" + sUID + "'";
+            RsSysFunction.CommandText = "SELECT * FROM sysfunction WHERE sUID=@sUID";
+            RsSysFunction.SetParameter("sUID", sUID);
             RsSysFunction.Open();
 
             if (!RsSysFunction.EOF) {
@@ -748,12 +759,13 @@ namespace Volte.Bot.Term
 
             string sLNKUID = sUID;
 
-            QueryRows _SysFunction = new QueryRows(_DbContext);
+            QueryRows RsSysFunction = new QueryRows(_DbContext);
 
-            _SysFunction.CommandText = "SELECT * FROM sysfunction WHERE sUID='" + sUID + "'";
-            _SysFunction.Open();
+            RsSysFunction.CommandText = "SELECT * FROM sysfunction WHERE sUID=@sUID";
+            RsSysFunction.SetParameter("sUID", sUID);
+            RsSysFunction.Open();
 
-            if (!_SysFunction.EOF) {
+            if (!RsSysFunction.EOF) {
                 return sLNKUID;
             }else{
                 return sLNKUID;
