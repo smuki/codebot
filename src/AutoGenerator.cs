@@ -23,7 +23,6 @@ namespace Volte.Bot.Term
 
         private ShellRunner _ShellRunner   = new ShellRunner();
         private List<string> _FAILURE      = new List<string>();
-        private List<FileNameValue> _Hashs = new List<FileNameValue>();
 
         public List<CommandEntity> sCommandEntity = new List<CommandEntity>();
 
