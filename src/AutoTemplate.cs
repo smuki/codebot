@@ -220,7 +220,9 @@ namespace Volte.Bot.Term
 
                 QueryRows RsSysFunctionDtl = new QueryRows(this.Trans);
 
-                RsSysFunctionDtl.CommandText = "SELECT * FROM sysfunctiondtl WHERE sUID='" + sUID + "' AND sColumnName='" + sColumnName + "'";
+                RsSysFunctionDtl.CommandText = "SELECT * FROM sysfunctiondtl WHERE sUID=@sUID AND sColumnName=@sColumnName";
+                RsSysFunctionDtl.SetParameter("sUID", sUID);
+                RsSysFunctionDtl.SetParameter("sColumnName", sColumnName);
                 RsSysFunctionDtl.Open();
                 if (!RsSysFunctionDtl.EOF){
                     sTypeCode = RsSysFunctionDtl.GetValue("sDataType");
@@ -615,7 +617,9 @@ namespace Volte.Bot.Term
 
                 QueryRows RsZUCOLUTM = new QueryRows(this.Trans);
 
-                RsZUCOLUTM.CommandText = "SELECT * FROM sysfields WHERE sTableName='" + tableName + "' AND sColumnName='" + columnName + "'";
+                RsZUCOLUTM.CommandText = "SELECT * FROM sysfields WHERE sTableName=@sTableName AND sColumnName=@sColumnName";
+                RsZUCOLUTM.SetParameter("sTableName", tableName);
+                RsZUCOLUTM.SetParameter("sColumnName",columnName);
                 RsZUCOLUTM.Open();
 
                 if (!RsZUCOLUTM.EOF) {
