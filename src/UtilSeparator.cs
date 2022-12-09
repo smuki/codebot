@@ -71,6 +71,16 @@ namespace Volte.Bot.Term
                 str = str.Remove(0, sStartValue.Length);
             }
             return str;
-        }        
+        } 
+        public static void CreateDir(string sPathName)
+        {
+            try {
+                if (!Directory.Exists(sPathName)) {
+                    Directory.CreateDirectory(sPathName);
+                }
+            } catch (Exception ex) {
+            }
+        }
+
     }
 }
