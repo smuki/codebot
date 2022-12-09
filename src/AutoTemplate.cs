@@ -417,10 +417,6 @@ namespace Volte.Bot.Term
         {
 
             string dataType = args[0].ToString();
-            string sLang="";
-            if (args.Length > 1) {
-                sLang = args[1].ToString();
-            }
 
             return AppConfigs.Mapping("DataType", dataType);
         }
@@ -430,22 +426,12 @@ namespace Volte.Bot.Term
 
             string dataType = args[0].ToString();
 
-            string sLang="";
-            if (args.Length > 1) {
-                sLang = args[1].ToString();
-            }
-
             return AppConfigs.Mapping("ToDataTypeMapping",dataType);
         }
 
         string DbType(object[] args)
         {
             string dataType = args[0].ToString();
-            string sLang="";
-            if (args.Length > 1) {
-                sLang = args[1].ToString();
-            }
-
             string sValue = AppConfigs.Mapping("DbTypeMapping",dataType);
             if (sValue==""){
                 return "undefine-"+dataType;
