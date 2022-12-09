@@ -48,7 +48,6 @@
                 <include name = "Base36Converter.cs" />
                 <include name = "COLUMNEntity.cs" />
                 <include name = "CodeBot.cs" />
-                <include name = "CoreUtil.cs" />
                 <include name = "IdGenerator.cs" />
                 <include name = "ShellCaller.cs" />
                 <include name = "TableUtil.cs" />
