@@ -498,7 +498,7 @@ namespace Volte.Bot.Term
                 JSONObject Ignore   = AppConfigs.JSONObject("Table");
                 string IgnoreTables = Ignore.GetValue("Tables");
                 string sTablePrefix = Ignore.GetValue("Prefix");
-                string IgnoreTableColumns=Ignore.GetValue("TableColumns");
+                string IgnoreTableColumns  = Ignore.GetValue("TableColumns");
                 List<string> hIgnoreTables = (IgnoreTables + ",").Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries).ToList<string>();
                 List<string> hIgnoreTableColumns = (IgnoreTableColumns + ",").Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries).ToList<string>();
                 hIgnoreTables.Add("dtproperties");
