@@ -171,7 +171,7 @@ namespace Volte.Bot.Term
 
         private void PrepareDir()
         {
-            CoreUtil.CreateDir(UtilSeparator.Separator(AppConfigs.DevelopPath + @"\definition\functions"));
+            UtilSeparator.CreateDir(UtilSeparator.Separator(AppConfigs.DevelopPath + @"\definition\functions"));
         }
 
         public void GeneratorActivityDefinition(string sUID)
