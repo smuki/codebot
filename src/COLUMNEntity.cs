@@ -8,6 +8,8 @@ namespace Volte.Bot.Term
     {
         public string sTableName { get; set; }
         public string sColumnName { get; set; }
+        public string sCamelTableName { get; set; }
+        public string sCamelColumnName { get; set; }
         public string sEnableMode { get; set; }
         public bool   bNullable { get; set; }
         public bool   bAutoIdentity { get; set; }
