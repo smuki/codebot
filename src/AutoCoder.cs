@@ -210,13 +210,21 @@ namespace Volte.Bot.Term
             JSONObject _Compiler = AppConfigs.JSONObject("Compiler");
             string sCompiler     = _Compiler.GetValue("Compiler");
             string sArguments    = _Compiler.GetValue("Arguments");
-
+            string sExtension    = _Compiler.GetValue("sExtension");
+            if (string.IsNullOrEmpty(sExtension)){
+                sExtension="csproj";
+            }
             if (sCompiler.ToLower()=="ignore" || string.IsNullOrEmpty(sCompiler))
             {
                 return;
             }
 
+            string project = SearchProject(AppConfigs.ProjectPath + @"\src\" + sUID, sExtension);
+
             sArguments = Utils.Util.ReplaceWith(sArguments, "{sUID}", sUID);
+            sArguments = Utils.Util.ReplaceWith(sArguments, "{project}", project);
+
+            Console.WriteLine("Project File : "+project);
 
             sCommand.sDirectory = UtilSeparator.Separator(AppConfigs.ProjectPath + @"\src\" + sUID);
             sCommand.sCommand   = sCompiler;
@@ -351,6 +359,8 @@ namespace Volte.Bot.Term
                 COLUMNEntity _COLUMNEntity   = new COLUMNEntity();
                 _COLUMNEntity.sTableName     = _TableName;
                 _COLUMNEntity.sColumnName    = _ColumnName;
+                _COLUMNEntity.sCamelTableName  = Utils.Util.ToCamelCase(_TableName);
+                _COLUMNEntity.sCamelColumnName = Utils.Util.ToCamelCase(_ColumnName);
                 _COLUMNEntity.sDescriptionId = _NameValue.GetValue("sDescriptionId");
                 _COLUMNEntity.bNullable      = _NameValue.GetBoolean("bNullable");
                 _COLUMNEntity.sEnableMode    = _NameValue.GetValue("sEnableMode");
@@ -449,6 +459,25 @@ namespace Volte.Bot.Term
             _AutoTemplate.Close();
         }
 
+        public string SearchProject(string localDirectory, string sExtension)
+        {
+
+            DirectoryInfo _DirInfo = new DirectoryInfo(localDirectory);
+
+            FileSystemInfo[] objFiles = _DirInfo.GetFileSystemInfos("*."+sExtension);
+
+            for (int i = 0; i < objFiles.Length; i++) 
+            {
+                FileInfo _FileInfo = objFiles[i] as FileInfo;
+
+                if (_FileInfo != null) 
+                {
+                    return _FileInfo.FullName;
+                }
+            }
+            return "";
+        }
+
         public void GeneratorEntity()
         {
 
@@ -473,20 +502,23 @@ namespace Volte.Bot.Term
 
             List<COLUMNEntity> ColumnEntity = new List<COLUMNEntity>();
 
+            string projectFile="";
             if (Directory.Exists(localDirectory)) {
 
                 DirectoryInfo _DirInfo = new DirectoryInfo(localDirectory);
 
                 FileSystemInfo[] objFiles = _DirInfo.GetFileSystemInfos("*.json");
 
-                for (int i = 0; i < objFiles.Length; i++) {
+                for (int i = 0; i < objFiles.Length; i++) 
+                {
                     FileInfo _FileInfo = objFiles[i] as FileInfo;
 
                     if (_FileInfo != null) {
 
                         JSONObject _JSONTableNames =  AppConfigs.LoadJSONObject(_FileInfo.FullName);
 
-                        foreach (string _s in _JSONTableNames.Names) {
+                        foreach (string _s in _JSONTableNames.Names) 
+                        {
 
                             string sTableName =_s;
 
@@ -506,6 +538,8 @@ namespace Volte.Bot.Term
                                         COLUMNEntity _COLUMNEntity  = new COLUMNEntity();
                                         _COLUMNEntity.sTableName    = sTableName;
                                         _COLUMNEntity.sColumnName   = _JSONObject.GetValue("sColumnName");
+                                        _COLUMNEntity.sCamelTableName  = Utils.Util.ToCamelCase(sTableName);
+                                        _COLUMNEntity.sCamelColumnName = Utils.Util.ToCamelCase(_JSONObject.GetValue("sColumnName"));
                                         _COLUMNEntity.sDataType     = _JSONObject.GetValue("sDataType");
                                         _COLUMNEntity.sComment      = _JSONObject.GetValue("sComment");
                                         _COLUMNEntity.bPrimaryKey   = _JSONObject.GetBoolean("bPrimaryKey");
@@ -532,7 +566,7 @@ namespace Volte.Bot.Term
 
                                     string cName  = Template.GetValue("template");
                                     string cValue = Template.GetValue("target");
-
+                                    bool project = Template.GetBoolean("project");
                                     cName = cName.Trim();
                                     cValue = cValue.Trim();
                                     cName  = cName.Replace("{sUID}" , "entity");
@@ -543,13 +577,18 @@ namespace Volte.Bot.Term
                                     cValue = cValue.Replace("{sTableName}" , Utils.Util.ToCamelCase(UtilSeparator.TrimStart(sTableName,sTablePrefix)));
                                 
                                     _AutoTemplate.Template = UtilSeparator.Separator(cName);
+
                                     if (cValue.IndexOf("/")>=0){
                                         _AutoTemplate.OutputFile = UtilSeparator.Separator(cValue);
                                     }else{
                                         _AutoTemplate.OutputFile = UtilSeparator.Separator(_Path + sUID + @"\" + cValue);
                                     }
+
+                                    if (project)
+                                    {
+                                        projectFile = _AutoTemplate.OutputFile;
+                                    }
                                     _AutoTemplate.Process();
-                                            
                                 }
 
                                 sTableNames.Add(sTableName);
@@ -562,40 +601,10 @@ namespace Volte.Bot.Term
 
                 _AutoTemplate.SetValue("sTableNames" , sTableNames);
 
-                _AutoTemplate.Template   = "N_Entity_Build_Template.csproj";
-                _AutoTemplate.OutputFile = UtilSeparator.Separator(AppConfigs.ProjectPath + @"\src\entity\entity.csproj");
-                _AutoTemplate.Process();
-
                 Prettify(AppConfigs.ProjectPath + @"\src\","entity");
                 Prettify(@"\java\","entity");
+                Build("entity");
 
-                JSONObject _Compiler = AppConfigs.JSONObject("Compiler");
-                string sCompiler     = _Compiler.GetValue("Compiler");
-                string sArguments    = _Compiler.GetValue("Arguments");
-
-                if (sCompiler.ToLower()=="ignore" || string.IsNullOrEmpty(sCompiler)){
-                    return;
-                }else{
-
-                    sArguments = Utils.Util.ReplaceWith(sArguments , "{sUID}" , UtilSeparator.Separator(@"entity"));
-                    if (this.DebugMode == "Y") {
-                        Console.WriteLine("Arguments="+sArguments);
-                    }
-                    CommandEntity sCommand = new CommandEntity();
-                    sCommand.sDirectory    = UtilSeparator.Separator(AppConfigs.ProjectPath + @"\src\entity");
-                    sCommand.sCommand      = sCompiler;
-                    sCommand.sArguments    = sArguments;
-
-                    sCommand = _ShellRunner.Execute(sCommand);
-                    sCommandEntity.Add(sCommand);
-
-                    WriteLine(sCommand.Message);
-
-                    if (sCommand.SUCCESS)
-                    {
-                        //WriteLine("SUCCESS.");
-                    }
-                }
                 Replication(AppConfigs.ProjectPath + @"\src\","entity");
                 Replication(@"\java\","entity");
 
