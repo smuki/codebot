@@ -29,7 +29,8 @@ namespace Volte.Bot.Term
         public StringBuilder Message = new StringBuilder();
         public AppConfigs AppConfigs;
 
-        public  string  DebugMode    = "N";
+        public  string DebugMode     = "N";
+        private string sTablePrefix  = "";
         private TableUtil _TableUtil = new TableUtil();
         private Substitute _Substitute=new Substitute();
 
@@ -463,18 +464,27 @@ namespace Volte.Bot.Term
                 _JSONRefs.SetValue(sRefCode,_JSONRef);
 
             }
+            JSONObject Ignore   = AppConfigs.JSONObject("Table");
+            string IgnoreTables = Ignore.GetValue("Tables");
+            sTablePrefix = Ignore.GetValue("Prefix");
+            string sTableCamelPrefix = Ignore.GetValue("CamelPrefix");
+
+            string sCamelTableName=Utils.Util.ToCamelCase(UtilSeparator.TrimStart(sTableName,sTablePrefix));
 
             JSONObject _JSONFunction = new JSONObject();
             _JSONFunction.SetValue("sUID"            , sUID);
             _JSONFunction.SetValue("sTableName"      , sTableName);
+            _JSONFunction.SetValue("sCamelTableName" , sCamelTableName);
+            _JSONFunction.SetValue("sCamelPrimaryKey", Utils.Util.ToCamelCase(sColumnName));
+            _JSONFunction.SetValue("sPrimaryKey"     , sColumnName);
             _JSONFunction.SetValue("PK_ColumnName"   , sColumnName);
-            _JSONFunction.SetValue("LNK_TableName"   , sLNK_TableName);
             _JSONFunction.SetValue("sDescription"    , sDescription);
+            _JSONFunction.SetValue("sCode"           , sCode);
+            _JSONFunction.SetValue("LNK_TableName"   , sLNK_TableName);
             _JSONFunction.SetValue("sLNKUID"         , sLNKUID);
             _JSONFunction.SetValue("ROOT_LNKUID"     , sROOT_LNKUID);
             _JSONFunction.SetValue("ROOT_TableName"  , sRoot_TableName);
             _JSONFunction.SetValue("ROOT_ColumnName" , sRoot_ColumnName);
-            _JSONFunction.SetValue("sCode"           , sCode);
             _JSONFunction.SetBoolean("bActive"       , bActive);
             _JSONFunction.SetValue("sHash"           , sHash);
             _JSONFunction.SetValue("entitys"         , _entitys);
