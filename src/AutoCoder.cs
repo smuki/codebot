@@ -522,6 +522,8 @@ namespace Volte.Bot.Term
 
                             string sTableName =_s;
 
+                            string sCamelTableName=Utils.Util.ToCamelCase(UtilSeparator.TrimStart(sTableName,sTablePrefix));
+
                             if (sTablePrefix=="" || sTableName.StartsWith(sTablePrefix))
                             {
 
@@ -538,7 +540,7 @@ namespace Volte.Bot.Term
                                         COLUMNEntity _COLUMNEntity  = new COLUMNEntity();
                                         _COLUMNEntity.sTableName    = sTableName;
                                         _COLUMNEntity.sColumnName   = _JSONObject.GetValue("sColumnName");
-                                        _COLUMNEntity.sCamelTableName  = Utils.Util.ToCamelCase(sTableName);
+                                        _COLUMNEntity.sCamelTableName  = sCamelTableName;
                                         _COLUMNEntity.sCamelColumnName = Utils.Util.ToCamelCase(_JSONObject.GetValue("sColumnName"));
                                         _COLUMNEntity.sDataType     = _JSONObject.GetValue("sDataType");
                                         _COLUMNEntity.sComment      = _JSONObject.GetValue("sComment");
@@ -554,6 +556,7 @@ namespace Volte.Bot.Term
 
                                 _AutoTemplate.SetValue("Entitys"      , ColumnEntity);
                                 _AutoTemplate.SetValue("sTableName"   , sTableName);
+                                _AutoTemplate.SetValue("sCamelTableName" , sCamelTableName);
                                 _AutoTemplate.SetValue("sPrimaryKey"  , sPrimaryKey);
                                 _AutoTemplate.SetValue("sTablePrefix" , sTablePrefix);
 
@@ -574,7 +577,7 @@ namespace Volte.Bot.Term
                                     cValue = cValue.Replace("{sUID}", "entity");
                                     cValue = cValue.Replace("{ProjectPath}", AppConfigs.ProjectPath);
                                     cValue = cValue.Replace("{DevelopPath}", AppConfigs.DevelopPath);
-                                    cValue = cValue.Replace("{sTableName}" , Utils.Util.ToCamelCase(UtilSeparator.TrimStart(sTableName,sTablePrefix)));
+                                    cValue = cValue.Replace("{sTableName}" , sCamelTableName);
                                 
                                     _AutoTemplate.Template = UtilSeparator.Separator(cName);
 
