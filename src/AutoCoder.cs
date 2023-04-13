@@ -31,6 +31,7 @@ namespace Volte.Bot.Term
 
         public  string  DebugMode    = "N";
         private string sTablePrefix  = "";
+        private string sCamelPrefix  = "";
         private TableUtil _TableUtil = new TableUtil();
         private Substitute _Substitute=new Substitute();
 
@@ -322,7 +323,8 @@ namespace Volte.Bot.Term
 
             JSONObject Ignore   = AppConfigs.JSONObject("Table");
             string IgnoreTables = Ignore.GetValue("Tables");
-            sTablePrefix = Ignore.GetValue("Prefix");
+            sTablePrefix  = Ignore.GetValue("Prefix");
+            sCamelPrefix  = Ignore.GetValue("CamelPrefix");
 
             AutoTemplate _AutoTemplate = new AutoTemplate();
             _AutoTemplate.DebugMode    = this.DebugMode;
@@ -406,8 +408,8 @@ namespace Volte.Bot.Term
 
             _AutoTemplate.SetValue("Entitys"       , Entitys);
             _AutoTemplate.SetValue("sPrimaryKey"   , sPrimaryKey);
-
             _AutoTemplate.SetValue("sTablePrefix"  , sTablePrefix);
+            _AutoTemplate.SetValue("sCamelPrefix" , sCamelPrefix);
             _AutoTemplate.SetValue("COLUMNS_NAME"  , _COLUMNS_NAME);
             _AutoTemplate.SetValue("COLUMNS_NAMED" , _COLUMNS_NAMEDateTime);
 
@@ -431,7 +433,7 @@ namespace Volte.Bot.Term
                 cValue = cValue.Replace("{sUID}"        , sUID);
                 cValue = cValue.Replace("{ProjectPath}" , AppConfigs.ProjectPath);
                 cValue = cValue.Replace("{DevelopPath}" , AppConfigs.DevelopPath);
-                cValue = cValue.Replace("{sTableName}"  , Utils.Util.ToCamelCase(UtilSeparator.TrimStart(_JSONFunction.GetValue("sTableName") , sTablePrefix)));
+                cValue = cValue.Replace("{sTableName}"  , sCamelPrefix+Utils.Util.ToCamelCase(UtilSeparator.TrimStart(_JSONFunction.GetValue("sTableName") , sTablePrefix)));
 
                 if (cName == "Path")
                 {
@@ -494,7 +496,8 @@ namespace Volte.Bot.Term
 
             JSONObject Ignore   = AppConfigs.JSONObject("Table");
             string IgnoreTables = Ignore.GetValue("Tables");
-            sTablePrefix = Ignore.GetValue("Prefix");
+            sTablePrefix  = Ignore.GetValue("Prefix");
+            sCamelPrefix = Ignore.GetValue("EntityPrefix");
 
             string localDirectory = UtilSeparator.Separator(AppConfigs.DevelopPath + @"\definition\entity\");
 
@@ -522,7 +525,7 @@ namespace Volte.Bot.Term
 
                             string sTableName =_s;
 
-                            string sCamelTableName=Utils.Util.ToCamelCase(UtilSeparator.TrimStart(sTableName,sTablePrefix));
+                            string sCamelTableName = sCamelPrefix+Utils.Util.ToCamelCase(UtilSeparator.TrimStart(sTableName,sTablePrefix));
 
                             if (sTablePrefix=="" || sTableName.StartsWith(sTablePrefix))
                             {
@@ -559,6 +562,7 @@ namespace Volte.Bot.Term
                                 _AutoTemplate.SetValue("sCamelTableName" , sCamelTableName);
                                 _AutoTemplate.SetValue("sPrimaryKey"  , sPrimaryKey);
                                 _AutoTemplate.SetValue("sTablePrefix" , sTablePrefix);
+                                _AutoTemplate.SetValue("sCamelPrefix" , sCamelPrefix);
 
                                 foreach (JSONObject Template in AppConfigs.JSONArray("entity").JSONObjects)
                                 {
