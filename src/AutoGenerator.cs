@@ -31,6 +31,8 @@ namespace Volte.Bot.Term
 
         public  string DebugMode     = "N";
         private string sTablePrefix  = "";
+        private string sCamelPrefix  = "";
+
         private TableUtil _TableUtil = new TableUtil();
         private Substitute _Substitute=new Substitute();
 
@@ -467,9 +469,9 @@ namespace Volte.Bot.Term
             JSONObject Ignore   = AppConfigs.JSONObject("Table");
             string IgnoreTables = Ignore.GetValue("Tables");
             sTablePrefix = Ignore.GetValue("Prefix");
-            string sTableCamelPrefix = Ignore.GetValue("CamelPrefix");
+            sCamelPrefix = Ignore.GetValue("CamelPrefix");
 
-            string sCamelTableName=Utils.Util.ToCamelCase(UtilSeparator.TrimStart(sTableName,sTablePrefix));
+            string sCamelTableName=sCamelPrefix+Utils.Util.ToCamelCase(UtilSeparator.TrimStart(sTableName,sTablePrefix));
 
             JSONObject _JSONFunction = new JSONObject();
             _JSONFunction.SetValue("sUID"            , sUID);
@@ -508,6 +510,8 @@ namespace Volte.Bot.Term
                 JSONObject Ignore   = AppConfigs.JSONObject("Table");
                 string IgnoreTables = Ignore.GetValue("Tables");
                 string sTablePrefix = Ignore.GetValue("Prefix");
+                string sCamelPrefix = Ignore.GetValue("CamelPrefix");
+
                 string IgnoreTableColumns  = Ignore.GetValue("TableColumns");
                 List<string> hIgnoreTables = (IgnoreTables + ",").Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries).ToList<string>();
                 List<string> hIgnoreTableColumns = (IgnoreTableColumns + ",").Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries).ToList<string>();
