@@ -238,6 +238,44 @@ namespace Volte.Bot.Term
             return sTypeCode;
         }
 
+        object NameMapping(object[] args)
+        {
+
+            string sUID = args[0].ToString();
+            string name = args[1].ToString();
+
+            JSONObject _JSONFunction = AppConfigs.LoadJSONObject(AppConfigs.AddonLocation + sUID + ".json");
+            JSONArray _entity = _JSONFunction.GetJSONArray("mapping");
+            foreach (JSONObject it in _entity.JSONObjects)
+            {
+                if (it.GetValue("fName") == name)
+                {
+                    return it.GetValue("tName");
+                }
+            }
+
+            return name;
+        }
+
+        object NameReverse(object[] args)
+        {
+
+            string sUID = args[0].ToString();
+            string name = args[1].ToString();
+
+            JSONObject _JSONFunction = AppConfigs.LoadJSONObject(AppConfigs.AddonLocation + sUID + ".json");
+            JSONArray _entity = _JSONFunction.GetJSONArray("mapping");
+            foreach (JSONObject it in _entity.JSONObjects)
+            {
+                if (it.GetValue("tName") == name)
+                {
+                    return it.GetValue("fName");
+                }
+            }
+
+            return name;
+        }
+
         object HasLNKColumn(object[] args)
         {
 
