@@ -217,6 +217,8 @@ namespace Volte.Bot.Term
             string sType          = "";
             string sHash          = "";
             string sDescription   = "";
+            string sContext       = "";
+
             bool   bActive        = false;
 
             if (RsSysFunction.EOF) {
@@ -227,6 +229,7 @@ namespace Volte.Bot.Term
                 sColumnName  = RsSysFunction.GetValue("sColumnName");
                 sDescription = RsSysFunction.GetValue("sDescription01");
                 sCode        = RsSysFunction.GetValue("sCode");
+                sContext     = RsSysFunction.GetValue("sContext");
                 bActive      = RsSysFunction.GetBoolean("bActive");
                 if (AppConfigs.GetBoolean("LowerName")){
                     sTableName = sTableName.ToLower();
@@ -474,6 +477,8 @@ namespace Volte.Bot.Term
 
             string sCamelTableName=sCamelPrefix+Utils.Util.ToCamelCase(UtilSeparator.TrimStart(sTableName,sTablePrefix));
 
+            JSONObject oContext=new JSONObject(sContext);
+
             JSONObject _JSONFunction = new JSONObject();
             _JSONFunction.SetValue("sUID"            , sUID);
             _JSONFunction.SetValue("sTableName"      , sTableName);
@@ -491,6 +496,7 @@ namespace Volte.Bot.Term
             _JSONFunction.SetBoolean("bActive"       , bActive);
             _JSONFunction.SetValue("sHash"           , sHash);
             _JSONFunction.SetValue("entitys"         , _entitys);
+            _JSONFunction.SetValue("mapping"         , oContext.GetJSONArray("mapping"));
             _JSONFunction.SetValue("sysref"          , _JSONRefs);
 
             Utils.Util.WriteContents(sDefinition , JsonFormatter.PrettyPrint(_JSONFunction.ToString()));
