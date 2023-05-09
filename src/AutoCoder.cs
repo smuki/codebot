@@ -407,6 +407,17 @@ namespace Volte.Bot.Term
 
             }
 
+            List<MappingPair> mapping = new List<MappingPair>();
+
+            foreach (JSONObject obj in _JSONFunction.GetJSONArray("mapping").JSONObjects)
+            {
+                MappingPair p=new MappingPair();
+                p.fName = obj.GetValue("fName");
+                p.tName = obj.GetValue("tName");
+                mapping.Add(p);
+            }
+
+            _AutoTemplate.SetValue("Mapping"       , mapping);
             _AutoTemplate.SetValue("Entitys"       , Entitys);
             _AutoTemplate.SetValue("sPrimaryKey"   , sPrimaryKey);
             _AutoTemplate.SetValue("sTablePrefix"  , sTablePrefix);
