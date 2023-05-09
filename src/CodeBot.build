@@ -47,6 +47,7 @@
                 <include name = "AutoTemplate.cs" />
                 <include name = "Base36Converter.cs" />
                 <include name = "COLUMNEntity.cs" />
+                <include name = "MappingPair.cs" />
                 <include name = "CodeBot.cs" />
                 <include name = "IdGenerator.cs" />
                 <include name = "ShellCaller.cs" />
