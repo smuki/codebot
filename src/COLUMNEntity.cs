@@ -25,9 +25,10 @@ namespace Volte.Bot.Term
         public string sRefBrowseType { get; set; }
         public string sColumnGroup { get; set; }
 
-        public bool bWriteable { get; set; }
+        public bool bWriteable  { get; set; }
         public bool bPrimaryKey { get; set; }
-        public int  nMaxLength { get; set; }
+        public bool bIndexes    { get; set; }
+        public int  nMaxLength  { get; set; }
 
         public string TableColumnName { get { return this.sTableName + "_" + this.sColumnName; } }
 
