@@ -724,6 +724,15 @@ namespace Volte.Bot.Term
             }
         }
 
+        object Contains(object[] args)
+        {
+            if (args.Length == 2)
+            {
+                return args[0].ToString().Contains(args[1].ToString());
+            }
+            return false;
+        }
+
         object Util(object[] args) {
 
             return new Util();
@@ -769,6 +778,8 @@ namespace Volte.Bot.Term
             _Tmpl.RegisterFunction("JSONObject"            , this.JSONObject);
             _Tmpl.RegisterFunction("Print"                 , this.Print);
             _Tmpl.RegisterFunction("Util"                  , this.Util);
+            _Tmpl.RegisterFunction("Contains"              , this.Contains);
+
             _Tmpl.RegisterFunction("ToUnderlineName"       , this.ToUnderlineName);
             _Tmpl.RegisterFunction("ToCamelCase"           , this.ToCamelCase);
 
@@ -816,6 +827,7 @@ namespace Volte.Bot.Term
             _Tmpl.RegisterFunction("JSONObject"            , this.JSONObject);
             _Tmpl.RegisterFunction("Print"                 , this.Print);
             _Tmpl.RegisterFunction("Util"                  , this.Util);
+            //_Tmpl.RegisterFunction("Contains"              , this.Contains);
             _Tmpl.RegisterFunction("ToUnderlineName"       , this.ToUnderlineName);
             _Tmpl.RegisterFunction("ToCamelCase"           , this.ToCamelCase);
 
