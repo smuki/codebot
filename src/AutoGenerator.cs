@@ -370,6 +370,7 @@ namespace Volte.Bot.Term
                 _entity.SetValue("sColumnName"   , _COLUMNEntity.sColumnName);
                 _entity.SetValue("sDataType"     , _COLUMNEntity.sDataType);
                 _entity.SetBoolean("bPrimaryKey" , _COLUMNEntity.bPrimaryKey);
+                _entity.SetBoolean("bIndexes" , _COLUMNEntity.bIndexes);
                 _entity.SetBoolean("bNullable"   , _COLUMNEntity.bNullable);
                 _entity.SetBoolean("Writeable"   , _COLUMNEntity.bWriteable);
 
@@ -561,6 +562,10 @@ namespace Volte.Bot.Term
                                     _ColumnEntity.SetValue("bPrimaryKey"  , RsSysFields.GetBoolean("bPrimaryKey"));
                                     _ColumnEntity.SetValue("bAutoIdentity", RsSysFields.GetBoolean("bAutoIdentity"));
 
+                                    if (RsSysFields.GetValue("sComment").IndexOf("#")>=0)
+                                    {
+                                        _ColumnEntity.SetValue("bIndexes", true);
+                                    }
                                     if (sDataType == "nvarchar")
                                     {
                                         if (nColumnLength > 1000 || nColumnLength < 0) {
