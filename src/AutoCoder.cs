@@ -369,6 +369,7 @@ namespace Volte.Bot.Term
                 _COLUMNEntity.Options        = _NameValue.GetValue("Options");
                 _COLUMNEntity.bWriteable     = _NameValue.GetBoolean("Writeable");
                 _COLUMNEntity.sComment       = _NameValue.GetValue("sComment");
+                _COLUMNEntity.bIndexes       = _NameValue.GetBoolean("bIndexes");
                 _COLUMNEntity.sRefBrowse     = _NameValue.GetValue("sRefBrowse");
                 _COLUMNEntity.sRefCheck      = _NameValue.GetValue("sRefCheck");
                 _COLUMNEntity.sRefViewer     = _NameValue.GetValue("sRefViewer");
@@ -547,6 +548,7 @@ namespace Volte.Bot.Term
                                         _COLUMNEntity.sCamelColumnName = Utils.Util.ToCamelCase(_JSONObject.GetValue("sColumnName"));
                                         _COLUMNEntity.sDataType     = _JSONObject.GetValue("sDataType");
                                         _COLUMNEntity.sComment      = _JSONObject.GetValue("sComment");
+                                        _COLUMNEntity.bIndexes      = _JSONObject.GetBoolean("bIndexes");
                                         _COLUMNEntity.bPrimaryKey   = _JSONObject.GetBoolean("bPrimaryKey");
                                         _COLUMNEntity.bAutoIdentity = _JSONObject.GetBoolean("bAutoIdentity");
 
