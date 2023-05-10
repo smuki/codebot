@@ -241,10 +241,16 @@ namespace Volte.Bot.Term
         object NameMapping(object[] args)
         {
 
-            string sUID = args[0].ToString();
-            string name = args[1].ToString();
+            string tUID = args[0].ToString();
+            string name = "";
+            if (args.Length==1){
+                name = args[0].ToString();
+                tUID = sUID;
+            }else{
+                name = args[1].ToString();
+            }
 
-            JSONObject _JSONFunction = AppConfigs.LoadJSONObject(AppConfigs.AddonLocation + sUID + ".json");
+            JSONObject _JSONFunction = AppConfigs.LoadJSONObject(AppConfigs.AddonLocation + tUID + ".json");
             JSONArray _entity = _JSONFunction.GetJSONArray("mapping");
             foreach (JSONObject it in _entity.JSONObjects)
             {
@@ -260,10 +266,16 @@ namespace Volte.Bot.Term
         object NameReverse(object[] args)
         {
 
-            string sUID = args[0].ToString();
-            string name = args[1].ToString();
+            string tUID = args[0].ToString();
+            string name = "";
+            if (args.Length==1){
+                name = args[0].ToString();
+                tUID = sUID;
+            }else{
+                name = args[1].ToString();
+            }
 
-            JSONObject _JSONFunction = AppConfigs.LoadJSONObject(AppConfigs.AddonLocation + sUID + ".json");
+            JSONObject _JSONFunction = AppConfigs.LoadJSONObject(AppConfigs.AddonLocation + tUID + ".json");
             JSONArray _entity = _JSONFunction.GetJSONArray("mapping");
             foreach (JSONObject it in _entity.JSONObjects)
             {
