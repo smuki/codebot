@@ -345,6 +345,19 @@ namespace Volte.Bot.Term
                     _AutoTemplate.SetValue(sName , _JSONFunction.GetValue(sName));
                 }
             }
+            Dictionary<string, string> mappingHash = new Dictionary<string, string>();
+
+            List<MappingPair> mapping = new List<MappingPair>();
+
+            foreach (JSONObject obj in _JSONFunction.GetJSONArray("mapping").JSONObjects)
+            {
+                mappingHash[obj.GetValue("fName")]=obj.GetValue("tName");
+
+                MappingPair p=new MappingPair();
+                p.fName = obj.GetValue("fName");
+                p.tName = obj.GetValue("tName");
+                mapping.Add(p);
+            }
 
             List<COLUMNEntity> Entitys = new List<COLUMNEntity>();
 
@@ -382,6 +395,12 @@ namespace Volte.Bot.Term
                 _COLUMNEntity.bAutoIdentity  = _NameValue.GetBoolean("bAutoIdentity");
                 _COLUMNEntity.nMaxLength     = _NameValue.GetInteger("nMaxLength");
 
+                if (mappingHash.ContainsKey(_COLUMNEntity.sCamelColumnName)){
+                    _COLUMNEntity.sAlias = mappingHash[_COLUMNEntity.sCamelColumnName];
+                }else{
+                    _COLUMNEntity.sAlias = _COLUMNEntity.sCamelColumnName;
+                }
+
                 if (string.IsNullOrEmpty(_COLUMNEntity.sComment)){
                     _COLUMNEntity.sComment = _ColumnName;
                 }
@@ -405,16 +424,6 @@ namespace Volte.Bot.Term
 
                 Entitys.Add(_COLUMNEntity);
 
-            }
-
-            List<MappingPair> mapping = new List<MappingPair>();
-
-            foreach (JSONObject obj in _JSONFunction.GetJSONArray("mapping").JSONObjects)
-            {
-                MappingPair p=new MappingPair();
-                p.fName = obj.GetValue("fName");
-                p.tName = obj.GetValue("tName");
-                mapping.Add(p);
             }
 
             _AutoTemplate.SetValue("Mapping"       , mapping);
