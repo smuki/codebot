@@ -24,6 +24,7 @@ namespace Volte.Bot.Term
         public string sRefBrowse { get; set; }
         public string sRefBrowseType { get; set; }
         public string sColumnGroup { get; set; }
+        public string sAlias { get; set; }
 
         public bool bWriteable  { get; set; }
         public bool bPrimaryKey { get; set; }
