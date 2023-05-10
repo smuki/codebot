@@ -256,6 +256,8 @@ namespace Volte.Bot.Term
             List<COLUMNEntity> Entitys = new List<COLUMNEntity>();
             List<string> sRef          = new List<string>();
             JSONArray _entitys         = new JSONArray();
+            JSONObject oContext=new JSONObject(sContext);
+
             QueryRows _SysRef          = new QueryRows(_DbContext);
 
             while (!RsZUPRGDTM.EOF) {
@@ -476,8 +478,6 @@ namespace Volte.Bot.Term
             sCamelPrefix = Ignore.GetValue("CamelPrefix");
 
             string sCamelTableName=sCamelPrefix+Utils.Util.ToCamelCase(UtilSeparator.TrimStart(sTableName,sTablePrefix));
-
-            JSONObject oContext=new JSONObject(sContext);
 
             JSONObject _JSONFunction = new JSONObject();
             _JSONFunction.SetValue("sUID"            , sUID);
