@@ -726,9 +726,16 @@ namespace Volte.Bot.Term
 
         object HasRegion(object[] args)
         {
-            string sUID = args[0].ToString();
-            string sName     = args[1].ToString();
-            return _Templates.HasRegion(sUID , sName);
+
+            string tUID = sUID;
+            string sName = "";
+            if (args.Length>1){
+                tUID  = args[0].ToString();
+                sName = args[1].ToString();                
+            }else{
+                sName = args[0].ToString();                
+            }
+            return _Templates.HasRegion(tUID , sName);
         }
 
         public void Close()
