@@ -426,11 +426,12 @@ namespace Volte.Bot.Term
 
             }
 
+            _AutoTemplate.SetValue("Property"      , _JSONFunction.GetJSONObject("Property"));
             _AutoTemplate.SetValue("Mapping"       , mapping);
             _AutoTemplate.SetValue("Entitys"       , Entitys);
             _AutoTemplate.SetValue("sPrimaryKey"   , sPrimaryKey);
             _AutoTemplate.SetValue("sTablePrefix"  , sTablePrefix);
-            _AutoTemplate.SetValue("sCamelPrefix" , sCamelPrefix);
+            _AutoTemplate.SetValue("sCamelPrefix"  , sCamelPrefix);
             _AutoTemplate.SetValue("COLUMNS_NAME"  , _COLUMNS_NAME);
             _AutoTemplate.SetValue("COLUMNS_NAMED" , _COLUMNS_NAMEDateTime);
 
