@@ -497,6 +497,7 @@ namespace Volte.Bot.Term
             _JSONFunction.SetValue("sHash"           , sHash);
             _JSONFunction.SetValue("entitys"         , _entitys);
             _JSONFunction.SetValue("mapping"         , oContext.GetJSONArray("mapping"));
+            _JSONFunction.SetValue("Property"        , oContext.GetJSONObject("Property"));
             _JSONFunction.SetValue("sysref"          , _JSONRefs);
 
             Utils.Util.WriteContents(sDefinition , JsonFormatter.PrettyPrint(_JSONFunction.ToString()));
