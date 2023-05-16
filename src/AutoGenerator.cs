@@ -590,6 +590,21 @@ namespace Volte.Bot.Term
 
                             _JSONTableName.SetValue(_sTableName , _Fields);
 
+                            QueryRows RsTableTpl = new QueryRows(_Trans);
+
+                            RsTableTpl.CommandText = "SELECT * FROM SysTableTemplates WHERE sTableName=@sTableName";
+                            RsTableTpl.SetParameter("sTableName",_sTableName);
+                            RsTableTpl.Open();
+                            string sContext="";
+                            if (!RsTableTpl.EOF) {
+                                sContext = RsTableTpl.GetValue("sContext");
+                            }
+                            RsTableTpl.Close();
+                            
+                            JSONObject oContext=new JSONObject(sContext);
+
+                            _JSONTableName.SetValue("Property" , oContext.GetJSONObject("Property"));
+
                             Utils.Util.WriteContents(sEntityFileName , JsonFormatter.PrettyPrint(_JSONTableName.ToString()));
 
                         }
