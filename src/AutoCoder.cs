@@ -32,6 +32,8 @@ namespace Volte.Bot.Term
         public  string  DebugMode    = "N";
         private string sTablePrefix  = "";
         private string sCamelPrefix  = "";
+        private string sNameIndexes  = "";
+
         private TableUtil _TableUtil = new TableUtil();
         private Substitute _Substitute=new Substitute();
 
@@ -325,6 +327,7 @@ namespace Volte.Bot.Term
             string IgnoreTables = Ignore.GetValue("Tables");
             sTablePrefix  = Ignore.GetValue("Prefix");
             sCamelPrefix  = Ignore.GetValue("CamelPrefix");
+            sNameIndexes  = Ignore.GetValue("sNameIndexes");
 
             AutoTemplate _AutoTemplate = new AutoTemplate();
             _AutoTemplate.DebugMode    = this.DebugMode;
@@ -494,7 +497,7 @@ namespace Volte.Bot.Term
             {
                 FileInfo _FileInfo = objFiles[i] as FileInfo;
 
-                if (_FileInfo != null) 
+                if (_FileInfo != null && _FileInfo.FullName.IndexOf("Backup", StringComparison.OrdinalIgnoreCase)<0) 
                 {
                     return _FileInfo.FullName;
                 }
@@ -519,7 +522,8 @@ namespace Volte.Bot.Term
             JSONObject Ignore   = AppConfigs.JSONObject("Table");
             string IgnoreTables = Ignore.GetValue("Tables");
             sTablePrefix  = Ignore.GetValue("Prefix");
-            sCamelPrefix = Ignore.GetValue("EntityPrefix");
+            sCamelPrefix   = Ignore.GetValue("EntityPrefix");
+            sNameIndexes = Ignore.GetValue("sNameIndexes");
 
             string localDirectory = UtilSeparator.Separator(AppConfigs.DevelopPath + @"\definition\entity\");
 
@@ -553,9 +557,25 @@ namespace Volte.Bot.Term
                             {
 
                                 ColumnEntity = new List<COLUMNEntity>();
+                                List<MappingPair> mapping = new List<MappingPair>();
+
                                 string sPrimaryKey="";
                                 if (_JSONTableNames.GetType(_s) == "l")
                                 {
+
+                                    Dictionary<string, string> mappingHash = new Dictionary<string, string>();
+
+
+                                    foreach (JSONObject obj in _JSONTableNames.GetJSONArray("mapping").JSONObjects)
+                                    {
+                                        mappingHash[obj.GetValue("fName")]=obj.GetValue("tName");
+
+                                        MappingPair p=new MappingPair();
+                                        p.fName = obj.GetValue("fName");
+                                        p.tName = obj.GetValue("tName");
+                                        mapping.Add(p);
+                                    }
+
 
                                     JSONArray _JSONObjects = _JSONTableNames.GetJSONArray(_s);
 
@@ -573,6 +593,15 @@ namespace Volte.Bot.Term
                                         _COLUMNEntity.bPrimaryKey   = _JSONObject.GetBoolean("bPrimaryKey");
                                         _COLUMNEntity.bAutoIdentity = _JSONObject.GetBoolean("bAutoIdentity");
 
+                                        if (mappingHash.ContainsKey(_COLUMNEntity.sCamelColumnName)){
+                                            _COLUMNEntity.sAlias = mappingHash[_COLUMNEntity.sCamelColumnName];
+                                        }else{
+                                            _COLUMNEntity.sAlias = _COLUMNEntity.sCamelColumnName;
+                                        }
+                                        if (_COLUMNEntity.bIndexes==false && sNameIndexes.IndexOf(_COLUMNEntity.sColumnName+",")>=0){
+                                            _COLUMNEntity.bIndexes=true;
+                                        }
+
                                         ColumnEntity.Add(_COLUMNEntity);
                                         if (_COLUMNEntity.bPrimaryKey){
                                             sPrimaryKey=_COLUMNEntity.sColumnName;
@@ -580,6 +609,7 @@ namespace Volte.Bot.Term
                                     }
                                 }
 
+                                _AutoTemplate.SetValue("Mapping"       , mapping);
                                 _AutoTemplate.SetValue("Entitys"      , ColumnEntity);
                                 _AutoTemplate.SetValue("sTableName"   , sTableName);
                                 _AutoTemplate.SetValue("sCamelTableName" , sCamelTableName);
