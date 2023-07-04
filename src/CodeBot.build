@@ -15,6 +15,7 @@
         <copy file="..\dist\Volte.Data.Dapper.dll" tofile="..\Tmp\Volte.Data.Dapper.dll" failonerror="false" />
         <copy file="..\dist\Volte.Bot.Tpl.dll" tofile="..\Tmp\Volte.Bot.Tpl.dll" failonerror="false" />
         <copy file="..\dist\Volte.Utils.dll" tofile="..\Tmp\Volte.Utils.dll" failonerror="false" />
+        <copy file="..\dist\MySql.Data.dll" tofile="..\Tmp\MySql.Data.dll" failonerror="false" />
         
         <csc target="exe" output="..\dist\CodeBot.exe" debug="${debug}" unsafe="${unsafe}">
             <nowarn>
@@ -34,6 +35,7 @@
                 <include name="..\Tmp\Volte.Data.Dapper.dll" />
                 <include name="..\Tmp\Volte.Bot.Tpl.dll" />
                 <include name="..\Tmp\Volte.Utils.dll" />
+                <include name="..\Tmp\MySql.Data.dll" />
 
             </resources>
 
@@ -61,6 +63,7 @@
                 <include name = "..\Tmp\Volte.Data.Dapper.dll" />
                 <include name = "..\Tmp\Volte.Bot.Tpl.dll" />
                 <include name = "..\Tmp\Volte.Utils.dll" />
+                <include name = "..\Tmp\MySql.Data.dll" />
             </references>
         </csc>
 
