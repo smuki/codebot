@@ -1,6 +1,7 @@
 using System;
 using System.IO;
 using System.Text;
+using Volte.Data.Json;
 
 namespace Volte.Bot.Term
 {
@@ -59,6 +60,24 @@ namespace Volte.Bot.Term
             }
             return "";
         }
+
+        public static JSONObject FileToJSONObject(string fileName)
+        {
+            if (File.Exists(fileName)) {
+                string s = "";
+                string j = "";
+
+                using(StreamReader sr = new StreamReader(fileName , Encoding.UTF8)) {
+                    while ((s = sr.ReadLine()) != null)
+                    {
+                        j += s.Trim();
+                    }
+                    return new JSONObject(j);
+                }
+            }
+            return new JSONObject();
+        }
+
         
         public static string TrimStart(string str,string sStartValue)
         {
