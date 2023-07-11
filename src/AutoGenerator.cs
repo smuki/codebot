@@ -611,6 +611,25 @@ namespace Volte.Bot.Term
                     }
                 }
 
+                JSONObject Components = AppConfigs.JSONObject("Components");
+
+                foreach (string _Name in Components.GetJSONArray("Tables").Names)
+                {
+
+                    string sEntityName = UtilSeparator.Separator(AppConfigs.DevelopPath + "\\definition\\components\\"+_Name+".json");
+
+                    string sEntityFileName = UtilSeparator.Separator(AppConfigs.DevelopPath + "\\definition\\entity\\"+_Name+".json");
+                    
+                    if (File.Exists(sEntityFileName)) {
+                        File.Delete(sEntityFileName);
+                    }
+
+                    JSONObject oContext=UtilSeparator.FileToJSONObject(sEntityName);
+
+                    Utils.Util.WriteContents(sEntityFileName , JsonFormatter.PrettyPrint(oContext.ToString()));
+
+                }
+
             } catch {
 
             }finally{
