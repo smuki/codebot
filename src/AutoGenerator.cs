@@ -526,9 +526,13 @@ namespace Volte.Bot.Term
                 hIgnoreTables.Add("dtproperties");
                 hIgnoreTables.Add("sysfunctiondtl");
 
+                Dictionary<string, string> IgnoreHash = new Dictionary<string, string>(StringComparer.InvariantCultureIgnoreCase);
+
                 foreach (JSONObject _Table in _JSONObject)
                 {
                     string _sTableName = _Table.GetValue("sTableName");
+                    IgnoreHash[_sTableName]=_sTableName;
+
                     if (sTablePrefix=="" || _sTableName.StartsWith(sTablePrefix)){
                         if (hIgnoreTables.Contains(_sTableName)) {
 
@@ -539,6 +543,39 @@ namespace Volte.Bot.Term
                             string sEntityFileName = UtilSeparator.Separator(AppConfigs.DevelopPath + "\\definition\\entity\\"+_sTableName+".json");
                             if (File.Exists(sEntityFileName)) {
                                 File.Delete(sEntityFileName);
+                            }
+
+                            QueryRows RsTableTpl = new QueryRows(_Trans);
+
+                            RsTableTpl.CommandText = "SELECT * FROM SysTableTemplates WHERE sTableName=@sTableName";
+                            RsTableTpl.SetParameter("sTableName",_sTableName);
+                            RsTableTpl.Open();
+                            string sContext="";
+                            if (!RsTableTpl.EOF) {
+                                sContext = RsTableTpl.GetValue("sContext");
+                            }
+                            RsTableTpl.Close();
+                            JSONObject oContext=new JSONObject(sContext);
+
+                            if (string.IsNullOrEmpty(sContext)){
+                                string sEntityName = UtilSeparator.Separator(AppConfigs.DevelopPath + "\\definition\\components\\"+_sTableName+".json");
+                                oContext=UtilSeparator.FileToJSONObject(sEntityName);
+                            }
+
+                            Dictionary<string, string> DataTypeMapping = new Dictionary<string, string>(StringComparer.InvariantCultureIgnoreCase);
+                            Dictionary<string, string> Hash = new Dictionary<string, string>(StringComparer.InvariantCultureIgnoreCase);
+
+                            foreach (JSONObject RsSysFields in _JSONColumn) {
+                                string sColumnName = RsSysFields.GetValue("sColumnName");
+                                Hash[sColumnName]=sColumnName;
+                            }                            
+
+                            foreach (JSONObject obj in oContext.GetJSONArray("Columns").JSONObjects)
+                            {
+                                if (!Hash.ContainsKey(obj.GetValue("sColumnName"))){
+                                    _JSONColumn.Add(obj);
+                                }
+                                DataTypeMapping[obj.GetValue("sColumnName")]=obj.GetValue("sDataType");
                             }
 
                             JSONArray _Fields = new JSONArray();
@@ -573,6 +610,12 @@ namespace Volte.Bot.Term
                                     {
                                         _ColumnEntity.SetValue("bIndexes", true);
                                     }
+
+
+                                    if (DataTypeMapping.ContainsKey(sColumnName)){
+                                        sDataType = DataTypeMapping[sColumnName];
+                                    }
+
                                     if (sDataType == "nvarchar")
                                     {
                                         if (nColumnLength > 1000 || nColumnLength < 0) {
@@ -590,18 +633,6 @@ namespace Volte.Bot.Term
 
                             _JSONTableName.SetValue(_sTableName , _Fields);
 
-                            QueryRows RsTableTpl = new QueryRows(_Trans);
-
-                            RsTableTpl.CommandText = "SELECT * FROM SysTableTemplates WHERE sTableName=@sTableName";
-                            RsTableTpl.SetParameter("sTableName",_sTableName);
-                            RsTableTpl.Open();
-                            string sContext="";
-                            if (!RsTableTpl.EOF) {
-                                sContext = RsTableTpl.GetValue("sContext");
-                            }
-                            RsTableTpl.Close();
-                            
-                            JSONObject oContext=new JSONObject(sContext);
 
                             _JSONTableName.SetValue("Property" , oContext.GetJSONObject("Property"));
 
@@ -615,19 +646,19 @@ namespace Volte.Bot.Term
 
                 foreach (string _Name in Components.GetJSONArray("Tables").Names)
                 {
+                    if (!IgnoreHash.ContainsKey(_Name)){
+                        string sEntityName = UtilSeparator.Separator(AppConfigs.DevelopPath + "\\definition\\components\\"+_Name+".json");
 
-                    string sEntityName = UtilSeparator.Separator(AppConfigs.DevelopPath + "\\definition\\components\\"+_Name+".json");
+                        string sEntityFileName = UtilSeparator.Separator(AppConfigs.DevelopPath + "\\definition\\entity\\"+_Name+".json");
+                        
+                        if (File.Exists(sEntityFileName)) {
+                            File.Delete(sEntityFileName);
+                        }
 
-                    string sEntityFileName = UtilSeparator.Separator(AppConfigs.DevelopPath + "\\definition\\entity\\"+_Name+".json");
-                    
-                    if (File.Exists(sEntityFileName)) {
-                        File.Delete(sEntityFileName);
+                        JSONObject oContext=UtilSeparator.FileToJSONObject(sEntityName);
+
+                        Utils.Util.WriteContents(sEntityFileName , JsonFormatter.PrettyPrint(oContext.ToString()));
                     }
-
-                    JSONObject oContext=UtilSeparator.FileToJSONObject(sEntityName);
-
-                    Utils.Util.WriteContents(sEntityFileName , JsonFormatter.PrettyPrint(oContext.ToString()));
-
                 }
 
             } catch {
