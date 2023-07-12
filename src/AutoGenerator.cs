@@ -545,21 +545,14 @@ namespace Volte.Bot.Term
                                 File.Delete(sEntityFileName);
                             }
 
-                            QueryRows RsTableTpl = new QueryRows(_Trans);
-
-                            RsTableTpl.CommandText = "SELECT * FROM SysTableTemplates WHERE sTableName=@sTableName";
-                            RsTableTpl.SetParameter("sTableName",_sTableName);
-                            RsTableTpl.Open();
                             string sContext="";
-                            if (!RsTableTpl.EOF) {
-                                sContext = RsTableTpl.GetValue("sContext");
-                            }
-                            RsTableTpl.Close();
                             JSONObject oContext=new JSONObject(sContext);
 
                             if (string.IsNullOrEmpty(sContext)){
                                 string sEntityName = UtilSeparator.Separator(AppConfigs.DevelopPath + "\\definition\\components\\"+_sTableName+".json");
-                                oContext=UtilSeparator.FileToJSONObject(sEntityName);
+                                if (File.Exists(sEntityName)) {
+                                    oContext=UtilSeparator.FileToJSONObject(sEntityName);
+                                }
                             }
 
                             Dictionary<string, string> DataTypeMapping = new Dictionary<string, string>(StringComparer.InvariantCultureIgnoreCase);
@@ -648,16 +641,16 @@ namespace Volte.Bot.Term
                 {
                     if (!IgnoreHash.ContainsKey(_Name)){
                         string sEntityName = UtilSeparator.Separator(AppConfigs.DevelopPath + "\\definition\\components\\"+_Name+".json");
+                        if (File.Exists(sEntityName)) {
+                            string sEntityFileName = UtilSeparator.Separator(AppConfigs.DevelopPath + "\\definition\\entity\\"+_Name+".json");
 
-                        string sEntityFileName = UtilSeparator.Separator(AppConfigs.DevelopPath + "\\definition\\entity\\"+_Name+".json");
-                        
-                        if (File.Exists(sEntityFileName)) {
-                            File.Delete(sEntityFileName);
+                            JSONObject oContext=UtilSeparator.FileToJSONObject(sEntityName);
+
+                            if (File.Exists(sEntityFileName)) {
+                                File.Delete(sEntityFileName);
+                            }
+                            Utils.Util.WriteContents(sEntityFileName , JsonFormatter.PrettyPrint(oContext.ToString()));
                         }
-
-                        JSONObject oContext=UtilSeparator.FileToJSONObject(sEntityName);
-
-                        Utils.Util.WriteContents(sEntityFileName , JsonFormatter.PrettyPrint(oContext.ToString()));
                     }
                 }
 
