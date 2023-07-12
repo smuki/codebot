@@ -348,7 +348,7 @@ namespace Volte.Bot.Term
                     _AutoTemplate.SetValue(sName , _JSONFunction.GetValue(sName));
                 }
             }
-            Dictionary<string, string> mappingHash = new Dictionary<string, string>();
+            Dictionary<string, string> mappingHash = new Dictionary<string, string>(StringComparer.InvariantCultureIgnoreCase);
 
             List<MappingPair> mapping = new List<MappingPair>();
 
