@@ -377,7 +377,7 @@ namespace Volte.Bot.Term
                 COLUMNEntity _COLUMNEntity   = new COLUMNEntity();
                 _COLUMNEntity.sTableName     = _TableName;
                 _COLUMNEntity.sColumnName    = _ColumnName;
-                _COLUMNEntity.sCamelTableName  = Utils.Util.ToCamelCase(_TableName);
+                _COLUMNEntity.sCamelTableName  = sCamelPrefix+Utils.Util.ToCamelCase(UtilSeparator.TrimStart(_TableName,sTablePrefix));;
                 _COLUMNEntity.sCamelColumnName = Utils.Util.ToCamelCase(_ColumnName);
                 _COLUMNEntity.sDescriptionId = _NameValue.GetValue("sDescriptionId");
                 _COLUMNEntity.bNullable      = _NameValue.GetBoolean("bNullable");
