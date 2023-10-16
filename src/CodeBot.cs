@@ -78,16 +78,17 @@ namespace Volte.Bot.Term
             Console.WriteLine("");
             Console.WriteLine("Command :");
             Console.WriteLine("the following command are available");
-            Console.WriteLine(" /build   = Build Program");
-            Console.WriteLine("     Parameter:");
-            Console.WriteLine("         /u  [Function Id]");
+            Console.WriteLine(" /build     Build activity");
+            Console.WriteLine("    Parameter:");
+            Console.WriteLine("      /u  [activity id]");
+            Console.WriteLine(" /generator generator activity");
+            Console.WriteLine("    Parameter:");
+            Console.WriteLine("      /u  [activity id]");
             Console.WriteLine("");
-            Console.WriteLine(" /entity  = build entity");
+            Console.WriteLine(" /entity    build entity");
             Console.WriteLine("");
-            Console.WriteLine("");
-            Console.WriteLine("/u  [Function Id]");
-            Console.WriteLine("/file  [File]");
-            Console.WriteLine("/s  [config File Name]");
+            Console.WriteLine("/u  [activity id]");
+            Console.WriteLine("/s  [config file name]");
             Console.WriteLine("/debug [debug mode]");
             Console.WriteLine("");
         }
