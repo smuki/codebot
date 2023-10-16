@@ -223,8 +223,10 @@ namespace Volte.Bot.Term
                 AppConfigs AppConfigs = new AppConfigs(fileName);
 
                 Console.WriteLine("AppSetting : [" + fileName + "]");
-                Console.WriteLine("sCommand : [" + sCommand + "]");
-                PrintConfig(AppConfigs.JSONObjects, 0);
+                Console.WriteLine("sCommand   : [" + sCommand + "]");
+                if (_debugMode=="Y"){
+                    PrintConfig(AppConfigs.JSONObjects, 0);
+                }
 
                 switch (sCommand) {
                     case "B": {
