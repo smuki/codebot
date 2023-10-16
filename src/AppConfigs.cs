@@ -111,7 +111,7 @@ namespace Volte.Bot.Term
 
             if (File.Exists(sLanguage))
             {
-                Console.WriteLine("Language " +sLanguage);
+                Console.WriteLine("Language   : " +sLanguage);
                 using(StreamReader sr = new StreamReader(sLanguage, _UTF8Encoding)) {
                     sValue = sr.ReadToEnd();
                 }
